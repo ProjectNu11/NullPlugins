@@ -1,0 +1,13 @@
+{
+    "name": "复读机",
+    "pack": "module.repeater",
+    "version": "1.0",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": false,
+    "db": false,
+    "category": "entertainment",
+    "description": "",
+    "dependency": null
+}

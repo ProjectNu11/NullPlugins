@@ -18,7 +18,7 @@ from graia.saya.builtins.broadcast.schema import ListenerSchema
 saya = Saya.current()
 channel = Channel.current()
 
-channel.name("HelpYouSearch")
+channel.name("SearchShortcut")
 channel.author("nullqwertyuiop")
 channel.description("自己查")
 
