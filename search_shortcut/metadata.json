@@ -1,0 +1,13 @@
+{
+    "name": "帮你搜搜",
+    "pack": "module.search_shortcut",
+    "version": "0.1",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": false,
+    "db": false,
+    "category": "utility",
+    "description": "",
+    "dependency": null
+}
