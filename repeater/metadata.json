@@ -8,6 +8,6 @@
     "pypi": false,
     "db": false,
     "category": "entertainment",
-    "description": "",
+    "description": "人类的本质。\n用法：收到连续多条重复消息后自动触发",
     "dependency": null
 }

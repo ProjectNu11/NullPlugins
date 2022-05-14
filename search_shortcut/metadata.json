@@ -8,6 +8,6 @@
     "pypi": false,
     "db": false,
     "category": "utility",
-    "description": "",
+    "description": "从聊天窗口快速进行搜索操作。用法：发送 \"百度+空格+内容\"",
     "dependency": null
 }
