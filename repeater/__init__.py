@@ -14,9 +14,12 @@ from graia.ariadne.message.element import (
     Json,
     Xml,
     MarketFace,
+    MultimediaElement,
 )
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
+
+from library.depend import Switch
 
 saya = Saya.current()
 channel = Channel.current()
@@ -30,7 +33,7 @@ group_repeat = {}
 
 @channel.use(
     ListenerSchema(
-        listening_events=[GroupMessage],
+        listening_events=[GroupMessage], decorators=[Switch.check(channel.module)]
     )
 )
 async def repeater(app: Ariadne, message: MessageChain, group: Group):
@@ -44,7 +47,11 @@ async def repeater(app: Ariadne, message: MessageChain, group: Group):
     ):
         group_repeat[group.id] = {"msg": message.asPersistentString(), "count": -1}
         return
-    message_serialization = message.asPersistentString()
+    msg = message.copy()
+    for i in msg.__root__:
+        if isinstance(i, MultimediaElement):
+            i.url = ""
+    message_serialization = msg.asPersistentString()
     if group.id not in group_repeat.keys():
         group_repeat[group.id] = {"msg": message_serialization, "count": 1}
     else:
