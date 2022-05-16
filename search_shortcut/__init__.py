@@ -15,6 +15,8 @@ from graia.ariadne.message.parser.twilight import (
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
+from library.depend import Switch
+
 saya = Saya.current()
 channel = Channel.current()
 
@@ -34,6 +36,7 @@ channel.description("自己查")
                 ]
             )
         ],
+        decorators=[Switch.check(channel.module)],
     )
 )
 async def search_shortcut(app: Ariadne, event: MessageEvent, content: MatchResult):
