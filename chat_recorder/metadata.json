@@ -1,0 +1,13 @@
+{
+    "name": "chat_recorder",
+    "pack": "module.chat_recorder",
+    "version": "1.0",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": true,
+    "db": true,
+    "category": "utility",
+    "description": "依赖包，用于储存机器人收到及发送的消息。",
+    "dependency": null
+}
