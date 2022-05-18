@@ -1,5 +1,5 @@
 {
-    "name": "chat_recorder",
+    "name": "聊天记录储存",
     "pack": "module.chat_recorder",
     "version": "1.0",
     "author": [
