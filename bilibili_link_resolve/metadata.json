@@ -1,0 +1,13 @@
+{
+    "name": "B 站链接解析",
+    "pack": "module.bilibili_link_resolve",
+    "version": "1.0",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": false,
+    "db": false,
+    "category": "utility",
+    "description": "",
+    "dependency": null
+}
