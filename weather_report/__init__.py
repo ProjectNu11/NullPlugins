@@ -36,7 +36,9 @@ if not get_module_config(channel.module, "key"):
 @channel.use(
     ListenerSchema(
         listening_events=[GroupMessage],
-        inline_dispatchers=[Twilight([WildcardMatch() @ "city", FullMatch("天气")])],
+        inline_dispatchers=[
+            Twilight([FullMatch("."), WildcardMatch() @ "city", FullMatch("天气")])
+        ],
         decorators=[Switch.check(channel.module)],
     )
 )
