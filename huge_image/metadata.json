@@ -1,0 +1,13 @@
+{
+    "name": "好大的图",
+    "pack": "module.huge_image",
+    "version": "1.0",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": false,
+    "db": false,
+    "category": "entertainment",
+    "description": "",
+    "dependency": null
+}
