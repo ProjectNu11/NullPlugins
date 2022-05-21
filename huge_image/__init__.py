@@ -57,11 +57,6 @@ async def huge_image(
     if image.matched:
         assert isinstance(image.result, Image)
         suffix = image.result.id.split(".")[-1]
-        if suffix != "gif":
-            return await app.sendMessage(
-                event.sender.group if isinstance(event, GroupMessage) else event.sender,
-                MessageChain("仅支持 Gif 图片"),
-            )
         img_id = image.result.id.split(".")[0][1:-1].replace("-", "")
         async with get_running(Adapter).session.get(
             url=f"https://gchat.qpic.cn/gchatpic_new/0/1-1-{img_id}/0"
