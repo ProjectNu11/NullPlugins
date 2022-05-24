@@ -1,0 +1,13 @@
+{
+    "name": "豆瓣电影",
+    "pack": "module.douban_movie",
+    "version": "nullqwertyuiop",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": true,
+    "db": false,
+    "category": "utility",
+    "description": "",
+    "dependency": null
+}
