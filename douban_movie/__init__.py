@@ -223,10 +223,9 @@ async def get_movie_info(
         .strip()
     )
     rating_better_than = (
-        soup.find("div", attrs={"class": "rating_betterthan"})
-        .get_text()
-        .strip()
-        .replace("  ", "")
+        (rbt.get_text().strip().replace("  ", ""))
+        if (rbt := soup.find("div", attrs={"class": "rating_betterthan"}))
+        else "暂无对比数据"
     )
     rating = (
         f"评分：{rating_num} - {rating_sum}\n\n"
