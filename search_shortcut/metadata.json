@@ -1,13 +1,14 @@
 {
     "name": "帮你搜搜",
     "pack": "module.search_shortcut",
-    "version": "0.1",
+    "version": "0.11",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": false,
-    "db": false,
     "category": "utility",
-    "description": "从聊天窗口快速进行搜索操作。用法：发送 \"百度+空格+内容\"",
-    "dependency": null
+    "description": "",
+    "dependency": null,
+    "loaded": true,
+    "override_default": null
 }

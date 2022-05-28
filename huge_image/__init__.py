@@ -22,6 +22,8 @@ from graia.broadcast.interrupt import InterruptControl
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
+from library.depend import Switch, FunctionCall
+
 saya = Saya.current()
 channel = Channel.current()
 
@@ -46,7 +48,7 @@ channel.description("好大的图")
                 ]
             )
         ],
-        decorators=[],
+        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
 async def huge_image(

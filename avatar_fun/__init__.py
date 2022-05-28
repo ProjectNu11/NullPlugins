@@ -1,5 +1,4 @@
 import asyncio
-import sys
 from io import BytesIO
 from pathlib import Path
 from typing import Union
@@ -12,7 +11,7 @@ from graia.ariadne.adapter import Adapter
 from graia.ariadne.app import Ariadne
 from graia.ariadne.event.message import GroupMessage, FriendMessage, MessageEvent
 from graia.ariadne.message.chain import MessageChain
-from graia.ariadne.message.element import Image, Plain, At
+from graia.ariadne.message.element import Image, At
 from graia.ariadne.message.parser.twilight import (
     Twilight,
     UnionMatch,
@@ -25,13 +24,13 @@ from graia.saya.builtins.broadcast.schema import ListenerSchema
 from moviepy.editor import ImageSequenceClip
 
 from library.config import config
-from library.depend import Switch
+from library.depend import Switch, FunctionCall
 
 saya = Saya.current()
 channel = Channel.current()
 
 channel.name("AvatarFunPic")
-channel.author("SAGIRI-kawaii")
+channel.author("SAGIRI-kawaii, nullqwertyuiop")
 channel.description("一个可以生成头像相关趣味图的插件，在群中发送 `[摸|亲|贴|撕|丢|爬|精神支柱|吞] [@目标|目标qq|目标图片]` 即可")
 
 data_dir = Path(config.path.data) / channel.module
@@ -46,13 +45,13 @@ data_dir.mkdir(exist_ok=True)
                 [
                     ElementMatch(At, optional=True) @ "at1",
                     UnionMatch("垃圾探头", "辣鸡探头", "腊鸡探头"),
-                    RegexMatch(r"[\n\r]?", optional=True),
+                    RegexMatch(r"[\n\r]", optional=True),
                     ElementMatch(Image, optional=True) @ "image",
                     ElementMatch(At, optional=True) @ "at2",
                 ]
             )
         ],
-        decorators=[Switch.check(channel.module)],
+        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
 async def avatar_fun_one_element(
@@ -81,11 +80,7 @@ async def avatar_fun_one_element(
 
 
 def get_match_element(message: MessageChain) -> list:
-    return [
-        element
-        for element in message.__root__
-        if isinstance(element, Image) or isinstance(element, At)
-    ]
+    return [element for element in message.__root__ if isinstance(element, (Image, At))]
 
 
 async def get_image(img: Union[int, Image]) -> bytes:

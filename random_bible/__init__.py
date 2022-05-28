@@ -23,7 +23,7 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
 from library.config import config
-from library.depend import Switch
+from library.depend import Switch, FunctionCall
 
 saya = Saya.current()
 channel = Channel.current()
@@ -43,7 +43,7 @@ data_dir.mkdir(exist_ok=True)
     ListenerSchema(
         listening_events=[GroupMessage],
         inline_dispatchers=[Twilight([FullMatch("随机圣经")])],
-        decorators=[Switch.check(channel.module)],
+        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
 async def get_bible(app: Ariadne, event: GroupMessage):
@@ -73,7 +73,7 @@ waiting = set()
                 ]
             )
         ],
-        decorators=[Switch.check(channel.module)],
+        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
 async def upload_bible(app: Ariadne, event: GroupMessage, image: ElementResult):
@@ -142,3 +142,18 @@ async def upload_bible(app: Ariadne, event: GroupMessage, image: ElementResult):
         group_dir / f"{md5(image_bytes).hexdigest()}.jpg"
     )
     await app.sendGroupMessage(event.sender.group, MessageChain("上传成功"), quote=source)
+
+
+@channel.use(
+    ListenerSchema(
+        listening_events=[GroupMessage],
+        inline_dispatchers=[Twilight([FullMatch("本群圣经总数")])],
+        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
+    )
+)
+async def get_bible_count(app: Ariadne, event: GroupMessage):
+    group_dir = data_dir / str(event.sender.group.id)
+    msg = "暂无本群圣经"
+    if group_dir.is_dir():
+        msg = f"本群共有圣经 {len(os.listdir(group_dir))} 条"
+    await app.sendGroupMessage(event.sender.group, MessageChain(msg))

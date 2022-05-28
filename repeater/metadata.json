@@ -1,13 +1,14 @@
 {
     "name": "复读机",
     "pack": "module.repeater",
-    "version": "1.1",
+    "version": "1.11",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": false,
-    "db": false,
     "category": "entertainment",
-    "description": "人类的本质。\n用法：收到连续多条重复消息后自动触发",
-    "dependency": null
+    "description": "",
+    "dependency": null,
+    "loaded": true,
+    "override_default": null
 }

@@ -1,13 +1,14 @@
 {
     "name": "终端执行器",
     "pack": "module.shell_executor",
-    "version": "1.0",
+    "version": "1.01",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": false,
-    "db": false,
     "category": "utility",
-    "description": "自担风险",
-    "dependency": null
+    "description": "",
+    "dependency": null,
+    "loaded": true,
+    "override_default": null
 }

@@ -30,7 +30,7 @@ from pydantic import BaseModel
 from sqlalchemy import select
 
 from library.config import get_module_config, update_module_config
-from library.depend import Switch
+from library.depend import Switch, FunctionCall
 from library.orm import orm
 from .table import WeatherSchedule
 
@@ -52,7 +52,7 @@ if not get_module_config(channel.module, "key"):
     ListenerSchema(
         listening_events=[GroupMessage, FriendMessage],
         inline_dispatchers=[Twilight([RegexMatch(r"\.(?!订阅).+天气")])],
-        decorators=[Switch.check(channel.module)],
+        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
 async def weather_report(app: Ariadne, event: MessageEvent):
@@ -70,7 +70,7 @@ async def weather_report(app: Ariadne, event: MessageEvent):
         inline_dispatchers=[
             Twilight([FullMatch(".订阅"), WildcardMatch() @ "city", FullMatch("天气")])
         ],
-        decorators=[Switch.check(channel.module)],
+        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
 async def weather_report(app: Ariadne, event: FriendMessage, city: RegexResult):
@@ -83,10 +83,7 @@ async def weather_report(app: Ariadne, event: FriendMessage, city: RegexResult):
                 waiter_friend: Friend, waiter_message: MessageChain
             ):
                 if waiter_friend.id == event.sender.id:
-                    if waiter_message.asDisplay() == "是":
-                        return True
-                    else:
-                        return False
+                    return waiter_message.asDisplay() == "是"
 
             await app.sendFriendMessage(
                 event.sender,
@@ -160,7 +157,7 @@ async def weather_report(app: Ariadne, event: FriendMessage, city: RegexResult):
         return await app.sendFriendMessage(event.sender, MessageChain("已取消该操作"))
 
 
-@channel.use(SchedulerSchema(timer=timers.crontabify("* * * * *")))
+@channel.use(SchedulerSchema(timer=timers.crontabify("* * * * * 5")))
 async def weather_schedule(app: Ariadne):
     if schedules := await orm.fetchall(
         select(
@@ -219,25 +216,24 @@ async def get_realtime_weather(city_code: str) -> Union[None, RealtimeWeather]:
 async def get_realtime_weather_msg(city_name: str) -> Union[None, MessageChain]:
     msg = None
     try:
-        if city_info := await get_city(city_name):
-            city_code, city_name = city_info
-            if realtime_weather := await get_realtime_weather(city_code):
-                msg = MessageChain(
-                    f"{city_name}的天气如下\n\n"
-                    f"天气状况：{realtime_weather.text}\n"
-                    f"温度：{realtime_weather.temp} °C\n"
-                    f"相对湿度：{realtime_weather.humidity}%\n"
-                    f"体感温度：{realtime_weather.feelsLike} °C\n"
-                    f"风向：{realtime_weather.windDir}\n"
-                    f"风力：{realtime_weather.windScale} 级\n"
-                    f"风速：{realtime_weather.windSpeed} km/h\n"
-                    f"当前小时累计降水量：{realtime_weather.precip} mm\n"
-                    f"气压：{realtime_weather.pressure} 百帕\n"
-                    f"能见度：{realtime_weather.vis} km\n"
-                    f"观测时间：{realtime_weather.obsTime.strftime('%Y-%m-%d %H:%M:%S')}"
-                )
-            else:
-                raise ValueError
+        if not (city_info := await get_city(city_name)):
+            raise ValueError
+        city_code, city_name = city_info
+        if realtime_weather := await get_realtime_weather(city_code):
+            msg = MessageChain(
+                f"{city_name}的天气如下\n\n"
+                f"天气状况：{realtime_weather.text}\n"
+                f"温度：{realtime_weather.temp} °C\n"
+                f"相对湿度：{realtime_weather.humidity}%\n"
+                f"体感温度：{realtime_weather.feelsLike} °C\n"
+                f"风向：{realtime_weather.windDir}\n"
+                f"风力：{realtime_weather.windScale} 级\n"
+                f"风速：{realtime_weather.windSpeed} km/h\n"
+                f"当前小时累计降水量：{realtime_weather.precip} mm\n"
+                f"气压：{realtime_weather.pressure} 百帕\n"
+                f"能见度：{realtime_weather.vis} km\n"
+                f"观测时间：{realtime_weather.obsTime.strftime('%Y-%m-%d %H:%M:%S')}"
+            )
         else:
             raise ValueError
     except ValueError:

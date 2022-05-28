@@ -1,13 +1,14 @@
 {
     "name": "头像表情包",
     "pack": "module.avatar_fun",
-    "version": "0.1",
+    "version": "0.1.1",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": true,
-    "db": false,
     "category": "entertainment",
     "description": "",
-    "dependency": null
+    "dependency": null,
+    "loaded": true,
+    "override_default": null
 }

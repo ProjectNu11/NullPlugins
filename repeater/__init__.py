@@ -1,6 +1,5 @@
 from graia.ariadne.app import Ariadne
-from graia.ariadne.event.message import Group, GroupMessage, ActiveGroupMessage
-from graia.ariadne.message.chain import MessageChain
+from graia.ariadne.event.message import GroupMessage, ActiveGroupMessage
 from graia.ariadne.message.element import (
     Image,
     Plain,
@@ -19,7 +18,7 @@ from graia.ariadne.message.element import (
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
-from library.depend import Switch
+from library.depend import Switch, FunctionCall
 
 saya = Saya.current()
 channel = Channel.current()
@@ -36,8 +35,10 @@ group_repeat = {}
         listening_events=[GroupMessage], decorators=[Switch.check(channel.module)]
     )
 )
-async def repeater(app: Ariadne, message: MessageChain, group: Group):
+async def repeater(app: Ariadne, event: GroupMessage):
     global group_repeat
+    message = event.messageChain
+    group = event.sender.group
     if (
         message.has(Forward)
         or message.has(App)
@@ -54,27 +55,27 @@ async def repeater(app: Ariadne, message: MessageChain, group: Group):
     message_serialization = msg.asPersistentString()
     if group.id not in group_repeat.keys():
         group_repeat[group.id] = {"msg": message_serialization, "count": 1}
-    else:
-        if message_serialization == group_repeat[group.id]["msg"]:
-            if group_repeat[group.id]["count"] == -1:
+    elif message_serialization == group_repeat[group.id]["msg"]:
+        if group_repeat[group.id]["count"] == -1:
+            return
+        count = group_repeat[group.id]["count"] + 1
+        if count == 3:
+            group_repeat[group.id]["count"] = count
+            msg = message.include(Plain, Image, At, Quote, AtAll, Face, Poke)
+            if msg.asDisplay() == "<! 不支持的消息类型 !>":
+                group_repeat[group.id] = {
+                    "msg": msg.asPersistentString(),
+                    "count": -1,
+                }
                 return
-            count = group_repeat[group.id]["count"] + 1
-            if count == 3:
-                group_repeat[group.id]["count"] = count
-                msg = message.include(Plain, Image, At, Quote, AtAll, Face, Poke)
-                if msg.asDisplay() == "<! 不支持的消息类型 !>":
-                    group_repeat[group.id] = {
-                        "msg": msg.asPersistentString(),
-                        "count": -1,
-                    }
-                    return
-                return await app.sendGroupMessage(group, msg.asSendable())
-            else:
-                group_repeat[group.id]["count"] = count
-                return
+            await app.sendGroupMessage(group, msg.asSendable())
+            await FunctionCall.add_record(channel.module, event)
         else:
-            group_repeat[group.id]["msg"] = message_serialization
-            group_repeat[group.id]["count"] = 1
+            group_repeat[group.id]["count"] = count
+        return
+    else:
+        group_repeat[group.id]["msg"] = message_serialization
+        group_repeat[group.id]["count"] = 1
 
 
 @channel.use(ListenerSchema(listening_events=[ActiveGroupMessage]))

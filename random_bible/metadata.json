@@ -1,13 +1,14 @@
 {
     "name": "随机圣经",
     "pack": "module.random_bible",
-    "version": "1.0",
+    "version": "1.01",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": true,
-    "db": false,
     "category": "entertainment",
-    "description": "阿门。用法：发送 \"随机圣经\" 获取本群已有的圣经，发送 \"上传圣经\" 上传本群圣经",
-    "dependency": null
+    "description": "",
+    "dependency": null,
+    "loaded": true,
+    "override_default": null
 }

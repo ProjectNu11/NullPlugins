@@ -15,7 +15,7 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 from loguru import logger
 
-from library.depend import Switch
+from library.depend import Switch, FunctionCall
 
 saya = Saya.current()
 channel = Channel.current()
@@ -43,7 +43,7 @@ channel.description("B站链接解析")
                 ]
             )
         ],
-        decorators=[Switch.check(channel.module)],
+        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
 async def bilibili_link_resolve_handler(app: Ariadne, event: MessageEvent):
@@ -60,7 +60,7 @@ class BilibiliLinkResolve:
             r"(?:http:|https://)?(?:[^.]+\.)?bilibili\.com/video/(?:BV|bv)([\w\d]{10})",
             message,
         ):
-            bv = "bv" + match[0]
+            bv = f"bv{match[0]}"
             av = cls.bv_to_av(bv)
             info = await BilibiliLinkResolve.get_info(av)
             return await cls.generate_messagechain(info)
@@ -76,7 +76,7 @@ class BilibiliLinkResolve:
         ):
             match = match[0]
             if not (match.startswith("http")):
-                match = "https://" + match
+                match = f"https://{match}"
             async with get_running(Adapter).session.get(match) as res:
                 if res.status == 200:
                     link = str(res.url)
@@ -96,23 +96,16 @@ class BilibiliLinkResolve:
     @staticmethod
     def bv_to_av(bv: str) -> int:
         table = "fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF"
-        tr = {}
-        for i in range(58):
-            tr[table[i]] = i
+        tr = {table[i]: i for i in range(58)}
         s = [11, 10, 3, 8, 4, 6]
         xor = 177451812
         add = 8728348608
-        r = 0
-        for i in range(6):
-            r += tr[bv[s[i]]] * 58**i
+        r = sum(tr[bv[s[i]]] * 58**i for i in range(6))
         return (r - add) ^ xor
 
     @staticmethod
     def av_to_bv(av: int) -> str:
         table = "fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF"
-        tr = {}
-        for i in range(58):
-            tr[table[i]] = i
         s = [11, 10, 3, 8, 4, 6]
         xor = 177451812
         add = 8728348608
@@ -132,7 +125,7 @@ class BilibiliLinkResolve:
             try:
                 description = str(data["desc"]).replace("\\n", "\n")
                 if len(description) >= 200:
-                    description = description[:200] + "..."
+                    description = f"{description[:200]}..."
                 text = text.replace("%标题%", str(data["title"]))
                 text = text.replace(
                     "%分区%",
@@ -160,8 +153,8 @@ class BilibiliLinkResolve:
                 text = text.replace(
                     "%链接%", f"https://www.bilibili.com/video/av{str(data['aid'])}"
                 )
-            except Exception as e:
-                logger.error(e)
+            except Exception as err:
+                logger.error(err)
             return text
 
         try:

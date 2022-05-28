@@ -15,7 +15,7 @@ from graia.ariadne.message.parser.twilight import (
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
-from library.depend import Switch
+from library.depend import Switch, FunctionCall
 
 saya = Saya.current()
 channel = Channel.current()
@@ -36,12 +36,11 @@ channel.description("自己查")
                 ]
             )
         ],
-        decorators=[Switch.check(channel.module)],
+        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
 async def search_shortcut(app: Ariadne, event: MessageEvent, content: MatchResult):
-    content = content.result.asDisplay()
-    if content:
+    if content := content.result.asDisplay():
         await app.sendMessage(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
             MessageChain(f"https://www.baidu.com/s?wd={urllib.parse.quote(content)}"),

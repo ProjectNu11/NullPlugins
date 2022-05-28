@@ -22,7 +22,7 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
 from library.config import config
-from library.depend import Switch, Permission
+from library.depend import Switch, Permission, FunctionCall
 from library.model import UserPerm
 
 saya = Saya.current()
@@ -57,6 +57,7 @@ data_dir.mkdir(exist_ok=True)
             MentionMe(),
             Permission.require(UserPerm.BOT_OWNER, MessageChain("Permission denied.")),
             Switch.check(channel.module),
+            FunctionCall.record(channel.module),
         ],
     )
 )
@@ -71,10 +72,7 @@ async def get_bible(app: Ariadne, event: GroupMessage, command: MatchResult):
             waiter_group.id == event.sender.group.id
             and waiter_member.id == event.sender.id
         ):
-            if waiter_message.asDisplay() == "是":
-                return True
-            else:
-                return False
+            return waiter_message.asDisplay() == "是"
 
     await app.sendGroupMessage(
         event.sender.group, MessageChain("请确认是否执行以下 Shell (是/否)\n" f"{command}")

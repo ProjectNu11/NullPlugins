@@ -26,7 +26,7 @@ from graia.saya.builtins.broadcast.schema import ListenerSchema
 from loguru import logger
 from sqlalchemy import select
 
-from library.depend import Permission, Switch
+from library.depend import Permission, Switch, FunctionCall
 from library.model import UserPerm
 from library.orm import orm
 from .table import WalletBalance, WalletDetail
@@ -45,7 +45,7 @@ update_lock = Lock()
     ListenerSchema(
         listening_events=[GroupMessage],
         inline_dispatchers=[Twilight([FullMatch("钱包")])],
-        decorators=[Switch.check(channel.module)],
+        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
 async def get_wallet(app: Ariadne, event: MessageEvent):
@@ -79,6 +79,7 @@ async def get_wallet(app: Ariadne, event: MessageEvent):
         decorators=[
             Permission.require(UserPerm.BOT_OWNER),
             Switch.check(channel.module),
+            FunctionCall.record(channel.module),
         ],
     )
 )
@@ -112,9 +113,7 @@ async def wallet_debug(
 class Wallet:
     @staticmethod
     def model_to_int(model: Union[Group, Member, Friend, int]):
-        if not isinstance(model, int):
-            return model.id
-        return model
+        return model if isinstance(model, int) else model.id
 
     @classmethod
     async def get_balance(

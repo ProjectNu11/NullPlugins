@@ -20,7 +20,7 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
 from library.config import config
-from library.depend import Switch
+from library.depend import Switch, FunctionCall
 
 saya = Saya.current()
 channel = Channel.current()
@@ -38,7 +38,7 @@ channel.description("")
                 [FullMatch(".douban"), FullMatch("search"), WildcardMatch() @ "movie"]
             )
         ],
-        decorators=[Switch.check(channel.module)],
+        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
 async def douban_movie_search(app: Ariadne, event: MessageEvent, movie: RegexResult):
@@ -84,7 +84,7 @@ async def douban_movie_search(app: Ariadne, event: MessageEvent, movie: RegexRes
                 [FullMatch(".douban"), FullMatch("info"), WildcardMatch() @ "movie"]
             )
         ],
-        decorators=[Switch.check(channel.module)],
+        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
 async def douban_movie_info(app: Ariadne, event: MessageEvent, movie: RegexResult):
