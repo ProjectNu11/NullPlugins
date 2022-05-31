@@ -157,7 +157,7 @@ async def weather_report(app: Ariadne, event: FriendMessage, city: RegexResult):
         return await app.sendFriendMessage(event.sender, MessageChain("已取消该操作"))
 
 
-@channel.use(SchedulerSchema(timer=timers.crontabify("* * * * * 5")))
+@channel.use(SchedulerSchema(timer=timers.crontabify("* * * * * 30")))
 async def weather_schedule(app: Ariadne):
     if schedules := await orm.fetchall(
         select(
