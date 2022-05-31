@@ -65,7 +65,8 @@ else:
             Twilight(
                 [
                     FullMatch(".eh"),
-                    RegexMatch(r"(https?://)?e-hentai\.org/g/\d+/[\da-z]+/?") @ "url",
+                    RegexMatch(r"(https?://)?e[-x]hentai\.org/g/\d+/[\da-z]+/?")
+                    @ "url",
                 ]
             )
         ],
@@ -74,7 +75,7 @@ else:
 )
 async def ehentai_downloader(app: Ariadne, event: GroupMessage, url: RegexResult):
     url = url.result.asDisplay()
-    gallery = re.findall(r"(?:https?://)?e-hentai\.org/g/(\d+)/[\da-z]+/?", url)[0]
+    gallery = re.findall(r"(?:https?://)?e[-x]hentai\.org/g/(\d+)/[\da-z]+/?", url)[0]
     try:
         async with ClientSession(cookies=EHentaiCookie.get_cookie_dict()) as session:
             async with session.get(url=url, proxy=config.proxy) as resp:
@@ -85,10 +86,12 @@ async def ehentai_downloader(app: Ariadne, event: GroupMessage, url: RegexResult
                     event.sender.group,
                     MessageChain(f"已取得图库 [{gallery}] {name}，正在尝试下载..."),
                 )
+            await session.get(url=url, proxy=config.proxy)
             async with session.post(
                 url=url,
                 data={"dltype": "res", "dlcheck": "Download Resample Archive"},
                 proxy=config.proxy,
+                allow_redirects=True,
             ) as resp:
                 url = get_hath(BeautifulSoup(await resp.text(), "html.parser"))
             async with session.get(url=f"{url}?start=1", proxy=config.proxy) as resp:
