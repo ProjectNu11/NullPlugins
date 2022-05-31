@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Tuple
 
 import pyzipper
-from aiohttp import ClientSession
+from aiohttp import ClientSession, ClientConnectorError
 from bs4 import BeautifulSoup
 from graia.ariadne import Ariadne
 from graia.ariadne.event.message import GroupMessage
@@ -119,6 +119,8 @@ async def ehentai_downloader(app: Ariadne, event: GroupMessage, url: RegexResult
                 )
     except AttributeError:
         await app.sendGroupMessage(event.sender.group, MessageChain("请输入正确的链接"))
+    except ClientConnectorError:
+        await app.sendGroupMessage(event.sender.group, MessageChain("网络错误，请稍后再试"))
     except RemoteException:
         await app.sendGroupMessage(event.sender.group, MessageChain("安全检查失败，无法上传该文件"))
 
