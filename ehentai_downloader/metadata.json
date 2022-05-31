@@ -1,0 +1,14 @@
+{
+    "name": "E-hentai 下载器",
+    "pack": "module.ehentai_downloader",
+    "version": "1.0",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": true,
+    "category": "utility",
+    "description": "",
+    "dependency": null,
+    "loaded": true,
+    "override_default": null
+}
