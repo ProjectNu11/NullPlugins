@@ -101,7 +101,7 @@ async def query(data_id: str) -> Optional[Tuple[int, ModerationLevel, str]]:
 
 async def run_image_moderation(image_id: str, data: bytes) -> Tuple[bool, str]:
     if pre_check := await query(image_id):
-        if pre_check[0] == -1:
+        if pre_check[0] != -1:
             return bool(pre_check), pre_check[2]
         return pre_check[1] < ModerationLevel.Block, pre_check[2]
     if not tencent_credential.is_valid():
