@@ -1,0 +1,14 @@
+{
+    "name": "图片构建器",
+    "pack": "module.build_image",
+    "version": "1.0",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": true,
+    "category": "utility",
+    "description": "依赖包，用于构建图片",
+    "dependency": null,
+    "loaded": true,
+    "override_default": null
+}

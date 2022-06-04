@@ -1,0 +1,3 @@
+Pillow
+qrcode
+youtube-dl

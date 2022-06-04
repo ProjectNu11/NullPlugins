@@ -1,0 +1,16 @@
+{
+    "name": "推特预览",
+    "pack": "module.twitter_preview",
+    "version": "1.0",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": true,
+    "category": "utility",
+    "description": "",
+    "dependency": [
+        "module.build_image"
+    ],
+    "loaded": true,
+    "override_default": null
+}
