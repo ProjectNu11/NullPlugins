@@ -94,9 +94,7 @@ async def name_card_shuffle(app: Ariadne, event: MessageEvent, restore: ArgResul
     ]
     last_active = datetime.now()
     await update_name_card(name_list=shuffle_list, time=last_active)
-    await app.sendGroupMessage(
-        group, MessageChain("已完成本次群名片打乱\nHave fun!")
-    )
+    await app.sendGroupMessage(group, MessageChain("已完成本次群名片打乱\nHave fun!"))
     await asyncio.sleep(120)
     await update_name_card(name_list=original_info, backup=False)
     last_active = datetime.now()
@@ -147,7 +145,9 @@ async def query_backup(group: int):
         return list(
             map(
                 lambda x: list(x[1]),
-                groupby(sorted(fetch, key=lambda x: x[0]), key=lambda x: x[0]),
+                groupby(
+                    sorted(fetch, key=lambda x: x[0], reverse=True), key=lambda x: x[0]
+                ),
             )
         )
 
@@ -156,6 +156,7 @@ async def restore_name_card(group: Group, supplicant: Member):
     ariadne = get_running(Ariadne)
     if not (history := await query_backup(group.id)):
         await ariadne.sendGroupMessage(group, MessageChain("暂无本群打乱历史"))
+    history = history[:20]
     count = len(history)
     fwd_nodes = [
         ForwardNode(
@@ -199,7 +200,8 @@ async def restore_name_card(group: Group, supplicant: Member):
             return False
 
     try:
-        response = await asyncio.wait_for(inc.wait(response_waiter), 60)
+        if not (response := await asyncio.wait_for(inc.wait(response_waiter), 60)):
+            return await ariadne.sendGroupMessage(group, MessageChain("已取消本次操作"))
     except asyncio.TimeoutError:
         return await ariadne.sendGroupMessage(group, MessageChain("等待超时"))
 
