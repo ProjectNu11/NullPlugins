@@ -1,8 +1,7 @@
 import random
 import sys
 
-from graia.ariadne import get_running
-from graia.ariadne.adapter import Adapter
+import aiohttp
 from graia.ariadne.app import Ariadne
 from graia.ariadne.event.message import (
     GroupMessage,
@@ -60,7 +59,7 @@ async def huge_image(
         assert isinstance(image.result, Image)
         suffix = image.result.id.split(".")[-1]
         img_id = image.result.id.split(".")[0][1:-1].replace("-", "")
-        async with get_running(Adapter).session.get(
+        async with aiohttp.ClientSession().get(
             url=f"https://gchat.qpic.cn/gchatpic_new/0/1-1-{img_id}/0"
         ) as resp:
             filesize = sys.getsizeof(await resp.read())

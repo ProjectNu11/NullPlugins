@@ -4,8 +4,7 @@ import urllib.parse
 from datetime import datetime
 from typing import Union, Tuple
 
-from graia.ariadne import get_running
-from graia.ariadne.adapter import Adapter
+import aiohttp
 from graia.ariadne.app import Ariadne
 from graia.ariadne.event.message import (
     GroupMessage,
@@ -76,7 +75,7 @@ async def weather_report(app: Ariadne, event: MessageEvent):
 async def weather_report(app: Ariadne, event: FriendMessage, city: RegexResult):
     city = city.result.asDisplay().strip()
     try:
-        if city_info := await get_city(city):
+        if city_info := await get_city(city, aiohttp.ClientSession()):
 
             @Waiter.create_using_function(listening_events=[FriendMessage])
             async def confirmation_waiter(
@@ -172,8 +171,10 @@ async def weather_schedule(app: Ariadne):
             )
 
 
-async def get_city(city_name: str) -> Union[None, Tuple[str, str]]:
-    async with get_running(Adapter).session.get(
+async def get_city(
+    city_name: str, session: aiohttp.ClientSession
+) -> Union[None, Tuple[str, str]]:
+    async with session.get(
         url="https://geoapi.qweather.com/v2/city/lookup"
         f"?key={get_module_config(channel.module, 'key')}"
         f"&location={urllib.parse.quote(city_name)}"
@@ -201,8 +202,10 @@ class RealtimeWeather(BaseModel):
     dew: Union[None, int]
 
 
-async def get_realtime_weather(city_code: str) -> Union[None, RealtimeWeather]:
-    async with get_running(Adapter).session.get(
+async def get_realtime_weather(
+    city_code: str, session: aiohttp.ClientSession
+) -> Union[None, RealtimeWeather]:
+    async with session.get(
         url="https://devapi.qweather.com/v7/weather/now"
         f"?key={get_module_config(channel.module, 'key')}"
         f"&location={urllib.parse.quote(city_code)}"
@@ -216,26 +219,27 @@ async def get_realtime_weather(city_code: str) -> Union[None, RealtimeWeather]:
 async def get_realtime_weather_msg(city_name: str) -> Union[None, MessageChain]:
     msg = None
     try:
-        if not (city_info := await get_city(city_name)):
-            raise ValueError
-        city_code, city_name = city_info
-        if realtime_weather := await get_realtime_weather(city_code):
-            msg = MessageChain(
-                f"{city_name}的天气如下\n\n"
-                f"天气状况：{realtime_weather.text}\n"
-                f"温度：{realtime_weather.temp} °C\n"
-                f"相对湿度：{realtime_weather.humidity}%\n"
-                f"体感温度：{realtime_weather.feelsLike} °C\n"
-                f"风向：{realtime_weather.windDir}\n"
-                f"风力：{realtime_weather.windScale} 级\n"
-                f"风速：{realtime_weather.windSpeed} km/h\n"
-                f"当前小时累计降水量：{realtime_weather.precip} mm\n"
-                f"气压：{realtime_weather.pressure} 百帕\n"
-                f"能见度：{realtime_weather.vis} km\n"
-                f"观测时间：{realtime_weather.obsTime.strftime('%Y-%m-%d %H:%M:%S')}"
-            )
-        else:
-            raise ValueError
+        async with aiohttp.ClientSession() as session:
+            if not (city_info := await get_city(city_name, session)):
+                raise ValueError
+            city_code, city_name = city_info
+            if realtime_weather := await get_realtime_weather(city_code, session):
+                msg = MessageChain(
+                    f"{city_name}的天气如下\n\n"
+                    f"天气状况：{realtime_weather.text}\n"
+                    f"温度：{realtime_weather.temp} °C\n"
+                    f"相对湿度：{realtime_weather.humidity}%\n"
+                    f"体感温度：{realtime_weather.feelsLike} °C\n"
+                    f"风向：{realtime_weather.windDir}\n"
+                    f"风力：{realtime_weather.windScale} 级\n"
+                    f"风速：{realtime_weather.windSpeed} km/h\n"
+                    f"当前小时累计降水量：{realtime_weather.precip} mm\n"
+                    f"气压：{realtime_weather.pressure} 百帕\n"
+                    f"能见度：{realtime_weather.vis} km\n"
+                    f"观测时间：{realtime_weather.obsTime.strftime('%Y-%m-%d %H:%M:%S')}"
+                )
+            else:
+                raise ValueError
     except ValueError:
         msg = MessageChain(f"无法获取 {city_name} 的天气")
     finally:

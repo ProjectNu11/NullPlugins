@@ -17,7 +17,11 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
 from library.orm import orm
+from .pepper import pepper
 from .table import ChatRecord, SendRecord
+from .util import generate_pass
+
+assert pepper
 
 saya = Saya.current()
 channel = Channel.current()
@@ -48,8 +52,8 @@ async def chat_record(event: MessageEvent):
             ChatRecord,
             {
                 "time": datetime.datetime.now(),
-                "group_id": group,
-                "member_id": event.sender.id,
+                "group_id": generate_pass(group),
+                "member_id": generate_pass(event.sender.id),
                 "persistent_string": message.asPersistentString()[:4000],
                 "seg": "|".join(seg_result)[:4000] if seg_result else "",
             },

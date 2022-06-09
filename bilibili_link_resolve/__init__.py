@@ -4,8 +4,6 @@ import time
 from typing import Union
 
 import aiohttp
-from graia.ariadne import get_running
-from graia.ariadne.adapter import Adapter
 from graia.ariadne.app import Ariadne
 from graia.ariadne.event.message import GroupMessage, FriendMessage, MessageEvent
 from graia.ariadne.message.chain import MessageChain
@@ -77,7 +75,7 @@ class BilibiliLinkResolve:
             match = match[0]
             if not (match.startswith("http")):
                 match = f"https://{match}"
-            async with get_running(Adapter).session.get(match) as res:
+            async with aiohttp.ClientSession().get(match) as res:
                 if res.status == 200:
                     link = str(res.url)
                     return await cls.resolve(link)
@@ -103,63 +101,14 @@ class BilibiliLinkResolve:
         r = sum(tr[bv[s[i]]] * 58**i for i in range(6))
         return (r - add) ^ xor
 
-    @staticmethod
-    def av_to_bv(av: int) -> str:
-        table = "fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF"
-        s = [11, 10, 3, 8, 4, 6]
-        xor = 177451812
-        add = 8728348608
-        av = (av ^ xor) + add
-        r = list("BV1  4 1 7  ")
-        for i in range(6):
-            r[s[i]] = table[av // 58**i % 58]
-        return "".join(r)
-
     @classmethod
     async def generate_messagechain(cls, info: dict) -> MessageChain:
         config = "%封面%\n【标题】%标题%\n【UP主】%up%\n【播放量】%播放量%\n【点赞量】%点赞量%\n【简介】%简介%"
         data = info["data"]
         chain_list = []
-
-        async def replace_variable(text: str) -> str:
-            try:
-                description = str(data["desc"]).replace("\\n", "\n")
-                if len(description) >= 200:
-                    description = f"{description[:200]}..."
-                text = text.replace("%标题%", str(data["title"]))
-                text = text.replace(
-                    "%分区%",
-                    str(data["tid"]),
-                )
-                text = text.replace("%视频类型%", "原创" if data["copyright"] == 1 else "转载")
-                text = text.replace(
-                    "%投稿时间%",
-                    str(
-                        time.strftime("%Y-%m-%d", time.localtime(int(data["pubdate"])))
-                    ),
-                )
-                text = text.replace("%视频长度%", str(cls.sec_format(data["duration"])))
-                text = text.replace("%up%", str(data["owner"].get("name", "")))
-                text = text.replace("%播放量%", str(data["stat"].get("view", "")))
-                text = text.replace("%弹幕量%", str(data["stat"].get("danmaku", "")))
-                text = text.replace("%评论量%", str(data["stat"].get("reply", "")))
-                text = text.replace("%点赞量%", str(data["stat"].get("like", "")))
-                text = text.replace("%投币量%", str(data["stat"].get("coin", "")))
-                text = text.replace("%收藏量%", str(data["stat"].get("favorite", "")))
-                text = text.replace("%转发量%", str(data["stat"].get("share", "")))
-                text = text.replace("%简介%", description)
-                text = text.replace("%av号%", "av" + str(data["aid"]))
-                text = text.replace("%bv号%", str(data["bvid"]))
-                text = text.replace(
-                    "%链接%", f"https://www.bilibili.com/video/av{str(data['aid'])}"
-                )
-            except Exception as err:
-                logger.error(err)
-            return text
-
         try:
             if "%封面%" in config:
-                first = True if config.startswith("%封面%") else False
+                first = bool(config.startswith("%封面%"))
                 parsed_config = config.split("%封面%")
                 img_url = data["pic"]
                 async with aiohttp.ClientSession() as session:
@@ -167,13 +116,51 @@ class BilibiliLinkResolve:
                         img_content = await resp.read()
                 cover = Image(data_bytes=img_content)
                 chain_list.append(cover if first else None)
-                for item in parsed_config[1:]:
-                    chain_list.append(Plain(text=await replace_variable(item)))
+                chain_list.extend(
+                    Plain(text=cls.replace_variable(item, data))
+                    for item in parsed_config[1:]
+                )
             else:
-                chain_list = [Plain(text=await replace_variable(config))]
+                chain_list = [Plain(text=cls.replace_variable(config, data))]
         except Exception as e:
             return MessageChain(f"解析失败，请联系机器人管理员。\n{e}")
         return MessageChain.create(chain_list)
+
+    @classmethod
+    def replace_variable(cls, text: str, data: dict) -> str:
+        try:
+            description = str(data["desc"]).replace("\\n", "\n")
+            if len(description) >= 200:
+                description = f"{description[:200]}..."
+            text = text.replace("%标题%", str(data["title"]))
+            text = text.replace(
+                "%分区%",
+                str(data["tid"]),
+            )
+            text = text.replace("%视频类型%", "原创" if data["copyright"] == 1 else "转载")
+            text = text.replace(
+                "%投稿时间%",
+                str(time.strftime("%Y-%m-%d", time.localtime(int(data["pubdate"])))),
+            )
+            text = text.replace("%视频长度%", str(cls.sec_format(data["duration"])))
+            text = text.replace("%up%", str(data["owner"].get("name", "")))
+            text = text.replace("%播放量%", str(data["stat"].get("view", "")))
+            text = text.replace("%弹幕量%", str(data["stat"].get("danmaku", "")))
+            text = text.replace("%评论量%", str(data["stat"].get("reply", "")))
+            text = text.replace("%点赞量%", str(data["stat"].get("like", "")))
+            text = text.replace("%投币量%", str(data["stat"].get("coin", "")))
+            text = text.replace("%收藏量%", str(data["stat"].get("favorite", "")))
+            text = text.replace("%转发量%", str(data["stat"].get("share", "")))
+            text = text.replace("%简介%", description)
+            text = text.replace("%av号%", "av" + str(data["aid"]))
+            text = text.replace("%bv号%", str(data["bvid"]))
+            text = text.replace(
+                "%链接%", f"https://www.bilibili.com/video/av{str(data['aid'])}"
+            )
+        except Exception as err:
+            logger.error(err)
+        finally:
+            return text
 
     @staticmethod
     def sec_format(secs: int) -> str:

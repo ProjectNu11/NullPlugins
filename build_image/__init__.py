@@ -1,5 +1,3 @@
-from asyncio import Lock
-
 from graia.ariadne.app import Ariadne
 from graia.ariadne.event.message import GroupMessage, MessageEvent, FriendMessage
 from graia.ariadne.message.chain import MessageChain
@@ -22,8 +20,6 @@ channel = Channel.current()
 channel.name("BuildImage")
 channel.author("nullqwertyuiop")
 channel.description("")
-
-lock = Lock()
 
 
 @channel.use(

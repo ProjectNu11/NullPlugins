@@ -1,7 +1,6 @@
 import asyncio
 import math
 import re
-import time
 from datetime import datetime, timedelta
 from io import BytesIO
 from pathlib import Path
@@ -63,7 +62,7 @@ if not get_module_config(channel.module):
         ],
     )
 )
-async def get_bible(app: Ariadne, event: MessageEvent):
+async def get_tweet(app: Ariadne, event: MessageEvent):
     fwd_nodes = [
         ForwardNode(
             target=config.account,
@@ -183,7 +182,6 @@ class BuildTweet:
     __tweet: dict
 
     def __init__(self, tweet: dict):
-        self.start_time = time.process_time()
         self.__grid = 15
         self.__boundary = 30
         self.__canvas_width = get_module_config(channel.module, "canvas_width")
@@ -191,7 +189,6 @@ class BuildTweet:
             logger.error("__canvas_width 必须大于 350")
             self.__canvas_width = 350
         self.__tweet = tweet
-        print(f"Got tweet: {tweet}")
 
     def get_text_url_free(self) -> str:
         body = self.__tweet["data"][0]
@@ -304,10 +301,12 @@ class BuildTweet:
                 break
         return url, offset
 
-    def get_media_urls(self) -> List[Tuple[str, str, Union[None, str]]]:
+    def get_media_urls(self) -> Optional[List[Tuple[str, str, Union[None, str]]]]:
+        if not (media := self.__tweet["includes"].get("media", None)):
+            return
         media_urls = []
         offset = 0
-        for index, media in enumerate(self.__tweet["includes"]["media"]):
+        for index, media in media:
             if media["type"] == "photo":
                 media_urls.append(("photo", media["url"], None))
             if media["type"] in ("video", "animated_gif"):
@@ -468,7 +467,7 @@ class BuildTweet:
         await footer.apaste(qr, (qr_x, qr_y), alpha=True)
         return footer
 
-    async def compose(self):
+    async def compose(self) -> BuildImage:
         header = await self.compose_header()
         body = await self.compose_body()
         footer = await self.compose_footer()

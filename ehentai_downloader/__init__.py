@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Tuple
 
 import pyzipper
-from aiohttp import ClientSession, ClientConnectorError
+from aiohttp import ClientSession, ClientConnectorError, TCPConnector
 from bs4 import BeautifulSoup
 from graia.ariadne import Ariadne
 from graia.ariadne.event.message import GroupMessage
@@ -77,10 +77,11 @@ async def ehentai_downloader(app: Ariadne, event: GroupMessage, url: RegexResult
     url = url.result.asDisplay()
     gallery = re.findall(r"(?:https?://)?e[-x]hentai\.org/g/(\d+)/[\da-z]+/?", url)[0]
     try:
-        async with ClientSession(cookies=EHentaiCookie.get_cookie_dict()) as session:
-            async with session.get(
-                url=url, proxy=config.proxy, verify_ssl=False
-            ) as resp:
+        async with ClientSession(
+            connector=TCPConnector(verify_ssl=False),
+            cookies=EHentaiCookie.get_cookie_dict(),
+        ) as session:
+            async with session.get(url=url, proxy=config.proxy) as resp:
                 url, name = get_archiver_and_title(
                     BeautifulSoup(await resp.text(), "html.parser")
                 )
@@ -88,7 +89,7 @@ async def ehentai_downloader(app: Ariadne, event: GroupMessage, url: RegexResult
                     event.sender.group,
                     MessageChain(f"已取得图库 [{gallery}] {name}，正在尝试下载..."),
                 )
-            await session.get(url=url, proxy=config.proxy, verify_ssl=False)
+            await session.get(url=url, proxy=config.proxy)
             async with session.post(
                 url=url,
                 data={"dltype": "res", "dlcheck": "Download Resample Archive"},
@@ -96,9 +97,7 @@ async def ehentai_downloader(app: Ariadne, event: GroupMessage, url: RegexResult
                 verify_ssl=False,
             ) as resp:
                 url = get_hath(BeautifulSoup(await resp.text(), "html.parser"))
-            async with session.get(
-                url=f"{url}?start=1", proxy=config.proxy, verify_ssl=False
-            ) as resp:
+            async with session.get(url=f"{url}?start=1", proxy=config.proxy) as resp:
                 password = get_module_config(channel.module, "extract_password")
                 loop = asyncio.get_event_loop()
                 file = await loop.run_in_executor(
