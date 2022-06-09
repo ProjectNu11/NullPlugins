@@ -25,9 +25,7 @@ def generate_pass(text: Union[int, str]) -> str:
 
 
 async def get_chat_record(
-    query: List[
-        Literal["id", "time", "group_id", "member_id", "persistent_string", "seg"]
-    ],
+    query: List[Literal["id", "time", "field", "sender", "persistent_string", "seg"]],
     group: int = None,
     member: int = None,
     time_min: datetime = None,
@@ -38,8 +36,8 @@ async def get_chat_record(
         return AttributeError("group or member must be filled")
     if not conditions:
         conditions = [
-            (ChatRecord.member_id == generate_pass(member)) if member else True,
-            (ChatRecord.group_id == generate_pass(group)) if group else True,
+            (ChatRecord.sender == generate_pass(member)) if member else True,
+            (ChatRecord.field == generate_pass(group)) if group else True,
             (ChatRecord.time > time_min) if time_min else True,
             (ChatRecord.time < time_max) if time_max else True,
         ]

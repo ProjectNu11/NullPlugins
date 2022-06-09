@@ -10,8 +10,8 @@ class ChatRecord(Base):
 
     id = Column(Integer, primary_key=True)
     time = Column(DateTime, nullable=False)
-    group_id = Column(BIGINT, nullable=False)
-    member_id = Column(BIGINT, nullable=False)
+    field = Column(BIGINT, nullable=False)
+    sender = Column(BIGINT, nullable=False)
     persistent_string = Column(String(length=4000), nullable=False)
     seg = Column(String(length=4000), nullable=False)
 

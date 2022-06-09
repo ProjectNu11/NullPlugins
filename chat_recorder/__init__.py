@@ -52,8 +52,8 @@ async def chat_record(event: MessageEvent):
             ChatRecord,
             {
                 "time": datetime.datetime.now(),
-                "group_id": generate_pass(group),
-                "member_id": generate_pass(event.sender.id),
+                "field": generate_pass(group),
+                "sender": generate_pass(event.sender.id),
                 "persistent_string": message.asPersistentString()[:4000],
                 "seg": "|".join(seg_result)[:4000] if seg_result else "",
             },
