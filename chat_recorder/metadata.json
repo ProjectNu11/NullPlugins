@@ -1,7 +1,7 @@
 {
     "name": "聊天记录储存",
     "pack": "module.chat_recorder",
-    "version": "1.11",
+    "version": "1.1",
     "author": [
         "nullqwertyuiop"
     ],
