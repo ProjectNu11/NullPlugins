@@ -19,6 +19,7 @@ from graia.ariadne.message.parser.twilight import (
 from graia.ariadne.model import UploadMethod
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
+from loguru import logger
 from pydantic import BaseModel
 
 from library.config import config, get_module_config, update_module_config
@@ -44,7 +45,9 @@ class EHentaiCookie(BaseModel):
 
     @classmethod
     def get_cookie_dict(cls):
-        return cls(**get_module_config(channel.module)).dict()
+        return cls(**get_module_config(channel.module)).dict(
+            include={"ipb_member_id", "ipb_pass_hash", "igneous"}
+        )
 
 
 if get_module_config(channel.module):
@@ -73,7 +76,7 @@ else:
         decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
-async def ehentai_downloader(app: Ariadne, event: GroupMessage, url: RegexResult):
+async def ehentai_downloader(ariadne: Ariadne, event: GroupMessage, url: RegexResult):
     url = url.result.asDisplay()
     gallery = re.findall(r"(?:https?://)?e[-x]hentai\.org/g/(\d+)/[\da-z]+/?", url)[0]
     try:
@@ -85,7 +88,7 @@ async def ehentai_downloader(app: Ariadne, event: GroupMessage, url: RegexResult
                 url, name = get_archiver_and_title(
                     BeautifulSoup(await resp.text(), "html.parser")
                 )
-                await app.sendGroupMessage(
+                await ariadne.sendGroupMessage(
                     event.sender.group,
                     MessageChain(f"已取得图库 [{gallery}] {name}，正在尝试下载..."),
                 )
@@ -107,21 +110,31 @@ async def ehentai_downloader(app: Ariadne, event: GroupMessage, url: RegexResult
                     await resp.read(),
                     password,
                 )
-                await app.uploadFile(
-                    file,
-                    UploadMethod.Group,
-                    event.sender.group,
-                    name=f"[{gallery}] {name}.zip",
-                )
-                await app.sendGroupMessage(
-                    event.sender.group, MessageChain(f"解压密码 {password}")
-                )
+        await ariadne.sendGroupMessage(
+            event.sender.group, MessageChain(f"已取得文件 [{gallery}] {name}.zip，正在上传")
+        )
+        await ariadne.uploadFile(
+            file,
+            UploadMethod.Group,
+            event.sender.group,
+            name=f"[{gallery}] {name}.zip",
+        )
+        await ariadne.sendGroupMessage(
+            event.sender.group, MessageChain(f"解压密码 {password}")
+        )
     except AttributeError:
-        await app.sendGroupMessage(event.sender.group, MessageChain("请输入正确的链接"))
-    except ClientConnectorError:
-        await app.sendGroupMessage(event.sender.group, MessageChain("网络错误，请稍后再试"))
-    except RemoteException:
-        await app.sendGroupMessage(event.sender.group, MessageChain("安全检查失败，无法上传该文件"))
+        await ariadne.sendGroupMessage(event.sender.group, MessageChain("请输入正确的链接"))
+    except ClientConnectorError as err:
+        logger.error(err)
+        await ariadne.sendGroupMessage(event.sender.group, MessageChain("网络错误，请稍后再试"))
+    except RemoteException as err:
+        logger.error(err)
+        await ariadne.sendGroupMessage(
+            event.sender.group, MessageChain("安全检查失败，无法上传该文件")
+        )
+    except asyncio.exceptions.TimeoutError:
+        await ariadne.sendGroupMessage(event.sender.group, MessageChain("上传超时"))
+        raise
 
 
 def get_archiver_and_title(soup: BeautifulSoup) -> Tuple[str, str]:
