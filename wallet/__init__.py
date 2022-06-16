@@ -57,7 +57,7 @@ async def get_wallet(app: Ariadne, event: MessageEvent):
     else:
         balance = 0
         time_line = ""
-    await app.sendMessage(
+    await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
         MessageChain(f"你一共有 {balance} 枚硬币{time_line}"),
     )
@@ -91,9 +91,9 @@ async def wallet_debug(
     amount: RegexResult,
 ):
     try:
-        field = int(field.result.asDisplay()) if field.result else event.sender.group
+        field = int(field.result.display) if field.result else event.sender.group
     except ValueError:
-        return await app.sendMessage(
+        return await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
             MessageChain(f"Invalid field: {field}"),
         )
@@ -101,10 +101,10 @@ async def wallet_debug(
         balance, _ = data
     else:
         balance = 0
-    target = int(target.result.asDisplay())
-    amount = int(amount.result.asDisplay())
+    target = int(target.result.display)
+    amount = int(amount.result.display)
     await Wallet.update(field, target, amount, "DEBUG")
-    await app.sendMessage(
+    await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
         MessageChain(f"Balance ({target}):\n{balance} -> {balance + amount} "),
     )

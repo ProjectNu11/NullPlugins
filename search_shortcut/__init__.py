@@ -40,9 +40,9 @@ channel.description("自己查")
     )
 )
 async def search_shortcut(app: Ariadne, event: MessageEvent, content: MatchResult):
-    if content := content.result.asDisplay():
-        await app.sendMessage(
+    if content := content.result.display:
+        await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
             MessageChain(f"https://www.baidu.com/s?wd={urllib.parse.quote(content)}"),
-            quote=event.messageChain.getFirst(Source),
+            quote=event.message_chain.get_first(Source),
         )

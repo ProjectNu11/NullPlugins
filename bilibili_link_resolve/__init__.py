@@ -45,9 +45,9 @@ channel.description("B站链接解析")
     )
 )
 async def bilibili_link_resolve_handler(app: Ariadne, event: MessageEvent):
-    await app.sendMessage(
+    await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
-        await BilibiliLinkResolve.resolve(event.messageChain.asDisplay()),
+        await BilibiliLinkResolve.resolve(event.message_chain.display),
     )
 
 
@@ -75,10 +75,11 @@ class BilibiliLinkResolve:
             match = match[0]
             if not (match.startswith("http")):
                 match = f"https://{match}"
-            async with aiohttp.ClientSession().get(match) as res:
-                if res.status == 200:
-                    link = str(res.url)
-                    return await cls.resolve(link)
+            async with aiohttp.ClientSession() as session:
+                async with session.get(match) as res:
+                    if res.status == 200:
+                        link = str(res.url)
+                        return await cls.resolve(link)
 
     @staticmethod
     async def get_info(av: int):
@@ -124,7 +125,7 @@ class BilibiliLinkResolve:
                 chain_list = [Plain(text=cls.replace_variable(config, data))]
         except Exception as e:
             return MessageChain(f"解析失败，请联系机器人管理员。\n{e}")
-        return MessageChain.create(chain_list)
+        return MessageChain(chain_list)
 
     @classmethod
     def replace_variable(cls, text: str, data: dict) -> str:

@@ -68,16 +68,16 @@ async def get_tweet(app: Ariadne, event: MessageEvent):
             target=config.account,
             name=f"{config.name}#{config.num}",
             time=datetime.now() + timedelta(seconds=15) * (index + 1),
-            message=MessageChain.create([Image(data_bytes=image.pic2bytes())]),
+            message=MessageChain([Image(data_bytes=image.pic2bytes())]),
         )
         for index, image in enumerate(
-            await TwitterPreview.generate_image(event.messageChain.asDisplay())
+            await TwitterPreview.generate_image(event.message_chain.display)
         )
     ]
     if fwd_nodes:
-        await app.sendMessage(
+        await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
-            MessageChain.create([Forward(nodeList=fwd_nodes)]),
+            MessageChain([Forward(fwd_nodes)]),
         )
 
 

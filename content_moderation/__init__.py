@@ -1,3 +1,5 @@
+raise Exception
+
 import contextlib
 
 from graia.ariadne import Ariadne
@@ -19,7 +21,6 @@ channel.name("ContentModeration")
 channel.author("nullqwertyuiop")
 channel.description("")
 
-
 if not get_module_config(channel.module):
     update_module_config(
         channel.module,
@@ -34,7 +35,9 @@ if not get_module_config(channel.module):
 )
 async def image_moderation(app: Ariadne, event: GroupMessage):
     if not (
-        images := (event.messageChain.get(FlashImage) or event.messageChain.get(Image))
+        images := (
+            event.message_chain.get(FlashImage) or event.message_chain.get(Image)
+        )
     ):
         return
     can_pass = True
@@ -47,9 +50,9 @@ async def image_moderation(app: Ariadne, event: GroupMessage):
         can_pass, sub_label = await run_image_moderation(img_id, img_bytes)
     if not can_pass:
         count = await update_violation_count(event.sender.group.id, event.sender.id)
-        await app.sendGroupMessage(
+        await app.send_group_message(
             event.sender.group,
-            MessageChain.create(
+            MessageChain(
                 [
                     At(event.sender),
                     Plain(f" 你发送的图片未通过内容审核，已被记录 {count} 次\n"),
@@ -58,4 +61,4 @@ async def image_moderation(app: Ariadne, event: GroupMessage):
             ),
         )
         with contextlib.suppress(PermissionError):
-            await app.recallMessage(event.messageChain.getFirst(Source))
+            await app.recall_message(event.message_chain.get_first(Source))

@@ -76,7 +76,7 @@ async def build_image(
     alpha: ArgResult,
 ):
     if get_help.matched:
-        return await app.sendMessage(
+        return await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
             MessageChain(
                 channel.content[0]
@@ -85,7 +85,7 @@ async def build_image(
             ),
         )
     if not (width.matched or height.matched):
-        return await app.sendMessage(
+        return await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
             MessageChain("必填参数未满足，请检查参数是否正确"),
         )
@@ -103,7 +103,7 @@ async def build_image(
         "RGBX",
         "YCbCr",
     ):
-        return await app.sendMessage(
+        return await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
             MessageChain(
                 "模式错误，支持的模式为：\n"
@@ -123,7 +123,7 @@ async def build_image(
     )
     if text.matched:
         await image.atext((0, 0), text.result.strip('"').strip("'"))
-    await app.sendMessage(
+    await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
         MessageChain([Image(data_bytes=image.pic2bytes())]),
     )

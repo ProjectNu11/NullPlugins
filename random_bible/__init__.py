@@ -50,11 +50,11 @@ async def get_bible(app: Ariadne, event: GroupMessage):
     group_dir = data_dir / str(event.sender.group.id)
     if group_dir.is_dir():
         if images := os.listdir(str(group_dir)):
-            return await app.sendGroupMessage(
+            return await app.send_group_message(
                 event.sender.group,
-                MessageChain.create([Image(path=group_dir / random.choice(images))]),
+                MessageChain([Image(path=group_dir / random.choice(images))]),
             )
-    return await app.sendGroupMessage(event.sender.group, MessageChain("暂无本群圣经"))
+    return await app.send_group_message(event.sender.group, MessageChain("暂无本群圣经"))
 
 
 waiting = set()
@@ -77,7 +77,7 @@ waiting = set()
     )
 )
 async def upload_bible(app: Ariadne, event: GroupMessage, image: ElementResult):
-    source = event.messageChain.getFirst(Source)
+    source = event.message_chain.get_first(Source)
     group_dir = data_dir / str(event.sender.group.id)
 
     @Waiter.create_using_function(listening_events=[GroupMessage])
@@ -89,7 +89,7 @@ async def upload_bible(app: Ariadne, event: GroupMessage, image: ElementResult):
             and waiter_member.id == event.sender.id
         ):
             if waiter_message.has(Image):
-                return await waiter_message.getFirst(Image).get_bytes()
+                return await waiter_message.get_first(Image).get_bytes()
             else:
                 return False
 
@@ -98,39 +98,39 @@ async def upload_bible(app: Ariadne, event: GroupMessage, image: ElementResult):
         image_bytes = await image.result.get_bytes()
     else:
         try:
-            if event.messageChain.getFirst(Quote) and (
-                await app.getMessageFromId(event.messageChain.getFirst(Quote).id)
-            ).messageChain.get(Image):
+            if event.message_chain.get_first(Quote) and (
+                await app.get_message_from_id(event.message_chain.get_first(Quote).id)
+            ).message_chain.get(Image):
                 image_bytes = (
                     await (
-                        await app.getMessageFromId(
-                            event.messageChain.getFirst(Quote).id
+                        await app.get_message_from_id(
+                            event.message_chain.get_first(Quote).id
                         )
                     )
-                    .messageChain.getFirst(Image)
+                    .message_chain.get_first(Image)
                     .get_bytes()
                 )
             else:
                 raise AttributeError()
         except (IndexError, AttributeError):
             if event.sender.id in waiting:
-                return await app.sendMessage(
+                return await app.send_message(
                     event.sender.group, MessageChain("请等待上一次上传结束后再进行新的上传"), quote=source
                 )
             try:
-                await app.sendMessage(
+                await app.send_message(
                     event.sender.group, MessageChain("请在 30 秒内发送要上传的圣经"), quote=source
                 )
                 image_bytes = await asyncio.wait_for(inc.wait(image_waiter), 30)
                 if not image_bytes:
-                    await app.sendGroupMessage(
+                    await app.send_group_message(
                         event.sender.group,
                         MessageChain("未检测到图片，请重新进行上传操作，本次上传结束"),
                         quote=source,
                     )
                     return
             except asyncio.TimeoutError:
-                await app.sendGroupMessage(
+                await app.send_group_message(
                     event.sender.group, MessageChain("图片等待超时，上传结束"), quote=source
                 )
                 return
@@ -141,7 +141,7 @@ async def upload_bible(app: Ariadne, event: GroupMessage, image: ElementResult):
     PillowImage.open(BytesIO(image_bytes)).convert("RGB").save(
         group_dir / f"{md5(image_bytes).hexdigest()}.jpg"
     )
-    await app.sendGroupMessage(event.sender.group, MessageChain("上传成功"), quote=source)
+    await app.send_group_message(event.sender.group, MessageChain("上传成功"), quote=source)
 
 
 @channel.use(
@@ -156,4 +156,4 @@ async def get_bible_count(app: Ariadne, event: GroupMessage):
     msg = "暂无本群圣经"
     if group_dir.is_dir():
         msg = f"本群共有圣经 {len(os.listdir(group_dir))} 条"
-    await app.sendGroupMessage(event.sender.group, MessageChain(msg))
+    await app.send_group_message(event.sender.group, MessageChain(msg))

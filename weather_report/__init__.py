@@ -55,9 +55,9 @@ if not get_module_config(channel.module, "key"):
     )
 )
 async def weather_report(app: Ariadne, event: MessageEvent):
-    city = event.messageChain.asDisplay()[1:-2].strip()
+    city = event.message_chain.display[1:-2].strip()
     if msg := await get_realtime_weather_msg(city):
-        await app.sendMessage(
+        await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
             msg,
         )
@@ -73,7 +73,7 @@ async def weather_report(app: Ariadne, event: MessageEvent):
     )
 )
 async def weather_report(app: Ariadne, event: FriendMessage, city: RegexResult):
-    city = city.result.asDisplay().strip()
+    city = city.result.display.strip()
     try:
         if city_info := await get_city(city, aiohttp.ClientSession()):
 
@@ -82,9 +82,9 @@ async def weather_report(app: Ariadne, event: FriendMessage, city: RegexResult):
                 waiter_friend: Friend, waiter_message: MessageChain
             ):
                 if waiter_friend.id == event.sender.id:
-                    return waiter_message.asDisplay() == "是"
+                    return waiter_message.display == "是"
 
-            await app.sendFriendMessage(
+            await app.send_friend_message(
                 event.sender,
                 MessageChain(f"是否要订阅 {city_info[1]} 的天气？(是/否)"),
             )
@@ -97,15 +97,15 @@ async def weather_report(app: Ariadne, event: FriendMessage, city: RegexResult):
             async def time_waiter(waiter_friend: Friend, waiter_message: MessageChain):
                 if waiter_friend.id == event.sender.id:
                     if re.match(
-                        r"([0-1]?\d|2[0-3])[：:][0-5]\d", waiter_message.asDisplay()
+                        r"([0-1]?\d|2[0-3])[：:][0-5]\d", waiter_message.display
                     ):
-                        hour, minute = (
-                            waiter_message.asDisplay().replace("：", ":").split(":")
+                        hour, minute = waiter_message.display.replace("：", ":").split(
+                            ":"
                         )
                         return f"{int(hour):02d}{int(minute):02d}"
                     return
 
-            await app.sendFriendMessage(
+            await app.send_friend_message(
                 event.sender,
                 MessageChain(f"请输入需要提醒的时间\n例：08:00"),
             )
@@ -118,7 +118,7 @@ async def weather_report(app: Ariadne, event: FriendMessage, city: RegexResult):
                         ).where(WeatherSchedule.supplicant == event.sender.id)
                     ):
                         if len(same_time) >= 5:
-                            return await app.sendFriendMessage(
+                            return await app.send_friend_message(
                                 event.sender,
                                 MessageChain(f"你已订阅 {len(same_time)} 个城市天气，暂时无法订阅更多城市"),
                             )
@@ -137,7 +137,7 @@ async def weather_report(app: Ariadne, event: FriendMessage, city: RegexResult):
                     "city": city_info[0],
                 },
             )
-            return await app.sendFriendMessage(
+            return await app.send_friend_message(
                 event.sender,
                 MessageChain(
                     f"已{'更新' if update else '订阅'}"
@@ -149,11 +149,11 @@ async def weather_report(app: Ariadne, event: FriendMessage, city: RegexResult):
         else:
             raise ValueError
     except ValueError:
-        return await app.sendFriendMessage(
+        return await app.send_friend_message(
             event.sender, MessageChain(f"无法获取 {city} 的天气")
         )
     except AssertionError:
-        return await app.sendFriendMessage(event.sender, MessageChain("已取消该操作"))
+        return await app.send_friend_message(event.sender, MessageChain("已取消该操作"))
 
 
 @channel.use(SchedulerSchema(timer=timers.crontabify("* * * * * 30")))
@@ -166,7 +166,7 @@ async def weather_schedule(app: Ariadne):
     ):
         for schedule in schedules:
             supplicant, city_code = schedule
-            await app.sendFriendMessage(
+            await app.send_friend_message(
                 supplicant, MessageChain(await get_realtime_weather_msg(city_code))
             )
 

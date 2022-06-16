@@ -62,7 +62,7 @@ data_dir.mkdir(exist_ok=True)
     )
 )
 async def get_bible(app: Ariadne, event: GroupMessage, command: MatchResult):
-    command = command.result.asDisplay().strip()
+    command = command.result.display.strip()
 
     @Waiter.create_using_function(listening_events=[GroupMessage])
     async def confirmation_waiter(
@@ -72,18 +72,18 @@ async def get_bible(app: Ariadne, event: GroupMessage, command: MatchResult):
             waiter_group.id == event.sender.group.id
             and waiter_member.id == event.sender.id
         ):
-            return waiter_message.asDisplay() == "是"
+            return waiter_message.display == "是"
 
-    await app.sendGroupMessage(
+    await app.send_group_message(
         event.sender.group, MessageChain("请确认是否执行以下 Shell (是/否)\n" f"{command}")
     )
     try:
         if not await asyncio.wait_for(inc.wait(confirmation_waiter), 30):
-            return await app.sendGroupMessage(
+            return await app.send_group_message(
                 event.sender.group, MessageChain("已取消本次执行")
             )
     except asyncio.TimeoutError:
-        return await app.sendGroupMessage(
+        return await app.send_group_message(
             event.sender.group, MessageChain("超时，已取消本次执行")
         )
     with (data_dir / "history.txt").open("a+", encoding="utf-8") as f:
@@ -91,6 +91,6 @@ async def get_bible(app: Ariadne, event: GroupMessage, command: MatchResult):
             f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\t"
             f"{event.sender.id}\t{command}\n"
         )
-    await app.sendGroupMessage(
+    await app.send_group_message(
         event.sender.group, MessageChain(os.popen(command).read())
     )

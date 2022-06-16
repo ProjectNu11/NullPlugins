@@ -59,10 +59,11 @@ async def huge_image(
         assert isinstance(image.result, Image)
         suffix = image.result.id.split(".")[-1]
         img_id = image.result.id.split(".")[0][1:-1].replace("-", "")
-        async with aiohttp.ClientSession().get(
-            url=f"https://gchat.qpic.cn/gchatpic_new/0/1-1-{img_id}/0"
-        ) as resp:
-            filesize = sys.getsizeof(await resp.read())
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                url=f"https://gchat.qpic.cn/gchatpic_new/0/1-1-{img_id}/0"
+            ) as resp:
+                filesize = sys.getsizeof(await resp.read())
         xml = (
             f"<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>"
             f'<msg serviceID="5" templateID="1" action="" '
@@ -78,7 +79,7 @@ async def huge_image(
             f'maxWidth="400" maxHeight="400" />'
             f'</item><source name="" icon="" action="" appid="-1" /></msg>'
         )
-        await app.sendMessage(
+        await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
-            MessageChain.create(Xml(xml=xml)),
+            MessageChain(Xml(xml=xml)),
         )

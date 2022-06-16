@@ -58,7 +58,7 @@ async def mute_roulette(
     at: ElementResult,
 ):
     if get_help.matched:
-        return await app.sendGroupMessage(
+        return await app.send_group_message(
             event.sender.group,
             MessageChain(
                 "[轮盘禁言]\n"
@@ -69,8 +69,8 @@ async def mute_roulette(
                 "每盘游戏结束时将自动禁言败方。祝游玩愉快！"
             ),
         )
-    if event.sender.group.accountPerm == MemberPerm.Member:
-        return await app.sendGroupMessage(
+    if event.sender.group.account_perm == MemberPerm.Member:
+        return await app.send_group_message(
             event.sender.group, MessageChain(f"{config.name} 需要管理员权限才可进行轮盘禁言")
         )
     if not at.matched:
@@ -78,17 +78,17 @@ async def mute_roulette(
     fast = fast.matched
     at = at.result
     assert isinstance(at, At)
-    target = await app.getMember(event.sender.group, at.target)
+    target = await app.get_member(event.sender.group, at.target)
     mute = random.randint(1, 10)
     if target.id == event.sender.id:
         try:
-            await app.muteMember(event.sender.group, target, mute)
+            await app.mute_member(event.sender.group, target, mute)
         except PermissionError:
             pass
-        return await app.sendGroupMessage(event.sender.group, MessageChain("这是在干什么？"))
-    await app.sendGroupMessage(
+        return await app.send_group_message(event.sender.group, MessageChain("这是在干什么？"))
+    await app.send_group_message(
         event.sender.group,
-        MessageChain.create(
+        MessageChain(
             [
                 At(target=target),
                 Plain("，"),
@@ -107,20 +107,20 @@ async def mute_roulette(
             if (
                 event.sender.group.id == group.id
                 and target.id == member.id
-                and msg.asDisplay() in ("接受", "拒绝")
+                and msg.display in ("接受", "拒绝")
             ):
-                return msg.asDisplay() == "接受"
+                return msg.display == "接受"
 
         if not await inc.wait(invite_confirm_waiter, timeout=30):
-            return await app.sendGroupMessage(
+            return await app.send_group_message(
                 event.sender.group, MessageChain("已取消本次轮盘禁言")
             )
     except asyncio.TimeoutError:
-        return await app.sendGroupMessage(event.sender.group, MessageChain("超时，操作取消"))
+        return await app.send_group_message(event.sender.group, MessageChain("超时，操作取消"))
 
     victim = None
     if not fast:
-        await app.sendGroupMessage(
+        await app.send_group_message(
             event.sender.group,
             MessageChain('本局轮盘禁言已开始！\n发送 "开枪" 或 "砰" 开始'),
         )
@@ -130,9 +130,9 @@ async def mute_roulette(
         for index in range(6):
             try:
                 player = order[index % 2]
-                await app.sendGroupMessage(
+                await app.send_group_message(
                     event.sender.group,
-                    MessageChain.create([At(target=player), Plain("，该你了")]),
+                    MessageChain([At(target=player), Plain("，该你了")]),
                 )
                 await inc.wait(Shoot(event.sender.group, player), timeout=30)
                 if bullet == slot:
@@ -140,17 +140,17 @@ async def mute_roulette(
                     break
                 slot = (slot + 1) % 6
             except asyncio.TimeoutError:
-                return await app.sendGroupMessage(
-                    event.sender.group, MessageChain.create("超时，操作取消")
+                return await app.send_group_message(
+                    event.sender.group, MessageChain("超时，操作取消")
                 )
     else:
         victim = random.choice([event.sender, target])
     assert victim
     try:
-        await app.muteMember(event.sender.group, victim, mute)
+        await app.mute_member(event.sender.group, victim, mute)
     except PermissionError:
         pass
-    await app.sendGroupMessage(
+    await app.send_group_message(
         event.sender.group, MessageChain(f"很可惜，{victim.name} 失败了")
     )
 
@@ -164,6 +164,6 @@ class Shoot(Waiter.create([GroupMessage])):
         if (
             self.group == group.id
             and self.member == member.id
-            and message.asDisplay() in ("开枪", "砰")
+            and message.display in ("开枪", "砰")
         ):
             return True

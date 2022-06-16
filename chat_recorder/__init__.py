@@ -41,7 +41,7 @@ async def chat_record(event: MessageEvent):
         group = -1
     else:
         group = 0
-    message = event.messageChain
+    message = event.message_chain
     content = "".join([plain.text for plain in message.get(Plain)]).strip()
     filter_words = re.findall(r"\[mirai:(.*?)]", content, re.S)
     for i in filter_words:
@@ -54,7 +54,7 @@ async def chat_record(event: MessageEvent):
                 "time": datetime.datetime.now(),
                 "field": generate_pass(group),
                 "sender": generate_pass(event.sender.id),
-                "persistent_string": message.asPersistentString()[:4000],
+                "persistent_string": message.as_persistent_string()[:4000],
                 "seg": "|".join(seg_result)[:4000] if seg_result else "",
             },
         )
@@ -69,7 +69,7 @@ async def sent_recorder(event: ActiveMessage):
         if isinstance(event.subject, Friend)
         else "unknown"
     )
-    msg = event.messageChain.asPersistentString(binary=False)[:4000]
+    msg = event.message_chain.as_persistent_string(binary=False)[:4000]
     await orm.add(
         SendRecord,
         {

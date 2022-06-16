@@ -45,17 +45,17 @@ channel.description("")
 async def chat_record(
     app: Ariadne, event: MessageEvent, times: RegexResult, faces: RegexResult
 ):
-    times = int(times.result.asDisplay())
+    times = int(times.result.display)
     if times > 1000:
-        return await app.sendMessage(
+        return await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
             MessageChain("投掷次数过多"),
         )
 
-    faces = int(faces.result.asDisplay())
-    await app.sendMessage(
+    faces = int(faces.result.display)
+    await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
-        MessageChain.create(
+        MessageChain(
             [
                 Plain(
                     " ".join(

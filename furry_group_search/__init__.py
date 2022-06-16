@@ -60,7 +60,7 @@ class CityGroup(BaseModel):
     )
 )
 async def furry_group_search(app: Ariadne, event: MessageEvent, city: RegexResult):
-    city = city.result.asDisplay()
+    city = city.result.display
     async with ClientSession() as session:
         async with session.get(
             f"https://api.fursuitguide.yooofur.com:26364/cityGroup/"
@@ -68,7 +68,7 @@ async def furry_group_search(app: Ariadne, event: MessageEvent, city: RegexResul
         ) as resp:
             data = await resp.json()
     if data.get("code", 0) != 100:
-        return await app.sendMessage(
+        return await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
             MessageChain(
                 [
@@ -84,7 +84,7 @@ async def furry_group_search(app: Ariadne, event: MessageEvent, city: RegexResul
             ),
         )
     msg = await generate_forward(data.get("data"))
-    await app.sendMessage(
+    await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender, msg
     )
 

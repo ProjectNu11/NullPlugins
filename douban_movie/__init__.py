@@ -50,10 +50,10 @@ async def douban_movie_search(app: Ariadne, event: MessageEvent, movie: RegexRes
         }
     ) as session:
         resp = await session.get(
-            f"https://www.douban.com/search?q={urllib.parse.quote(movie.result.asDisplay())}"
+            f"https://www.douban.com/search?q={urllib.parse.quote(movie.result.display)}"
         )
         if resp.status != 200:
-            return await app.sendMessage(
+            return await app.send_message(
                 event.sender.group if isinstance(event, GroupMessage) else event.sender,
                 MessageChain(f"服务器返回错误 {resp.status}"),
             )
@@ -62,17 +62,17 @@ async def douban_movie_search(app: Ariadne, event: MessageEvent, movie: RegexRes
                 BeautifulSoup(await resp.text(), features="html.parser"), session
             )
         ):
-            return await app.sendMessage(
+            return await app.send_message(
                 event.sender.group if isinstance(event, GroupMessage) else event.sender,
                 MessageChain("未找到相关影片"),
             )
-    await app.sendMessage(
+    await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
         MessageChain(f"找到 {len(node_list) - 1} 条相关影片"),
     )
-    await app.sendMessage(
+    await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
-        MessageChain.create([Forward(nodeList=node_list)]),
+        MessageChain([Forward(node_list)]),
     )
 
 
@@ -88,9 +88,9 @@ async def douban_movie_search(app: Ariadne, event: MessageEvent, movie: RegexRes
     )
 )
 async def douban_movie_info(app: Ariadne, event: MessageEvent, movie: RegexResult):
-    movie = movie.result.asDisplay()
+    movie = movie.result.display
     if not movie.isdigit():
-        return await app.sendMessage(
+        return await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
             MessageChain(f"无效的影片 ID：{movie}"),
         )
@@ -103,16 +103,16 @@ async def douban_movie_info(app: Ariadne, event: MessageEvent, movie: RegexResul
     ) as session:
         resp = await session.get(f"https://movie.douban.com/subject/{movie}")
         if resp.status != 200:
-            return await app.sendMessage(
+            return await app.send_message(
                 event.sender.group if isinstance(event, GroupMessage) else event.sender,
                 MessageChain(f"服务器返回错误 {resp.status}"),
             )
         node_list = await get_movie_info(
             BeautifulSoup(await resp.text(), features="html.parser"), session
         )
-        await app.sendMessage(
+        await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
-            MessageChain.create([Forward(nodeList=node_list)]),
+            MessageChain([Forward(node_list)]),
         )
 
 
@@ -168,7 +168,7 @@ async def search_movie(
                 target=config.account,
                 name=f"{config.name}#{config.num}",
                 time=datetime.now() + timedelta(seconds=15) * (index + 1),
-                message=MessageChain.create(
+                message=MessageChain(
                     [
                         Image(data_bytes=cover) if cover else None,
                         Plain(text=f"影名：{title}\n"),
@@ -253,7 +253,7 @@ async def get_movie_info(
                 target=config.account,
                 name=f"{config.name}#{config.num}",
                 time=datetime.now(),
-                message=MessageChain.create([Image(data_bytes=cover)]),
+                message=MessageChain([Image(data_bytes=cover)]),
             )
         ]
         if cover
@@ -263,7 +263,7 @@ async def get_movie_info(
             target=config.account,
             name=f"{config.name}#{config.num}",
             time=datetime.now() + timedelta(seconds=15),
-            message=MessageChain.create(
+            message=MessageChain(
                 [
                     Plain(text=title),
                     Plain(text="\n\n"),
@@ -275,7 +275,7 @@ async def get_movie_info(
             target=config.account,
             name=f"{config.name}#{config.num}",
             time=datetime.now() + timedelta(seconds=30),
-            message=MessageChain.create(
+            message=MessageChain(
                 [
                     Plain(text=rating),
                 ]
@@ -285,7 +285,7 @@ async def get_movie_info(
             target=config.account,
             name=f"{config.name}#{config.num}",
             time=datetime.now() + timedelta(seconds=45),
-            message=MessageChain.create(
+            message=MessageChain(
                 [
                     Plain(text=digest),
                 ]
