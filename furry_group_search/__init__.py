@@ -46,7 +46,7 @@ class CityGroup(BaseModel):
     valid: int
 
     @root_validator(pre=True)
-    def hub_check(cls, values: dict):
+    def furry_group_search_validator(cls, values: dict):
         if "valid" not in values:
             values["valid"] = values.get("vaild")
         return values
