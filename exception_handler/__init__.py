@@ -28,28 +28,36 @@ async def except_handle(ariadne: Ariadne, event: ExceptionThrowed):
         traceback.print_tb(event.exception.__traceback__, file=fp)
         tb = fp.getvalue()
     msg = (
-        f"异常时间：\n{datetime.now():%Y年%m月%d日 %H:%M:%S}\n \n"
-        f"异常事件：\n{str(event.event)}\n \n"
-        f"异常类型：\n{type(event.exception)}\n \n"
-        f"异常内容：\n{str(event.exception)}\n \n"
+        f"异常时间：\n{datetime.now():%Y年%m月%d日 %H:%M:%S}\n"
+        f"异常事件：\n{str(event.event)}\n"
+        f"异常类型：\n{type(event.exception)}\n"
+        f"异常内容：\n{str(event.exception)}\n"
         f"异常追踪：\n{tb}"
     )
     max_length = 350
-    font = BuildImage(w=1, h=1, color="white", font_size=15).font
+    font_size = 15
+    font = BuildImage(w=1, h=1, color="white", font_size=font_size).font
     text_box = TextUtil.get_text_box(msg, font, max_length)
-    boundary = 25
+    boundary = 20
     image = BuildImage(
-        w=text_box[0] + boundary * 2, h=text_box[1] + boundary * 2, color="white"
+        w=text_box[0] + boundary * 2,
+        h=int(text_box[1] * 1.1) + boundary * 2,
+        color="white",
+        font_size=font_size,
     )
     await image.atext(
-        (boundary, boundary), TextUtil.auto_newline(msg, font, max_length), fill="black"
+        (boundary, boundary),
+        TextUtil.auto_newline(msg, font, max_length),
+        fill="black",
     )
+    image.show()
     if isinstance(event.event, (GroupMessage, FriendMessage)):
-        await ariadne.send_group_message(
+        await ariadne.send_message(
             event.event.sender.group
             if isinstance(event.event, GroupMessage)
             else event.event.sender,
-            MessageChain(Plain("发生异常\n"), Image(data_bytes=image.pic2bytes())),
+            MessageChain(Plain("执行操作时发生以下异常\n"), Image(data_bytes=image.pic2bytes())),
+            quote=event.event.message_chain,
         )
     for owner in config.owners:
         await ariadne.send_friend_message(

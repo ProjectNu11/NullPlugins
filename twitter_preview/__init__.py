@@ -11,6 +11,7 @@ import youtube_dl
 from aiohttp import ClientSession
 from graia.ariadne import Ariadne
 from graia.ariadne.event.message import GroupMessage, FriendMessage, MessageEvent
+from graia.ariadne.exception import RemoteException
 from graia.ariadne.message.chain import MessageChain
 from graia.ariadne.message.element import ForwardNode, Image, Forward
 from graia.ariadne.message.parser.twilight import Twilight, WildcardMatch, RegexMatch
@@ -87,13 +88,23 @@ async def get_tweet(app: Ariadne, event: MessageEvent):
     if media:
         for __media in media:
             data, name = __media
-            await app.upload_file(
-                data=data,
-                target=event.sender.group
-                if isinstance(event, GroupMessage)
-                else event.sender,
-                name=name,
-            )
+            try:
+                await app.upload_file(
+                    data=data,
+                    target=event.sender.group
+                    if isinstance(event, GroupMessage)
+                    else event.sender,
+                    name=name,
+                )
+            except RemoteException as err:
+                logger.error(err)
+                if "upload check_security fail" in str(err):
+                    await app.send_message(
+                        event.sender.group
+                        if isinstance(event, GroupMessage)
+                        else event.sender,
+                        MessageChain("文件未通过安全检查"),
+                    )
 
 
 class TwitterPreview:
