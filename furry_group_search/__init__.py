@@ -45,7 +45,7 @@ class CityGroup(BaseModel):
     url: Optional[str]
     valid: int
 
-    @root_validator(pre=True)
+    @root_validator(pre=True, allow_reuse=True)
     def furry_group_search_validator(cls, values: dict):
         if "valid" not in values:
             values["valid"] = values.get("vaild")
@@ -120,10 +120,10 @@ async def generate_forward(full_data: list) -> MessageChain:
                             ),
                             Plain(f"群号：{group.group}\n")
                             if group.valid
-                            else Plain(f"进入该群需先添加：{group.group}\n"),
+                            else Plain(f"进入该群需先添加：{group.group}"),
                             Image(data_bytes=await async_generate_qr(group.url))
                             if group.valid
-                            else None,
+                            else Plain(""),
                         ]
                     ),
                 )

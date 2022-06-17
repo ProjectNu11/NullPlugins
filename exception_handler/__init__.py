@@ -6,11 +6,14 @@ from graia.ariadne.app import Ariadne
 from graia.ariadne.event.message import GroupMessage, FriendMessage
 from graia.ariadne.message.chain import MessageChain
 from graia.ariadne.message.element import Image, Plain
+from graia.ariadne.message.parser.twilight import Twilight, FullMatch
 from graia.broadcast.builtin.event import ExceptionThrowed
 from graia.saya import Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
 from library import config
+from library.depend import Permission
+from library.model import UserPerm
 from module.build_image.util import BuildImage, TextUtil
 
 channel = Channel.current()
@@ -37,7 +40,7 @@ async def except_handle(ariadne: Ariadne, event: ExceptionThrowed):
     max_length = 350
     font_size = 15
     font = BuildImage(w=1, h=1, color="white", font_size=font_size).font
-    text_box = TextUtil.get_text_box(msg, font, max_length)
+    text_box = TextUtil.get_text_box(msg, font, max_length, check_emoji=False)
     boundary = 20
     image = BuildImage(
         w=text_box[0] + boundary * 2,
@@ -50,7 +53,6 @@ async def except_handle(ariadne: Ariadne, event: ExceptionThrowed):
         TextUtil.auto_newline(msg, font, max_length),
         fill="black",
     )
-    image.show()
     if isinstance(event.event, (GroupMessage, FriendMessage)):
         await ariadne.send_message(
             event.event.sender.group
@@ -64,3 +66,14 @@ async def except_handle(ariadne: Ariadne, event: ExceptionThrowed):
             owner,
             MessageChain(Plain("发生异常\n"), Image(data_bytes=image.pic2bytes())),
         )
+
+
+@channel.use(
+    ListenerSchema(
+        listening_events=[GroupMessage, FriendMessage],
+        inline_dispatchers=[Twilight([FullMatch(".raise")])],
+        decorators=[Permission.require(UserPerm.OWNER)],
+    )
+)
+async def exception_raise():
+    raise ValueError("异常抛出测试")

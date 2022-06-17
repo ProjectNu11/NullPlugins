@@ -966,16 +966,14 @@ class TextUtil:
 
     @classmethod
     def get_text_box(
-        cls, text: str, font: FreeTypeFont, max_length: int
+        cls, text: str, font: FreeTypeFont, max_length: int, check_emoji: bool = True
     ) -> Tuple[int, int]:
+        if check_emoji:
+            text = cls.replace_emoji(text)
         return max(
             font.getsize(line)[0]
-            for line in cls.auto_newline(
-                cls.replace_emoji(text), font, max_length
-            ).splitlines()
+            for line in cls.auto_newline(text, font, max_length).splitlines()
         ), sum(
             font.getsize(line)[1]
-            for line in cls.auto_newline(
-                cls.replace_emoji(text), font, max_length
-            ).splitlines()
+            for line in cls.auto_newline(text, font, max_length).splitlines()
         )
