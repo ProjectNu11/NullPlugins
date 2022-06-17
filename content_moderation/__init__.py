@@ -28,7 +28,8 @@ if not get_module_config(channel.module):
 
 @channel.use(
     ListenerSchema(
-        listening_events=[GroupMessage], decorators=[Switch.check(channel.module)]
+        listening_events=[GroupMessage],
+        decorators=[Switch.check(channel.module, log=False)],
     )
 )
 async def image_moderation(app: Ariadne, event: GroupMessage):
