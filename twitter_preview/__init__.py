@@ -63,30 +63,37 @@ if not get_module_config(channel.module):
     )
 )
 async def get_tweet(app: Ariadne, event: MessageEvent):
-    images = await TwitterPreview.generate_image(event.message_chain.display)
+    images, media = await TwitterPreview.generate_image(event.message_chain.display)
     if not images:
         return
     if len(images) == 1:
-        return await app.send_message(
+        await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
             MessageChain([Image(data_bytes=images[0].pic2bytes())]),
         )
-    fwd_nodes = [
+    elif fwd_nodes := [
         ForwardNode(
             target=config.account,
             name=f"{config.name}#{config.num}",
             time=datetime.now() + timedelta(seconds=15) * (index + 1),
             message=MessageChain([Image(data_bytes=image.pic2bytes())]),
         )
-        for index, image in enumerate(
-            await TwitterPreview.generate_image(event.message_chain.display)
-        )
-    ]
-    if fwd_nodes:
+        for index, image in enumerate(images)
+    ]:
         await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
             MessageChain([Forward(fwd_nodes)]),
         )
+    if media:
+        for __media in media:
+            data, name = __media
+            await app.upload_file(
+                data=data,
+                target=event.sender.group
+                if isinstance(event, GroupMessage)
+                else event.sender,
+                name=name,
+            )
 
 
 class TwitterPreview:
@@ -95,7 +102,7 @@ class TwitterPreview:
         r"(?:https?://)?(?:www\.)?(t\.co/[a-zA-Z\d_.-]{10})"
     )
     status_link_pattern = re.compile(
-        r"(?:https?://)?(?:www\.)?twitter\.com/[\w\d]+/status/(\d+)"
+        r"(?:https?://)?(?:www\.)?twitter\.com/\w+/status/(\d+)"
     )
 
     @classmethod
@@ -154,15 +161,21 @@ class TwitterPreview:
             return resp
 
     @classmethod
-    async def generate_image(cls, text: str) -> Optional[List[BuildImage]]:
+    async def generate_image(
+        cls, text: str
+    ) -> Optional[Tuple[List[BuildImage], List[Tuple[bytes, str]]]]:
         if not (status_ids := await cls.get_status_id(text)):
             return
         images = []
+        media = []
         for status_id in status_ids:
             if not (tweet := await cls.get_tweet(status_id)):
                 continue
-            images.append(await BuildTweet(tweet).compose())
-        return images
+            image, __media = await BuildTweet(tweet).compose()
+            images.append(image)
+            if __media:
+                media.append(__media)
+        return images, media
 
     @classmethod
     async def get_bytes(cls, media_url: str) -> Optional[bytes]:
@@ -188,6 +201,7 @@ class BuildTweet:
     __boundary: int
     __canvas_width: int
     __tweet: dict
+    __media: Tuple[bytes, str] = None
 
     def __init__(self, tweet: dict):
         self.__grid = 30
@@ -268,8 +282,10 @@ class BuildTweet:
         )
         return header
 
-    async def build_text(self) -> BuildImage:
+    async def build_text(self) -> Optional[BuildImage]:
         text = self.get_text_url_free()
+        if not text:
+            return
         _, height = TextUtil.get_text_box(
             text,
             BuildImage(w=1, h=1, font_size=40, color="white").font,
@@ -300,7 +316,7 @@ class BuildTweet:
                     "expanded_url"
                 ]
                 if re.match(
-                    rf"(?:https?://)?(?:www\.)?twitter\.com/[\w\d]+/status/(\d+)/{media_type}/\d+",
+                    rf"(?:https?://)?(?:www\.)?twitter\.com/\w+/status/(\d+)/{media_type}/\d+",
                     url,
                 ):
                     break
@@ -309,11 +325,14 @@ class BuildTweet:
                 break
         return url, offset
 
-    def get_media_urls(self) -> Optional[List[Tuple[str, str, Union[None, str]]]]:
+    def get_media_urls(
+        self,
+    ) -> Tuple[Optional[List[Tuple[str, str, Union[None, str]]]], bool]:
         if not (media := self.__tweet["includes"].get("media", None)):
-            return
+            return [], False
         media_urls = []
         offset = 0
+        has_video = False
         for index, media in enumerate(media):
             if media["type"] == "photo":
                 media_urls.append(("photo", media["url"], None))
@@ -324,7 +343,8 @@ class BuildTweet:
                 media_urls.append(
                     (media["type"], media["preview_image_url"], extended_url)
                 )
-        return media_urls
+                has_video = True
+        return media_urls, has_video
 
     async def build_media_base(self, url: str) -> BuildImage:
         media = BuildImage(
@@ -352,9 +372,15 @@ class BuildTweet:
         return base
 
     async def compose_media(self) -> Optional[BuildImage]:
-        urls = self.get_media_urls()
+        urls, has_video = self.get_media_urls()
         if not urls:
             return
+        if has_video:
+            self.__media = await TwitterPreview.async_get_media_info(
+                f"https://twitter.com/"
+                f"{self.__tweet['includes']['users'][0]['username']}"
+                f"/status/{self.__tweet['data'][0]['id']}"
+            )
         media = [await self.build_media(media_type, url) for media_type, url, _ in urls]
         width = self.__canvas_width - self.__boundary * 2
         height = sum([img.h for img in media] + [self.__grid * (len(media) - 1)])
@@ -371,11 +397,14 @@ class BuildTweet:
             return text
         canvas = BuildImage(
             w=self.__canvas_width,
-            h=text.h + self.__grid + media.h,
+            h=(text.h if text else 0) + self.__grid + media.h,
             color="white",
         )
-        await canvas.apaste(text, (self.__boundary, 0), alpha=True)
-        await canvas.apaste(media, (self.__boundary, text.h + self.__grid), alpha=True)
+        if text:
+            await canvas.apaste(text, (self.__boundary, 0), alpha=True)
+        await canvas.apaste(
+            media, (self.__boundary, (text.h if text else 0) + self.__grid), alpha=True
+        )
         return canvas
 
     @staticmethod
@@ -475,11 +504,11 @@ class BuildTweet:
         await footer.apaste(qr, (qr_x, qr_y), alpha=True)
         return footer
 
-    async def compose(self) -> BuildImage:
+    async def compose(self) -> Tuple[BuildImage, Optional[Tuple[bytes, str]]]:
         header = await self.compose_header()
         body = await self.compose_body()
         footer = await self.compose_footer()
-        parts = [header, body, footer]
+        parts = [part for part in (header, body, footer) if part]
         height = sum([p.h for p in parts] + [self.__grid * (len(parts))])
         canvas = BuildImage(
             w=self.__canvas_width,
@@ -490,4 +519,4 @@ class BuildTweet:
         for part in parts:
             await canvas.apaste(part, (0, _h), alpha=True)
             _h += part.h + self.__grid
-        return canvas
+        return canvas, self.__media
