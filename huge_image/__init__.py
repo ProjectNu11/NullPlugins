@@ -17,7 +17,6 @@ from graia.ariadne.message.parser.twilight import (
     ElementMatch,
     ElementResult,
 )
-from graia.broadcast.interrupt import InterruptControl
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
@@ -25,9 +24,6 @@ from library.depend import Switch, FunctionCall
 
 saya = Saya.current()
 channel = Channel.current()
-
-bcc = saya.broadcast
-inc = InterruptControl(bcc)
 
 channel.name("HugeImage")
 channel.author("nullqwertyuiop")

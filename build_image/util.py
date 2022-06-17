@@ -44,6 +44,7 @@ class BuildImage:
         font: Union[str, Path, FreeTypeFont] = Path(
             Path(__file__).parent, "assets", "fonts", "SourceHanSans-VF.ttf"
         ),
+        font_variation: Optional[str] = None,
         ratio: float = 1,
         is_alpha: bool = False,
         plain_text: Optional[str] = None,
@@ -75,6 +76,10 @@ class BuildImage:
             if isinstance(font, FreeTypeFont)
             else ImageFont.truetype(str(font), font_size)
         )
+        if font_variation:
+            self.font.set_variation_by_name(font_variation)
+        elif b"Regular" in self.font.get_variation_names():
+            self.font.set_variation_by_name("Regular")
 
         if not plain_text and not color:
             color = (255, 255, 255)
@@ -800,6 +805,22 @@ class BuildImage:
             self.markImg = self.markImg.resize((r2, r2), Resampling.LANCZOS)
         ellipse_box = [0, 0, r2 - 2, r2 - 2]
         self.draw_ellipse(ellipse_box, width=1)
+
+    def get_font_variation_names(self):
+        """
+        说明：
+            获取字体变体名称
+        :return: 字体变体名称列表
+        """
+        return self.font.get_variation_names()
+
+    def set_font_variation_by_name(self, variation: str):
+        """
+        说明：
+            设置字体变体
+        :param variation: 字体变体名称
+        """
+        self.font.set_variation_by_name(variation)
 
 
 class TextUtil:

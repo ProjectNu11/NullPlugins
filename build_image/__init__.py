@@ -51,6 +51,14 @@ channel.description("")
                         "文字的大小"
                     )
                     @ "font_size",
+                    ArgumentMatch(
+                        "-fv", "--font-variant", type=str, optional=True
+                    ).help("文字的变体")
+                    @ "font_variant",
+                    ArgumentMatch("-fc", "--font-color", type=str, optional=True).help(
+                        "文字的颜色"
+                    )
+                    @ "font_color",
                     ArgumentMatch("-t", "--text", type=str, optional=True).help("插入的文字")
                     @ "text",
                     ArgumentMatch(
@@ -72,6 +80,8 @@ async def build_image(
     color: ArgResult,
     mode: ArgResult,
     font_size: ArgResult,
+    font_variant: ArgResult,
+    font_color: ArgResult,
     text: ArgResult,
     alpha: ArgResult,
 ):
@@ -113,16 +123,27 @@ async def build_image(
                 "\n10. RGBX\n11. YCbCr"
             ),
         )
-    image = BuildImage(
-        w=width.result,
-        h=height.result,
-        color=color.result,
-        image_mode=mode.result or "RGBA",
-        font_size=font_size.result or 30,
-        is_alpha=alpha.matched,
-    )
-    if text.matched:
-        await image.atext((0, 0), text.result.strip('"').strip("'"))
+    try:
+        image = BuildImage(
+            w=width.result,
+            h=height.result,
+            color=color.result,
+            image_mode=mode.result or "RGBA",
+            font_size=font_size.result or 30,
+            font_variation=font_variant.result or "Regular",
+            is_alpha=alpha.matched,
+        )
+        if text.matched:
+            await image.atext(
+                pos=(0, 0),
+                text=text.result.strip('"').strip("'"),
+                fill=font_color.result,
+            )
+    except ValueError as err:
+        return await app.send_message(
+            event.sender.group if isinstance(event, GroupMessage) else event.sender,
+            MessageChain(str(err)),
+        )
     await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
         MessageChain([Image(data_bytes=image.pic2bytes())]),

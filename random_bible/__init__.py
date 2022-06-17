@@ -32,9 +32,6 @@ channel.name("ModuleManager")
 channel.author("nullqwertyuiop")
 channel.description("")
 
-bcc = saya.broadcast
-inc = InterruptControl(bcc)
-
 data_dir = Path(config.path.data) / channel.module
 data_dir.mkdir(exist_ok=True)
 
@@ -46,15 +43,15 @@ data_dir.mkdir(exist_ok=True)
         decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
-async def get_bible(app: Ariadne, event: GroupMessage):
+async def get_bible(ariadne: Ariadne, event: GroupMessage):
     group_dir = data_dir / str(event.sender.group.id)
     if group_dir.is_dir():
         if images := os.listdir(str(group_dir)):
-            return await app.send_group_message(
+            return await ariadne.send_group_message(
                 event.sender.group,
                 MessageChain([Image(path=group_dir / random.choice(images))]),
             )
-    return await app.send_group_message(event.sender.group, MessageChain("暂无本群圣经"))
+    return await ariadne.send_group_message(event.sender.group, MessageChain("暂无本群圣经"))
 
 
 waiting = set()
@@ -76,7 +73,7 @@ waiting = set()
         decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
-async def upload_bible(app: Ariadne, event: GroupMessage, image: ElementResult):
+async def upload_bible(ariadne: Ariadne, event: GroupMessage, image: ElementResult):
     source = event.message_chain.get_first(Source)
     group_dir = data_dir / str(event.sender.group.id)
 
@@ -99,11 +96,13 @@ async def upload_bible(app: Ariadne, event: GroupMessage, image: ElementResult):
     else:
         try:
             if event.message_chain.get_first(Quote) and (
-                await app.get_message_from_id(event.message_chain.get_first(Quote).id)
+                await ariadne.get_message_from_id(
+                    event.message_chain.get_first(Quote).id
+                )
             ).message_chain.get(Image):
                 image_bytes = (
                     await (
-                        await app.get_message_from_id(
+                        await ariadne.get_message_from_id(
                             event.message_chain.get_first(Quote).id
                         )
                     )
@@ -114,23 +113,25 @@ async def upload_bible(app: Ariadne, event: GroupMessage, image: ElementResult):
                 raise AttributeError()
         except (IndexError, AttributeError):
             if event.sender.id in waiting:
-                return await app.send_message(
+                return await ariadne.send_message(
                     event.sender.group, MessageChain("请等待上一次上传结束后再进行新的上传"), quote=source
                 )
             try:
-                await app.send_message(
+                await ariadne.send_message(
                     event.sender.group, MessageChain("请在 30 秒内发送要上传的圣经"), quote=source
                 )
-                image_bytes = await asyncio.wait_for(inc.wait(image_waiter), 30)
+                image_bytes = await asyncio.wait_for(
+                    InterruptControl(ariadne.broadcast).wait(image_waiter), 30
+                )
                 if not image_bytes:
-                    await app.send_group_message(
+                    await ariadne.send_group_message(
                         event.sender.group,
                         MessageChain("未检测到图片，请重新进行上传操作，本次上传结束"),
                         quote=source,
                     )
                     return
             except asyncio.TimeoutError:
-                await app.send_group_message(
+                await ariadne.send_group_message(
                     event.sender.group, MessageChain("图片等待超时，上传结束"), quote=source
                 )
                 return
@@ -141,7 +142,9 @@ async def upload_bible(app: Ariadne, event: GroupMessage, image: ElementResult):
     PillowImage.open(BytesIO(image_bytes)).convert("RGB").save(
         group_dir / f"{md5(image_bytes).hexdigest()}.jpg"
     )
-    await app.send_group_message(event.sender.group, MessageChain("上传成功"), quote=source)
+    await ariadne.send_group_message(
+        event.sender.group, MessageChain("上传成功"), quote=source
+    )
 
 
 @channel.use(

@@ -36,9 +36,6 @@ from .table import WeatherSchedule
 saya = Saya.current()
 channel = Channel.current()
 
-bcc = saya.broadcast
-inc = InterruptControl(bcc)
-
 channel.name("WeatherReport")
 channel.author("nullqwertyuiop")
 channel.description("天气预报")
@@ -72,7 +69,7 @@ async def weather_report(app: Ariadne, event: MessageEvent):
         decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
-async def weather_report(app: Ariadne, event: FriendMessage, city: RegexResult):
+async def weather_report(ariadne: Ariadne, event: FriendMessage, city: RegexResult):
     city = city.result.display.strip()
     try:
         if city_info := await get_city(city, aiohttp.ClientSession()):
@@ -84,12 +81,14 @@ async def weather_report(app: Ariadne, event: FriendMessage, city: RegexResult):
                 if waiter_friend.id == event.sender.id:
                     return waiter_message.display == "是"
 
-            await app.send_friend_message(
+            await ariadne.send_friend_message(
                 event.sender,
                 MessageChain(f"是否要订阅 {city_info[1]} 的天气？(是/否)"),
             )
             try:
-                assert await asyncio.wait_for(inc.wait(confirmation_waiter), 30)
+                assert await asyncio.wait_for(
+                    InterruptControl(ariadne.broadcast).wait(confirmation_waiter), 30
+                )
             except asyncio.TimeoutError:
                 raise AssertionError
 
@@ -105,12 +104,14 @@ async def weather_report(app: Ariadne, event: FriendMessage, city: RegexResult):
                         return f"{int(hour):02d}{int(minute):02d}"
                     return
 
-            await app.send_friend_message(
+            await ariadne.send_friend_message(
                 event.sender,
                 MessageChain(f"请输入需要提醒的时间\n例：08:00"),
             )
             try:
-                if time := await asyncio.wait_for(inc.wait(time_waiter), 30):
+                if time := await asyncio.wait_for(
+                    InterruptControl(ariadne.broadcast).wait(time_waiter), 30
+                ):
                     update = False
                     if same_time := await orm.fetchall(
                         select(
@@ -118,7 +119,7 @@ async def weather_report(app: Ariadne, event: FriendMessage, city: RegexResult):
                         ).where(WeatherSchedule.supplicant == event.sender.id)
                     ):
                         if len(same_time) >= 5:
-                            return await app.send_friend_message(
+                            return await ariadne.send_friend_message(
                                 event.sender,
                                 MessageChain(f"你已订阅 {len(same_time)} 个城市天气，暂时无法订阅更多城市"),
                             )
@@ -137,7 +138,7 @@ async def weather_report(app: Ariadne, event: FriendMessage, city: RegexResult):
                     "city": city_info[0],
                 },
             )
-            return await app.send_friend_message(
+            return await ariadne.send_friend_message(
                 event.sender,
                 MessageChain(
                     f"已{'更新' if update else '订阅'}"
@@ -149,11 +150,11 @@ async def weather_report(app: Ariadne, event: FriendMessage, city: RegexResult):
         else:
             raise ValueError
     except ValueError:
-        return await app.send_friend_message(
+        return await ariadne.send_friend_message(
             event.sender, MessageChain(f"无法获取 {city} 的天气")
         )
     except AssertionError:
-        return await app.send_friend_message(event.sender, MessageChain("已取消该操作"))
+        return await ariadne.send_friend_message(event.sender, MessageChain("已取消该操作"))
 
 
 @channel.use(SchedulerSchema(timer=timers.crontabify("* * * * * 30")))

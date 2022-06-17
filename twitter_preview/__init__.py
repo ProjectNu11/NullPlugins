@@ -63,6 +63,14 @@ if not get_module_config(channel.module):
     )
 )
 async def get_tweet(app: Ariadne, event: MessageEvent):
+    images = await TwitterPreview.generate_image(event.message_chain.display)
+    if not images:
+        return
+    if len(images) == 1:
+        return await app.send_message(
+            event.sender.group if isinstance(event, GroupMessage) else event.sender,
+            MessageChain([Image(data_bytes=images[0].pic2bytes())]),
+        )
     fwd_nodes = [
         ForwardNode(
             target=config.account,
@@ -182,7 +190,7 @@ class BuildTweet:
     __tweet: dict
 
     def __init__(self, tweet: dict):
-        self.__grid = 15
+        self.__grid = 30
         self.__boundary = 30
         self.__canvas_width = get_module_config(channel.module, "canvas_width")
         if self.__canvas_width < 350:
@@ -239,7 +247,7 @@ class BuildTweet:
         return canvas
 
     async def compose_header(self) -> BuildImage:
-        header_height = 150
+        header_height = 150 - self.__grid
         header = BuildImage(
             self.__canvas_width, header_height, font_size=25, color="white"
         )
@@ -306,7 +314,7 @@ class BuildTweet:
             return
         media_urls = []
         offset = 0
-        for index, media in media:
+        for index, media in enumerate(media):
             if media["type"] == "photo":
                 media_urls.append(("photo", media["url"], None))
             if media["type"] in ("video", "animated_gif"):
@@ -472,7 +480,7 @@ class BuildTweet:
         body = await self.compose_body()
         footer = await self.compose_footer()
         parts = [header, body, footer]
-        height = sum([p.h for p in parts] + [self.__grid * 2 * (len(parts))])
+        height = sum([p.h for p in parts] + [self.__grid * (len(parts))])
         canvas = BuildImage(
             w=self.__canvas_width,
             h=height,
@@ -481,5 +489,5 @@ class BuildTweet:
         _h = 0
         for part in parts:
             await canvas.apaste(part, (0, _h), alpha=True)
-            _h += part.h + self.__grid * 2
+            _h += part.h + self.__grid
         return canvas

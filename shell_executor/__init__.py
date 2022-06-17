@@ -1,7 +1,9 @@
 import asyncio
-import os
+import re
+import subprocess
 from datetime import datetime
 from pathlib import Path
+from typing import Tuple
 
 from graia.ariadne import Ariadne
 from graia.ariadne.event.message import GroupMessage
@@ -32,9 +34,6 @@ channel.name("ShellExecutor")
 channel.author("nullqwertyuiop")
 channel.description("")
 
-bcc = saya.broadcast
-inc = InterruptControl(bcc)
-
 data_dir = Path(config.path.data) / channel.module
 data_dir.mkdir(exist_ok=True)
 
@@ -49,7 +48,7 @@ data_dir.mkdir(exist_ok=True)
                     RegexMatch(r"[\n\r]?", optional=True),
                     FullMatch("shell"),
                     FullMatch(">"),
-                    WildcardMatch() @ "command",
+                    WildcardMatch().flags(re.S) @ "command",
                 ]
             )
         ],
@@ -61,7 +60,7 @@ data_dir.mkdir(exist_ok=True)
         ],
     )
 )
-async def get_bible(app: Ariadne, event: GroupMessage, command: MatchResult):
+async def execute_shell(ariadne: Ariadne, event: GroupMessage, command: MatchResult):
     command = command.result.display.strip()
 
     @Waiter.create_using_function(listening_events=[GroupMessage])
@@ -74,23 +73,45 @@ async def get_bible(app: Ariadne, event: GroupMessage, command: MatchResult):
         ):
             return waiter_message.display == "是"
 
-    await app.send_group_message(
+    await ariadne.send_group_message(
         event.sender.group, MessageChain("请确认是否执行以下 Shell (是/否)\n" f"{command}")
     )
     try:
-        if not await asyncio.wait_for(inc.wait(confirmation_waiter), 30):
-            return await app.send_group_message(
+        if not await asyncio.wait_for(
+            InterruptControl(ariadne.broadcast).wait(confirmation_waiter), 30
+        ):
+            return await ariadne.send_group_message(
                 event.sender.group, MessageChain("已取消本次执行")
             )
     except asyncio.TimeoutError:
-        return await app.send_group_message(
+        return await ariadne.send_group_message(
             event.sender.group, MessageChain("超时，已取消本次执行")
         )
-    with (data_dir / "history.txt").open("a+", encoding="utf-8") as f:
+    with Path(data_dir, "history.txt").open("a+", encoding="utf-8") as f:
         f.write(
             f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\t"
             f"{event.sender.id}\t{command}\n"
         )
-    await app.send_group_message(
-        event.sender.group, MessageChain(os.popen(command).read())
+    stdout, stderr = await async_execute(command)
+    msg = f"stdout: \n{stdout}"
+    if stderr:
+        msg += f"\n==========\nstderr: \n{stderr}"
+    await ariadne.send_group_message(
+        event.sender.group,
+        MessageChain(msg),
     )
+
+
+def execute(command: str) -> Tuple[str, str]:
+    process = subprocess.Popen(
+        command,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    stdout, stderr = process.communicate()
+    return stdout.decode("utf-8"), stderr.decode("utf-8")
+
+
+async def async_execute(command: str) -> Tuple[str, str]:
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(None, execute, command)

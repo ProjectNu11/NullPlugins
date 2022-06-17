@@ -24,9 +24,6 @@ from library.depend import Switch, FunctionCall
 saya = Saya.current()
 channel = Channel.current()
 
-bcc = saya.broadcast
-inc = InterruptControl(bcc)
-
 channel.name("MuteRoulette")
 channel.author("nullqwertyuiop")
 channel.description("")
@@ -51,14 +48,14 @@ channel.description("")
     )
 )
 async def mute_roulette(
-    app: Ariadne,
+    ariadne: Ariadne,
     event: GroupMessage,
     fast: ArgResult,
     get_help: ArgResult,
     at: ElementResult,
 ):
     if get_help.matched:
-        return await app.send_group_message(
+        return await ariadne.send_group_message(
             event.sender.group,
             MessageChain(
                 "[轮盘禁言]\n"
@@ -70,7 +67,7 @@ async def mute_roulette(
             ),
         )
     if event.sender.group.account_perm == MemberPerm.Member:
-        return await app.send_group_message(
+        return await ariadne.send_group_message(
             event.sender.group, MessageChain(f"{config.name} 需要管理员权限才可进行轮盘禁言")
         )
     if not at.matched:
@@ -78,15 +75,17 @@ async def mute_roulette(
     fast = fast.matched
     at = at.result
     assert isinstance(at, At)
-    target = await app.get_member(event.sender.group, at.target)
+    target = await ariadne.get_member(event.sender.group, at.target)
     mute = random.randint(1, 10)
     if target.id == event.sender.id:
         try:
-            await app.mute_member(event.sender.group, target, mute)
+            await ariadne.mute_member(event.sender.group, target, mute)
         except PermissionError:
             pass
-        return await app.send_group_message(event.sender.group, MessageChain("这是在干什么？"))
-    await app.send_group_message(
+        return await ariadne.send_group_message(
+            event.sender.group, MessageChain("这是在干什么？")
+        )
+    await ariadne.send_group_message(
         event.sender.group,
         MessageChain(
             [
@@ -111,16 +110,20 @@ async def mute_roulette(
             ):
                 return msg.display == "接受"
 
-        if not await inc.wait(invite_confirm_waiter, timeout=30):
-            return await app.send_group_message(
+        if not await InterruptControl(ariadne.broadcast).wait(
+            invite_confirm_waiter, timeout=30
+        ):
+            return await ariadne.send_group_message(
                 event.sender.group, MessageChain("已取消本次轮盘禁言")
             )
     except asyncio.TimeoutError:
-        return await app.send_group_message(event.sender.group, MessageChain("超时，操作取消"))
+        return await ariadne.send_group_message(
+            event.sender.group, MessageChain("超时，操作取消")
+        )
 
     victim = None
     if not fast:
-        await app.send_group_message(
+        await ariadne.send_group_message(
             event.sender.group,
             MessageChain('本局轮盘禁言已开始！\n发送 "开枪" 或 "砰" 开始'),
         )
@@ -130,27 +133,29 @@ async def mute_roulette(
         for index in range(6):
             try:
                 player = order[index % 2]
-                await app.send_group_message(
+                await ariadne.send_group_message(
                     event.sender.group,
                     MessageChain([At(target=player), Plain("，该你了")]),
                 )
-                await inc.wait(Shoot(event.sender.group, player), timeout=30)
+                await InterruptControl(ariadne.broadcast).wait(
+                    Shoot(event.sender.group, player), timeout=30
+                )
                 if bullet == slot:
                     victim = player
                     break
                 slot = (slot + 1) % 6
             except asyncio.TimeoutError:
-                return await app.send_group_message(
+                return await ariadne.send_group_message(
                     event.sender.group, MessageChain("超时，操作取消")
                 )
     else:
         victim = random.choice([event.sender, target])
     assert victim
     try:
-        await app.mute_member(event.sender.group, victim, mute)
+        await ariadne.mute_member(event.sender.group, victim, mute)
     except PermissionError:
         pass
-    await app.send_group_message(
+    await ariadne.send_group_message(
         event.sender.group, MessageChain(f"很可惜，{victim.name} 失败了")
     )
 

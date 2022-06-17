@@ -31,9 +31,6 @@ channel.name("NameCardShuffle")
 channel.author("nullqwertyuiop, 角川烈&白门守望者 (Chitung-public)")
 channel.description("")
 
-bcc = saya.broadcast
-inc = InterruptControl(bcc)
-
 last_active = datetime.fromtimestamp(0)
 shuffle_flags = {}
 
@@ -52,31 +49,31 @@ shuffle_flags = {}
         decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
-async def name_card_shuffle(app: Ariadne, event: MessageEvent, restore: ArgResult):
+async def name_card_shuffle(ariadne: Ariadne, event: MessageEvent, restore: ArgResult):
     global last_active, shuffle_flags
     group = event.sender.group
     if str(group.id) in shuffle_flags and shuffle_flags[str(group.id)]["status"] == 1:
-        await app.send_group_message(group, MessageChain("已在进行群名片打乱"))
+        await ariadne.send_group_message(group, MessageChain("已在进行群名片打乱"))
         return
     if last_active + timedelta(minutes=2) > datetime.now():
         seconds = (last_active + timedelta(minutes=2) - datetime.now()).total_seconds()
-        await app.send_group_message(
+        await ariadne.send_group_message(
             group,
             MessageChain("距离上一次 shuffle 运行时间不满 2 分钟，请在 " f"{round(seconds, 2)} 秒后再试。"),
         )
         return
     if group.account_perm == MemberPerm.Member:
-        await app.send_group_message(
+        await ariadne.send_group_message(
             group, MessageChain(f"{config.name} 目前还没有管理员权限，请授予 {config.name} 权限解锁更多功能。")
         )
         return
     if restore.matched:
         last_active = datetime.now()
         return await restore_name_card(group, event.sender)
-    if not (member_list := await app.get_member_list(group)):
+    if not (member_list := await ariadne.get_member_list(group)):
         return
     if len(member_list) > 20:
-        await app.send_group_message(
+        await ariadne.send_group_message(
             group, MessageChain("群人数大于设定的人数限制，仅对最近发言的 20 人进行打乱。")
         )
     original_info = [(member, member.name) for member in member_list]
@@ -94,12 +91,12 @@ async def name_card_shuffle(app: Ariadne, event: MessageEvent, restore: ArgResul
     ]
     last_active = datetime.now()
     await update_name_card(name_list=shuffle_list, time=last_active)
-    await app.send_group_message(group, MessageChain("已完成本次群名片打乱\nHave fun!"))
+    await ariadne.send_group_message(group, MessageChain("已完成本次群名片打乱\nHave fun!"))
     await asyncio.sleep(120)
     await update_name_card(name_list=original_info, backup=False)
     last_active = datetime.now()
     shuffle_flags[str(group.id)]["status"] = 0
-    await app.send_group_message(group, MessageChain("已恢复本次群名片打乱"))
+    await ariadne.send_group_message(group, MessageChain("已恢复本次群名片打乱"))
 
 
 async def update_name_card(
@@ -200,7 +197,11 @@ async def restore_name_card(group: Group, supplicant: Member):
             return False
 
     try:
-        if not (response := await asyncio.wait_for(inc.wait(response_waiter), 60)):
+        if not (
+            response := await asyncio.wait_for(
+                InterruptControl(ariadne.broadcast).wait(response_waiter), 60
+            )
+        ):
             return await ariadne.send_group_message(group, MessageChain("已取消本次操作"))
     except asyncio.TimeoutError:
         return await ariadne.send_group_message(group, MessageChain("等待超时"))
