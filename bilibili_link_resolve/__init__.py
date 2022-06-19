@@ -55,7 +55,7 @@ class BilibiliLinkResolve:
     @classmethod
     async def resolve(cls, message: str) -> Union[None, MessageChain]:
         if match := re.findall(
-            r"(?:http:|https://)?(?:[^.]+\.)?bilibili\.com/video/(?:BV|bv)([\w\d]{10})",
+            r"(?:http:|https://)?(?:[^.]+\.)?bilibili\.com/video/(?:BV|bv)(\w{10})",
             message,
         ):
             bv = f"bv{match[0]}"
@@ -69,9 +69,7 @@ class BilibiliLinkResolve:
             av = match[0]
             info = await cls.get_info(av)
             return await cls.generate_messagechain(info)
-        elif match := re.findall(
-            r"(http:|https:/\)?(?:[^.]+\.)?b23\.tv/[\w\d]+)", message
-        ):
+        elif match := re.findall(r"(http:|https:/\)?(?:[^.]+\.)?b23\.tv/\w+)", message):
             match = match[0]
             if not (match.startswith("http")):
                 match = f"https://{match}"

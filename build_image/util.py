@@ -274,6 +274,7 @@ class BuildImage:
         text: str,
         fill: Union[str, Tuple[int, int, int]] = (0, 0, 0),
         center_type: Optional[Literal["center", "by_height", "by_width"]] = None,
+        skip_emoji: bool = False,
     ):
         """
         说明：
@@ -284,7 +285,9 @@ class BuildImage:
             :param fill: 文字颜色
             :param center_type: 居中类型，可能的值 center: 完全居中，by_width: 水平居中，by_height: 垂直居中
         """
-        await self.loop.run_in_executor(None, self.text, pos, text, fill, center_type)
+        await self.loop.run_in_executor(
+            None, self.text, pos, text, fill, center_type, skip_emoji
+        )
 
     def text(
         self,
@@ -292,6 +295,7 @@ class BuildImage:
         text: str,
         fill: Union[str, Tuple[int, int, int]] = (0, 0, 0),
         center_type: Optional[Literal["center", "by_height", "by_width"]] = None,
+        skip_emoji: bool = False,
     ):
         """
         说明：
@@ -301,6 +305,7 @@ class BuildImage:
             :param text: 文字内容
             :param fill: 文字颜色
             :param center_type: 居中类型，可能的值 center: 完全居中，by_width: 水平居中，by_height: 垂直居中
+            :param skip_emoji: 是否跳过 emoji
         """
         if center_type:
             if center_type not in ["center", "by_height", "by_width"]:
@@ -320,7 +325,7 @@ class BuildImage:
                 w = pos[0]
             pos = (w, h)
         self.markImg = TextUtil.render_text(
-            text=text, image=self, pos=pos, fill=fill
+            text=text, image=self, pos=pos, fill=fill, skip_emoji=skip_emoji
         ).markImg
 
     async def asave(self, path: Optional[Union[str, Path]] = None):
@@ -845,8 +850,21 @@ class TextUtil:
         pos: Tuple[int, int],
         max_length: int = 0,
         fill: Union[str, Tuple[int, int, int]] = (0, 0, 0),
+        skip_emoji: bool = False,
     ) -> BuildImage:
         max_length = max_length or image.w - pos[0]
+        image.draw.text(
+            xy=pos,
+            text=TextUtil.auto_newline(
+                text=TextUtil.replace_emoji(text) if skip_emoji else text,
+                font=image.font,
+                max_length=max_length,
+            ),
+            fill=fill,
+            font=image.font,
+        )
+        if skip_emoji:
+            return image
         emoji_loc = groupby(
             TextUtil.get_emoji_loc(
                 text=TextUtil.auto_newline(
@@ -858,16 +876,6 @@ class TextUtil:
             key=lambda x: x[0],
         )
         emoji_loc = list(map(lambda x: [x[0], list(x[1])], emoji_loc))
-        image.draw.text(
-            xy=pos,
-            text=TextUtil.auto_newline(
-                text=TextUtil.replace_emoji(text),
-                font=image.font,
-                max_length=max_length,
-            ),
-            fill=fill,
-            font=image.font,
-        )
         emoji_size_x, emoji_size_y = map(
             lambda x: (math.ceil(x * 0.8)),
             image.font.getsize("\u3000"),
@@ -970,10 +978,7 @@ class TextUtil:
     ) -> Tuple[int, int]:
         if check_emoji:
             text = cls.replace_emoji(text)
-        return max(
-            font.getsize(line)[0]
-            for line in cls.auto_newline(text, font, max_length).splitlines()
-        ), sum(
-            font.getsize(line)[1]
-            for line in cls.auto_newline(text, font, max_length).splitlines()
+        return (
+            font.getsize_multiline(cls.auto_newline(text, font, max_length))[0],
+            font.getsize_multiline(cls.auto_newline(text, font, max_length))[1],
         )
