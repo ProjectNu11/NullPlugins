@@ -16,8 +16,9 @@ from loguru import logger
 from library import config
 from library.depend import Permission
 from library.model import UserPerm
+from module import modules
 
-Saya.current().require(__import__("module").get_module("build_image").pack)
+Saya.current().require(modules.get_module("build_image").pack)
 from module.build_image.util import BuildImage, TextUtil
 
 channel = Channel.current()

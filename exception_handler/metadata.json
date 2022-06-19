@@ -1,7 +1,7 @@
 {
     "name": "错误处理",
     "pack": "module.exception_handler",
-    "version": "1.0",
+    "version": "1.0b",
     "author": [
         "nullqwertyuiop"
     ],
