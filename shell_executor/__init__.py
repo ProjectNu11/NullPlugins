@@ -8,7 +8,7 @@ from typing import Tuple
 from graia.ariadne import Ariadne
 from graia.ariadne.event.message import GroupMessage
 from graia.ariadne.message.chain import MessageChain
-from graia.ariadne.message.element import At
+from graia.ariadne.message.element import At, Image
 from graia.ariadne.message.parser.base import MentionMe
 from graia.ariadne.message.parser.twilight import (
     Twilight,
@@ -18,14 +18,15 @@ from graia.ariadne.message.parser.twilight import (
     MatchResult,
     RegexMatch,
 )
-from graia.ariadne.model import Group, Member
-from graia.broadcast.interrupt import InterruptControl, Waiter
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
 from library.config import config
-from library.depend import Switch, Permission, FunctionCall
+from library.depend.function_call import FunctionCall
+from library.depend.permission import Permission
+from library.depend.switch import Switch
 from library.model import UserPerm
+from module.build_image import create_image
 
 saya = Saya.current()
 channel = Channel.current()
@@ -34,7 +35,7 @@ channel.name("ShellExecutor")
 channel.author("nullqwertyuiop")
 channel.description("")
 
-data_dir = Path(config.path.data) / channel.module
+data_dir = Path(Path(config.path.data), channel.module)
 data_dir.mkdir(exist_ok=True)
 
 
@@ -62,53 +63,30 @@ data_dir.mkdir(exist_ok=True)
 )
 async def execute_shell(ariadne: Ariadne, event: GroupMessage, command: MatchResult):
     command = command.result.display.strip()
-
-    @Waiter.create_using_function(listening_events=[GroupMessage])
-    async def confirmation_waiter(
-        waiter_group: Group, waiter_member: Member, waiter_message: MessageChain
-    ):
-        if (
-            waiter_group.id == event.sender.group.id
-            and waiter_member.id == event.sender.id
-        ):
-            return waiter_message.display == "是"
-
-    await ariadne.send_group_message(
-        event.sender.group, MessageChain("请确认是否执行以下 Shell (是/否)\n" f"{command}")
-    )
-    try:
-        if not await asyncio.wait_for(
-            InterruptControl(ariadne.broadcast).wait(confirmation_waiter), 30
-        ):
-            return await ariadne.send_group_message(
-                event.sender.group, MessageChain("已取消本次执行")
-            )
-    except asyncio.TimeoutError:
-        return await ariadne.send_group_message(
-            event.sender.group, MessageChain("超时，已取消本次执行")
-        )
     with Path(data_dir, "history.txt").open("a+", encoding="utf-8") as f:
         f.write(
             f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\t"
             f"{event.sender.id}\t{command}\n"
         )
     stdout, stderr = await async_execute(command)
-    msg = f"stdout: \n{stdout}"
+    msg = f"==========\nstdout: \n==========\n{stdout}"
     if stderr:
-        msg += f"\n==========\nstderr: \n{stderr}"
+        msg += f"\n==========\nstderr: \n==========\n{stderr}"
     await ariadne.send_group_message(
         event.sender.group,
-        MessageChain(msg),
+        MessageChain([Image(data_bytes=await create_image(msg, cut=120))]),
     )
 
 
 def execute(command: str) -> Tuple[str, str]:
-    process = subprocess.Popen(
+    process = subprocess.run(
         command,
+        shell=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
-    stdout, stderr = process.communicate()
+    stdout = process.stdout
+    stderr = process.stderr
     return stdout.decode("utf-8"), stderr.decode("utf-8")
 
 

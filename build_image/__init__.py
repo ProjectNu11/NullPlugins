@@ -11,8 +11,11 @@ from graia.ariadne.message.parser.twilight import (
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
-from library.depend import Switch, FunctionCall
-from .util import BuildImage
+from library.depend.function_call import FunctionCall
+from library.depend.switch import Switch
+from .build_image import BuildImage
+from .text_engine.text_engine import TextEngine
+from .aworda_text_to_image.text2image import create_image
 
 saya = Saya.current()
 channel = Channel.current()
@@ -20,6 +23,12 @@ channel = Channel.current()
 channel.name("BuildImage")
 channel.author("nullqwertyuiop")
 channel.description("")
+
+utils = {
+    "build_image": BuildImage,
+    "text_engine": TextEngine,
+    "create_image": create_image,
+}
 
 
 @channel.use(

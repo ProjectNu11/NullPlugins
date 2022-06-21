@@ -26,7 +26,9 @@ from graia.saya.builtins.broadcast.schema import ListenerSchema
 from loguru import logger
 from sqlalchemy import select
 
-from library.depend import Permission, Switch, FunctionCall
+from library.depend.permission import Permission
+from library.depend.function_call import FunctionCall
+from library.depend.switch import Switch
 from library.model import UserPerm
 from library.orm import orm
 from .table import WalletBalance, WalletDetail

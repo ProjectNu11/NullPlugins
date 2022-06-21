@@ -22,8 +22,9 @@ from graia.saya.builtins.broadcast import ListenerSchema
 from loguru import logger
 from pydantic import BaseModel
 
-from library.config import config, get_module_config, update_module_config
-from library.depend import Switch, FunctionCall
+from library.config import config
+from library.depend.function_call import FunctionCall
+from library.depend.switch import Switch
 
 saya = Saya.current()
 channel = Channel.current()
@@ -45,17 +46,17 @@ class EHentaiCookie(BaseModel):
 
     @classmethod
     def get_cookie_dict(cls):
-        return cls(**get_module_config(channel.module)).dict(
+        return cls(**config.get_module_config(channel.module)).dict(
             include={"ipb_member_id", "ipb_pass_hash", "igneous"}
         )
 
 
-if get_module_config(channel.module):
-    update_module_config(
-        channel.module, EHentaiCookie(**get_module_config(channel.module))
+if config.get_module_config(channel.module):
+    config.update_module_config(
+        channel.module, EHentaiCookie(**config.get_module_config(channel.module))
     )
 else:
-    update_module_config(
+    config.update_module_config(
         channel.module,
         EHentaiCookie(),
     )
@@ -101,7 +102,7 @@ async def ehentai_downloader(ariadne: Ariadne, event: GroupMessage, url: RegexRe
             ) as resp:
                 url = get_hath(BeautifulSoup(await resp.text(), "html.parser"))
             async with session.get(url=f"{url}?start=1", proxy=config.proxy) as resp:
-                password = get_module_config(channel.module, "extract_password")
+                password = config.get_module_config(channel.module, "extract_password")
                 loop = asyncio.get_event_loop()
                 file = await loop.run_in_executor(
                     None,
@@ -171,6 +172,6 @@ def encrypt_zip(filename: str, data_bytes: bytes, password: str) -> bytes:
         Path(data_dir / f"temp-{filename}").unlink(missing_ok=True)
     with Path(data_dir / filename).open("rb") as f:
         data = f.read()
-    if not get_module_config(channel.module, "caching"):
+    if not config.get_module_config(channel.module, "caching"):
         Path(data_dir / filename).unlink(missing_ok=True)
     return data

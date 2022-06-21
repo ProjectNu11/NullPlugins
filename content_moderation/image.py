@@ -14,7 +14,7 @@ from tencentcloud.common.profile.client_profile import ClientProfile
 from tencentcloud.common.profile.http_profile import HttpProfile
 from tencentcloud.ims.v20201229 import ims_client, models
 
-from library.config import get_module_config
+from library.config import config
 from library.orm import orm
 from .table import ImageModeration
 from .util import tencent_credential
@@ -54,7 +54,7 @@ def get_result(data_id, file_content):
     client_profile = ClientProfile()
     client_profile.httpProfile = http_profile
     client = ims_client.ImsClient(
-        cred, get_module_config(channel.module, "server"), client_profile
+        cred, config.get_module_config(channel.module, "server"), client_profile
     )
     req = models.ImageModerationRequest()
     params = {"DataId": data_id, "FileContent": file_content}

@@ -23,7 +23,8 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
 from library.config import config
-from library.depend import Switch, FunctionCall
+from library.depend.function_call import FunctionCall
+from library.depend.switch import Switch
 
 saya = Saya.current()
 channel = Channel.current()

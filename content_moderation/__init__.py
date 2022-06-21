@@ -7,8 +7,8 @@ from graia.ariadne.message.element import Image, Source, FlashImage, Plain, At
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
-from library.config import get_module_config, update_module_config
-from library.depend import Switch
+from library.config import config
+from library.depend.switch import Switch
 from module.content_moderation.image import run_image_moderation
 from module.content_moderation.util import update_violation_count, TencentCredential
 
@@ -19,8 +19,8 @@ channel.name("ContentModeration")
 channel.author("nullqwertyuiop")
 channel.description("")
 
-if not get_module_config(channel.module):
-    update_module_config(
+if not config.get_module_config(channel.module):
+    config.update_module_config(
         channel.module,
         {"secret_id": None, "secret_key": None, "server": "ap-guangzhou"},
     )

@@ -20,7 +20,8 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
 from library.config import config
-from library.depend import Switch, FunctionCall
+from library.depend.function_call import FunctionCall
+from library.depend.switch import Switch
 
 saya = Saya.current()
 channel = Channel.current()
@@ -170,7 +171,7 @@ async def search_movie(
                 time=datetime.now() + timedelta(seconds=15) * (index + 1),
                 message=MessageChain(
                     [
-                        Image(data_bytes=cover) if cover else None,
+                        Image(data_bytes=cover) if cover else Plain("[暂无图片]"),
                         Plain(text=f"影名：{title}\n"),
                         Plain(text=f"编号：{movie_id}\n"),
                         Plain(text=f"评分：{rating}\n"),

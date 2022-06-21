@@ -1,7 +1,3 @@
-def download_emoji_assets():
-    pass
-
-
 # <editor-fold desc="Emoji List">
 emoji_list = [
     "‼",

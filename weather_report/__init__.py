@@ -28,8 +28,9 @@ from graia.scheduler.saya import SchedulerSchema
 from pydantic import BaseModel
 from sqlalchemy import select
 
-from library.config import get_module_config, update_module_config
-from library.depend import Switch, FunctionCall
+from library.config import config
+from library.depend.function_call import FunctionCall
+from library.depend.switch import Switch
 from library.orm import orm
 from .table import WeatherSchedule
 
@@ -40,8 +41,8 @@ channel.name("WeatherReport")
 channel.author("nullqwertyuiop")
 channel.description("天气预报")
 
-if not get_module_config(channel.module, "key"):
-    update_module_config(channel.module, {"key": None})
+if not config.get_module_config(channel.module, "key"):
+    config.update_module_config(channel.module, {"key": None})
 
 
 @channel.use(

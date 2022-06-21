@@ -13,7 +13,8 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 from loguru import logger
 
-from library.depend import Switch, FunctionCall
+from library.depend.function_call import FunctionCall
+from library.depend.switch import Switch
 
 saya = Saya.current()
 channel = Channel.current()
@@ -114,7 +115,7 @@ class BilibiliLinkResolve:
                     async with session.get(url=img_url) as resp:
                         img_content = await resp.read()
                 cover = Image(data_bytes=img_content)
-                chain_list.append(cover if first else None)
+                chain_list.append(cover if first else Plain(""))
                 chain_list.extend(
                     Plain(text=cls.replace_variable(item, data))
                     for item in parsed_config[1:]

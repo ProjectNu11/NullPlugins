@@ -2,7 +2,7 @@ from graia.saya import Channel
 from sqlalchemy import select
 from tencentcloud.common import credential
 
-from library.config import get_module_config
+from library.config import config
 from library.orm import orm
 from module.content_moderation.table import ViolationCount
 
@@ -15,17 +15,15 @@ class TencentCredential:
     __error_count: int = 0
 
     def __init__(self, module: str):
-        config = get_module_config(module)
-        if not config:
+        cfg = config.get_module_config(module)
+        if not cfg:
             self.__valid = False
             return
-        if not config.get("secret_id", None) or not config.get("secret_key", None):
+        if not cfg.get("secret_id", None) or not cfg.get("secret_key", None):
             self.__valid = False
             return
         else:
-            self.__cred = credential.Credential(
-                config["secret_id"], config["secret_key"]
-            )
+            self.__cred = credential.Credential(cfg["secret_id"], cfg["secret_key"])
             self.__valid = True
 
     def invalidate(self):

@@ -21,9 +21,9 @@ from loguru import logger
 from pydantic import BaseModel
 
 from library.config import config
-from library.config import get_module_config, update_module_config
-from library.depend import Switch, FunctionCall
-from module.build_image.util import TextUtil, BuildImage
+from library.depend.function_call import FunctionCall
+from library.depend.switch import Switch
+from module.build_image.build_image import TextUtil, BuildImage
 
 saya = Saya.current()
 channel = Channel.current()
@@ -38,8 +38,8 @@ class TwitterPreviewConfig(BaseModel):
     bearer: str = None
 
 
-if not get_module_config(channel.module):
-    update_module_config(channel.module, TwitterPreviewConfig())
+if not config.get_module_config(channel.module):
+    config.update_module_config(channel.module, TwitterPreviewConfig())
 
 
 @channel.use(
@@ -124,9 +124,9 @@ class TwitterPreview:
 
     @staticmethod
     def get_bearer() -> dict:
-        assert get_module_config(channel.module, "bearer"), "推特 Bearer 未配置"
+        assert config.get_module_config(channel.module, "bearer"), "推特 Bearer 未配置"
         return {
-            "Authorization": f"Bearer {get_module_config(channel.module, 'bearer')}"
+            "Authorization": f"Bearer {config.get_module_config(channel.module, 'bearer')}"
         }
 
     @classmethod
@@ -217,7 +217,7 @@ class BuildTweet:
     def __init__(self, tweet: dict):
         self.__grid = 30
         self.__boundary = 30
-        self.__canvas_width = get_module_config(channel.module, "canvas_width")
+        self.__canvas_width = config.get_module_config(channel.module, "canvas_width")
         if self.__canvas_width < 350:
             logger.error("__canvas_width 必须大于 350")
             self.__canvas_width = 350
