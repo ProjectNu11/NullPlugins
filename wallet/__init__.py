@@ -53,9 +53,9 @@ update_lock = Lock()
 async def get_wallet(app: Ariadne, event: MessageEvent):
     if data := await Wallet.get_balance(event.sender.group, event.sender):
         balance, last_time = data
-        time_line = (
-            f"\n===============\n最后一次更新于{last_time.strftime('%Y-%m-%d %H:%M:%S')}"
-        )
+        if isinstance(last_time, datetime):
+            last_time = last_time.strftime("%Y-%m-%d %H:%M:%S")
+        time_line = f"\n===============\n最后一次更新于{last_time}"
     else:
         balance = 0
         time_line = ""
