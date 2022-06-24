@@ -8,7 +8,7 @@ from graia.saya import Channel
 from library import config
 from module.image_searcher.utils import get_thumb, error_catcher
 
-custom_cfg = []
+custom_cfg = ["api_key"]
 channel = Channel.current()
 
 
@@ -26,7 +26,7 @@ async def saucenao_search(
     if not api_key:
         if not (
             saucenao_cfg := config.get_module_config(channel.module, "saucenao")
-        ) or (api_key := saucenao_cfg.get("api_key")):
+        ) or not (api_key := saucenao_cfg.get("api_key")):
             return MessageChain("未配置 SauceNAO API Key")
     async with Network(proxies=proxies) as client:
         saucenao = SauceNAO(client=client, api_key=api_key)
