@@ -1,0 +1,14 @@
+{
+    "name": "以图搜图",
+    "pack": "module.image_searcher",
+    "version": "1.0",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": true,
+    "category": "utility",
+    "description": "",
+    "dependency": null,
+    "loaded": true,
+    "override_default": null
+}
