@@ -36,7 +36,7 @@ if not (__cfg := config.get_module_config(channel.module)):
         channel.module,
         {
             engine: {"switch": True, **{key: None for key in keys}}
-            for engine, keys in custom_cfg_keys
+            for engine, keys in custom_cfg_keys.items()
         },
     )
 else:
