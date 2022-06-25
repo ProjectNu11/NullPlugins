@@ -13,8 +13,7 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 from loguru import logger
 
-from library.depend.function_call import FunctionCall
-from library.depend.switch import Switch
+from library.depend import Switch, FunctionCall
 
 saya = Saya.current()
 channel = Channel.current()
@@ -46,17 +45,18 @@ channel.description("B站链接解析")
     )
 )
 async def bilibili_link_resolve_handler(app: Ariadne, event: MessageEvent):
-    await app.send_message(
-        event.sender.group if isinstance(event, GroupMessage) else event.sender,
-        await BilibiliLinkResolve.resolve(event.message_chain.display),
-    )
+    if msg := await BilibiliLinkResolve.resolve(event.message_chain.display):
+        await app.send_message(
+            event.sender.group if isinstance(event, GroupMessage) else event.sender,
+            msg,
+        )
 
 
 class BilibiliLinkResolve:
     @classmethod
     async def resolve(cls, message: str) -> Union[None, MessageChain]:
         if match := re.findall(
-            r"(?:http:|https://)?(?:[^.]+\.)?bilibili\.com/video/(?:BV|bv)(\w{10})",
+            r"(?:https?://)?(?:[^.]+\.)?bilibili\.com/video/(?:BV|bv)(\w{10})",
             message,
         ):
             bv = f"bv{match[0]}"
@@ -64,13 +64,13 @@ class BilibiliLinkResolve:
             info = await BilibiliLinkResolve.get_info(av)
             return await cls.generate_messagechain(info)
         elif match := re.findall(
-            r"(?:http:|https://)?(?:[^.]+\.)?bilibili\.com/video/(?:AV|av)(\d+)",
+            r"(?:https?://)?(?:[^.]+\.)?bilibili\.com/video/(?:AV|av)(\d+)",
             message,
         ):
             av = match[0]
             info = await cls.get_info(av)
             return await cls.generate_messagechain(info)
-        elif match := re.findall(r"(http:|https:/\)?(?:[^.]+\.)?b23\.tv/\w+)", message):
+        elif match := re.findall(r"(https?://\)?(?:[^.]+\.)?b23\.tv/\w+)", message):
             match = match[0]
             if not (match.startswith("http")):
                 match = f"https://{match}"
@@ -118,7 +118,7 @@ class BilibiliLinkResolve:
                 chain_list.append(cover if first else Plain(""))
                 chain_list.extend(
                     Plain(text=cls.replace_variable(item, data))
-                    for item in parsed_config[1:]
+                    for item in parsed_config
                 )
             else:
                 chain_list = [Plain(text=cls.replace_variable(config, data))]
