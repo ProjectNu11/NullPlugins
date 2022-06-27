@@ -1,0 +1,17 @@
+{
+    "name": "帮助菜单",
+    "pack": "module.help_menu",
+    "version": "0.1",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": false,
+    "category": "utility",
+    "description": "",
+    "dependency": [
+        "module.build_image"
+    ],
+    "loaded": true,
+    "override_default": true,
+    "override_switch": true
+}

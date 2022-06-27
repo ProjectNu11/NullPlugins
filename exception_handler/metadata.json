@@ -12,5 +12,6 @@
         "module.build_image"
     ],
     "loaded": true,
-    "override_default": null
+    "override_default": null,
+    "override_switch": null
 }

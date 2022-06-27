@@ -1,16 +1,17 @@
 import asyncio
 import os
-import PIL.Image
+from abc import ABC, abstractmethod
+from base64 import b64decode, b64encode
 from io import BytesIO
 from pathlib import Path
-from PIL import ImageDraw
-from abc import ABC, abstractmethod
-from PIL.ImageFont import FreeTypeFont
-from base64 import b64decode, b64encode
 from typing import Optional, Union, Tuple, List, Any
 
-from .util import get_font
+import PIL.Image
+from PIL import ImageDraw
+from PIL.ImageFont import FreeTypeFont
+
 from .model import TextType
+from .util import get_font
 
 DEFAULT_FONT = str(Path(os.getcwd()) / "statics" / "fonts" / "STKAITI.TTF")
 

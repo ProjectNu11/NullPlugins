@@ -29,8 +29,7 @@ from pydantic import BaseModel
 from sqlalchemy import select
 
 from library.config import config
-from library.depend.function_call import FunctionCall
-from library.depend.switch import Switch
+from library.depend import Switch, FunctionCall
 from library.orm import orm
 from .table import WeatherSchedule
 
@@ -178,7 +177,7 @@ async def get_city(
 ) -> Union[None, Tuple[str, str]]:
     async with session.get(
         url="https://geoapi.qweather.com/v2/city/lookup"
-        f"?key={get_module_config(channel.module, 'key')}"
+        f"?key={config.get_module_config(channel.module, 'key')}"
         f"&location={urllib.parse.quote(city_name)}"
     ) as resp:
         if resp.status == 200:
@@ -209,7 +208,7 @@ async def get_realtime_weather(
 ) -> Union[None, RealtimeWeather]:
     async with session.get(
         url="https://devapi.qweather.com/v7/weather/now"
-        f"?key={get_module_config(channel.module, 'key')}"
+        f"?key={config.get_module_config(channel.module, 'key')}"
         f"&location={urllib.parse.quote(city_code)}"
     ) as resp:
         if resp.status == 200:

@@ -1,10 +1,11 @@
 import math
-import PIL.Image
 from io import BytesIO
 from pathlib import Path
+from typing import List, Union, Optional, Tuple, Literal
+
+import PIL.Image
 from PIL import ImageDraw
 from PIL.ImageFont import FreeTypeFont
-from typing import List, Union, Optional, Tuple, Literal
 
 from .adapter import AbstractAdapter
 from .elements import Text, Image, Enter, EmptyLine

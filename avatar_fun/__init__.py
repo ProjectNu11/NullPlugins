@@ -13,8 +13,7 @@ from graia.ariadne.message.parser.twilight import (
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
-from library.depend.function_call import FunctionCall
-from library.depend.switch import Switch
+from library.depend import Switch, FunctionCall
 from .trash import trash
 from .util import get_image, async_write_gif
 

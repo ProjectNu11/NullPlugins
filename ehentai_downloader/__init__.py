@@ -7,6 +7,7 @@ import pyzipper
 from aiohttp import ClientSession, ClientConnectorError, TCPConnector
 from bs4 import BeautifulSoup
 from graia.ariadne import Ariadne
+from graia.ariadne.connection.util import UploadMethod
 from graia.ariadne.event.message import GroupMessage
 from graia.ariadne.exception import RemoteException
 from graia.ariadne.message.chain import MessageChain
@@ -16,15 +17,13 @@ from graia.ariadne.message.parser.twilight import (
     RegexResult,
     RegexMatch,
 )
-from graia.ariadne.connection.util import UploadMethod
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 from loguru import logger
 from pydantic import BaseModel
 
 from library.config import config
-from library.depend.function_call import FunctionCall
-from library.depend.switch import Switch
+from library.depend import Switch, FunctionCall
 
 saya = Saya.current()
 channel = Channel.current()

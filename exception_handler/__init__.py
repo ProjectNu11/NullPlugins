@@ -12,7 +12,7 @@ from graia.saya import Channel, Saya
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
 from library import config
-from library.depend.permission import Permission
+from library.depend import Permission
 from library.model import UserPerm
 from module import modules
 from module.build_image.aworda_text_to_image.text2image import create_image

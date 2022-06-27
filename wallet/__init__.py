@@ -11,14 +11,16 @@ from graia.ariadne.event.message import (
     FriendMessage,
 )
 from graia.ariadne.message.chain import MessageChain
+from graia.ariadne.message.element import At
 from graia.ariadne.message.parser.twilight import (
     Twilight,
     FullMatch,
     RegexMatch,
-    SpacePolicy,
     RegexResult,
     ArgumentMatch,
     ArgResult,
+    ElementMatch,
+    ElementResult,
 )
 from graia.ariadne.model import Friend
 from graia.saya import Saya, Channel
@@ -26,9 +28,7 @@ from graia.saya.builtins.broadcast.schema import ListenerSchema
 from loguru import logger
 from sqlalchemy import select
 
-from library.depend.permission import Permission
-from library.depend.function_call import FunctionCall
-from library.depend.switch import Switch
+from library.depend import Switch, FunctionCall, Permission
 from library.model import UserPerm
 from library.orm import orm
 from .table import WalletBalance, WalletDetail
@@ -55,7 +55,7 @@ async def get_wallet(app: Ariadne, event: MessageEvent):
         balance, last_time = data
         if isinstance(last_time, datetime):
             last_time = last_time.strftime("%Y-%m-%d %H:%M:%S")
-        time_line = f"\n===============\n最后一次更新于{last_time}"
+        time_line = f"\n===============\n最后一次更新于 {last_time}"
     else:
         balance = 0
         time_line = ""
@@ -71,9 +71,10 @@ async def get_wallet(app: Ariadne, event: MessageEvent):
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(".debug"),
-                    ArgumentMatch("-f", "--field", optional=True) @ "field",
-                    RegexMatch(r"[1-9][0-9]+").space(SpacePolicy.FORCE) @ "target",
+                    FullMatch(".wallet_debug"),
+                    ArgumentMatch("-f", "--field", type=int, optional=True) @ "field",
+                    ArgumentMatch("-t", "--target", type=int, optional=True) @ "target",
+                    ElementMatch(At) @ "at",
                     RegexMatch(r"-?[1-9][0-9]*") @ "amount",
                 ]
             )
@@ -90,20 +91,24 @@ async def wallet_debug(
     event: MessageEvent,
     field: ArgResult,
     target: RegexResult,
+    at: ElementResult,
     amount: RegexResult,
 ):
-    try:
-        field = int(field.result.display) if field.result else event.sender.group
-    except ValueError:
-        return await app.send_message(
-            event.sender.group if isinstance(event, GroupMessage) else event.sender,
-            MessageChain(f"Invalid field: {field}"),
+    if not field.matched and isinstance(event, FriendMessage):
+        await app.send_friend_message(
+            event.sender.id,
+            MessageChain("Error: field is required for friend message"),
         )
+    field = field.result if field.matched else event.sender.group
     if data := await Wallet.get_balance(event.sender.group, event.sender):
         balance, _ = data
     else:
         balance = 0
-    target = int(target.result.display)
+    if at.matched:
+        assert isinstance(at.result, At)
+        target = at.result.target
+    else:
+        target = target.result if target.matched else event.sender
     amount = int(amount.result.display)
     await Wallet.update(field, target, amount, "DEBUG")
     await app.send_message(

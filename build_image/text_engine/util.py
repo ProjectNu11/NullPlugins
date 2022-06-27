@@ -1,7 +1,8 @@
 import os
 from pathlib import Path
-from PIL import ImageFont
 from typing import Union, Optional
+
+from PIL import ImageFont
 from PIL.ImageFont import FreeTypeFont
 
 DEFAULT_FONT_NAME = str(Path(os.getcwd()) / "statics" / "fonts" / "STKAITI.TTF")

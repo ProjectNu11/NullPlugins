@@ -8,7 +8,7 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
 from library.config import config
-from library.depend.switch import Switch
+from library.depend import Switch
 from module.content_moderation.image import run_image_moderation
 from module.content_moderation.util import update_violation_count, TencentCredential
 

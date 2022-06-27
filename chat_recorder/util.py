@@ -6,8 +6,8 @@ from typing import Union, List, Literal
 from sqlalchemy import select
 
 from library.orm import orm
-from .table import ChatRecord, SendRecord
 from .pepper import pepper
+from .table import ChatRecord, SendRecord
 
 
 def get_salt(text: Union[str, int]) -> str:

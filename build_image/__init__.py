@@ -7,16 +7,17 @@ from graia.ariadne.message.parser.twilight import (
     FullMatch,
     ArgumentMatch,
     ArgResult,
+    SpacePolicy,
 )
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
-from library.depend.function_call import FunctionCall
-from library.depend.switch import Switch
-from .build_image import BuildImage
+from library import config
+from library.depend import Switch, FunctionCall
 
 # from .text_engine.text_engine import TextEngine
 from .aworda_text_to_image.text2image import create_image
+from .build_image import BuildImage
 
 saya = Saya.current()
 channel = Channel.current()
@@ -38,7 +39,10 @@ utils = {
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(".build_image").help("匹配 .build_image"),
+                    FullMatch(config.func.prefix)
+                    .space(SpacePolicy.NOSPACE)
+                    .help(f"匹配指令前缀 {config.func.prefix}"),
+                    FullMatch(f"build_image").help("匹配 build_image"),
                     ArgumentMatch("--help", action="store_true", optional=True).help(
                         "显示该帮助文本"
                     )
@@ -99,9 +103,16 @@ async def build_image(
         return await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
             MessageChain(
-                channel.content[0]
-                .metaclass.inline_dispatchers[0]
-                .get_help(".build_image", "通过指令构造一张图片")
+                [
+                    Image(
+                        data_bytes=await create_image(
+                            channel.content[0]
+                            .metaclass.inline_dispatchers[0]
+                            .get_help(".build_image", "通过指令构造一张图片"),
+                            cut=120,
+                        )
+                    )
+                ]
             ),
         )
     if not (width.matched or height.matched):
