@@ -15,7 +15,7 @@ channel = Channel.current()
 @channel.use(
     ListenerSchema(
         listening_events=[GroupMessage],
-        inline_dispatchers=[Twilight([RegexMatch(r"\w+(疼|痛)\w*")])],
+        inline_dispatchers=[Twilight([RegexMatch(r".+(疼|痛)\w*")])],
         decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
@@ -24,10 +24,12 @@ async def fake_diagnose(
 ):
     msg = message.as_display()
     msg = msg.replace("疼", "癌").replace("痛", "癌")
-    cut = list(jieba.cut(msg.split("癌")[0]))
-    illness = f"{cut[-1]}癌"
+    if cut := list(jieba.cut(msg.split("癌")[0])):
+        illness = f"得了{cut[-1]}癌"
+    else:
+        illness = "在无病呻吟"
     await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
-        MessageChain(f"您好！根据您的描述，您可能得了{illness}。"),
+        MessageChain(f"您好！根据您的描述，您可能{illness}。"),
         quote=source,
     )
