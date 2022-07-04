@@ -1,0 +1,16 @@
+{
+    "name": "百度看病",
+    "pack": "module.fake_diagnose",
+    "version": "0.1",
+    "author": [
+        "nullqwertyuiop",
+        "Little-LinNian"
+    ],
+    "pypi": false,
+    "category": "entertainment",
+    "description": "",
+    "dependency": null,
+    "loaded": true,
+    "override_default": null,
+    "override_switch": null
+}
