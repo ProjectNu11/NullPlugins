@@ -15,7 +15,7 @@ channel = Channel.current()
 @channel.use(
     ListenerSchema(
         listening_events=[GroupMessage],
-        inline_dispatchers=[Twilight([RegexMatch(r"\w+(疼|痛)\w+")])],
+        inline_dispatchers=[Twilight([RegexMatch(r"\w+(疼|痛)\w*")])],
         decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
