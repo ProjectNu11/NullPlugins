@@ -15,9 +15,8 @@ assets_dir = Path(Path(__file__).parent.parent, "assets", "pat")
 
 
 def pat(*images: Image.Image) -> bytes:
-    base = images[-1]
+    base = images[-1].convert("RGBA")
     frames: list[Image.Image] = []
-
     for i in range(5):
         hand = Image.open(assets_dir / f"{i}.png")
         frame = Image.new("RGBA", hand.size, (255, 255, 255, 255))
