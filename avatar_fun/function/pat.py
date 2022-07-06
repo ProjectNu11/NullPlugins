@@ -23,7 +23,7 @@ def pat(*images: Image.Image) -> bytes:
         frame = Image.new("RGBA", hand.size, (255, 255, 255, 255))
         x, y, w, h = locations[i]
         tmp = base.resize((w, h), Image.LANCZOS)
-        frame.paste(tmp, (x, y), mask=tmp.split()[3])
-        frame.paste(hand, mask=hand.split()[3])
+        frame.paste(tmp, (x, y), mask=tmp)
+        frame.paste(hand, mask=hand)
         frames.append(frame)
     return write_gif(frames, 60)

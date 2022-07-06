@@ -47,7 +47,7 @@ def beat(*images: Image.Image) -> bytes:
         bg = Image.open(assets_dir, f"{i}.png")
         x, y, w, h = locs[1] if i == 2 else locs[0]
         frame.paste(base.resize((w, h)), (x, y))
-        frame.paste(bg, (0, 0), mask=bg.split()[3])
+        frame.paste(bg, (0, 0), mask=bg)
         img_frames.append(frame)
     frames = [img_frames[n] for n in seq]
     return write_gif(frames, 85)

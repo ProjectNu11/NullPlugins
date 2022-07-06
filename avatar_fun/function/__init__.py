@@ -2,7 +2,7 @@ from .beat import beat
 from .kiss import kiss
 from .pat import pat
 from .rip import rip
-from .top import top
+from .swallow import swallow
 from .trash import trash
 from .tuotoi import tuotoi
 
@@ -15,8 +15,8 @@ __all__ = {
     "pat": pat,
     "撕": rip,
     "rip": rip,
-    "顶": top,
-    "top": top,
+    "吞": swallow,
+    "swallow": swallow,
     "贴": tuotoi,
     "tuotoi": tuotoi,
     "垃圾探头": trash,
