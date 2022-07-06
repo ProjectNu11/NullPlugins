@@ -1,28 +1,33 @@
+import asyncio
+from io import BytesIO
+
+from PIL import Image as PillowImage
 from graia.ariadne.app import Ariadne
 from graia.ariadne.event.message import GroupMessage, FriendMessage, MessageEvent
 from graia.ariadne.message.chain import MessageChain
-from graia.ariadne.message.element import Image, At
+from graia.ariadne.message.element import Image
 from graia.ariadne.message.parser.twilight import (
     Twilight,
     UnionMatch,
-    RegexMatch,
-    ElementMatch,
-    ElementResult,
+    WildcardMatch,
     RegexResult,
+    FullMatch,
+    SpacePolicy,
 )
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
+from library import config
 from library.depend import Switch, FunctionCall
-from .trash import trash
-from .util import get_image, async_write_gif
+from .function import __all__
+from .util import get_element_image, get_image
 
 saya = Saya.current()
 channel = Channel.current()
 
 channel.name("AvatarFunPic")
-channel.author("SAGIRI-kawaii, nullqwertyuiop")
-channel.description("一个可以生成头像相关趣味图的插件，在群中发送 `[摸|亲|贴|撕|丢|爬|精神支柱|吞] [@目标|目标qq|目标图片]` 即可")
+channel.author("nullqwertyuiop")
+channel.description("")
 
 
 @channel.use(
@@ -31,45 +36,30 @@ channel.description("一个可以生成头像相关趣味图的插件，在群�
         inline_dispatchers=[
             Twilight(
                 [
-                    ElementMatch(At, optional=True) @ "at1",
-                    UnionMatch("垃圾探头") @ "func",
-                    RegexMatch(r"[\n\r]", optional=True),
-                    ElementMatch(Image, optional=True) @ "image",
-                    ElementMatch(At, optional=True) @ "at2",
+                    FullMatch(config.func.prefix).space(SpacePolicy.NOSPACE),
+                    UnionMatch(*__all__.keys()) @ "func",
+                    WildcardMatch(),
                 ]
             )
         ],
         decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
-async def avatar_fun_one_element(
-    app: Ariadne,
-    event: MessageEvent,
-    func: RegexResult,
-    at1: ElementResult,
-    image: ElementResult,
-    at2: ElementResult,
-):
-    if image.matched:
-        assert isinstance(image.result, Image)
-        image_bytes = await get_image(image.result)
-    elif at1.matched and not at2.matched:
-        assert isinstance(at1.result, At)
-        image_bytes = await get_image(at1.result.target)
-    elif at2.matched:
-        assert isinstance(at2.result, At)
-        image_bytes = await get_image(at2.result.target)
-    else:
-        image_bytes = await event.sender.get_avatar()
-    func: str = func.result.display
-    if not image_bytes:
-        return
-    composed = None
-    if func == "垃圾探头":
-        composed = await trash(image_bytes)
-    if not composed:
-        return
+async def avatar_fun_one_element(app: Ariadne, event: MessageEvent, func: RegexResult):
+    elements = [PillowImage.open(BytesIO(await get_image(event.sender.id)))]
+    elements.extend(await get_element_image(event.message_chain))
+    loop = asyncio.get_event_loop()
+    try:
+        if not (
+            composed := await loop.run_in_executor(
+                None, __all__[func.result.display], *elements
+            )
+        ):
+            return
+        msg = MessageChain([Image(data_bytes=composed)])
+    except AssertionError as err:
+        msg = MessageChain(err.args[0])
     await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
-        MessageChain([Image(data_bytes=composed)]),
+        msg,
     )
