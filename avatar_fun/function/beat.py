@@ -44,7 +44,7 @@ def beat(*images: Image.Image) -> bytes:
     img_frames: list[Image.Image] = []
     for i in range(10):
         frame = Image.new("RGBA", (235, 196), "#ffffff")
-        bg = Image.open(assets_dir, f"{i}.png")
+        bg = Image.open(Path(assets_dir, f"{i}.png"))
         x, y, w, h = locs[1] if i == 2 else locs[0]
         frame.paste(base.resize((w, h)), (x, y))
         frame.paste(bg, (0, 0), mask=bg)

@@ -3,7 +3,7 @@ import base64
 import json
 from datetime import datetime
 from enum import Enum
-from typing import NoReturn, Optional, Tuple
+from typing import NoReturn
 
 from graia.saya import Channel
 from sqlalchemy import select
@@ -85,7 +85,7 @@ async def update(data_id: str, label: str, suggestion: str, sub_label: str) -> N
     )
 
 
-async def query(data_id: str) -> Optional[Tuple[int, ModerationLevel, str]]:
+async def query(data_id: str) -> tuple[int, ModerationLevel, str] | None:
     if fetch := await orm.fetchone(
         select(
             ImageModeration.override,
@@ -99,7 +99,7 @@ async def query(data_id: str) -> Optional[Tuple[int, ModerationLevel, str]]:
         return override, getattr(ModerationLevel, str(suggestion)), sub_label
 
 
-async def run_image_moderation(image_id: str, data: bytes) -> Tuple[bool, str]:
+async def run_image_moderation(image_id: str, data: bytes) -> tuple[bool, str]:
     if pre_check := await query(image_id):
         if pre_check[0] != -1:
             return bool(pre_check), pre_check[2]

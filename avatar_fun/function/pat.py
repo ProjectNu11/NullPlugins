@@ -18,7 +18,7 @@ def pat(*images: Image.Image) -> bytes:
     base = crop_to_circle(images[-1].convert("RGBA"))
     frames: list[Image.Image] = []
     for i in range(5):
-        hand = Image.open(assets_dir / f"{i}.png")
+        hand = Image.open(Path(assets_dir, f"{i}.png"))
         frame = Image.new("RGBA", hand.size, (255, 255, 255, 255))
         x, y, w, h = locations[i]
         tmp = base.resize((w, h), Image.LANCZOS)

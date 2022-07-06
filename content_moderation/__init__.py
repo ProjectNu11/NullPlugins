@@ -10,7 +10,11 @@ from graia.saya.builtins.broadcast import ListenerSchema
 from library.config import config
 from library.depend import Switch
 from module.content_moderation.image import run_image_moderation
-from module.content_moderation.util import update_violation_count, TencentCredential
+from module.content_moderation.util import (
+    update_violation_count,
+    TencentCredential,
+    tencent_credential,
+)
 
 saya = Saya.current()
 channel = Channel.current()
@@ -29,10 +33,12 @@ if not config.get_module_config(channel.module):
 @channel.use(
     ListenerSchema(
         listening_events=[GroupMessage],
-        decorators=[Switch.check(channel.module, log=False)],
+        decorators=[Switch.check(channel.module, no_notice=True, log=False)],
     )
 )
 async def image_moderation(app: Ariadne, event: GroupMessage):
+    if not tencent_credential.is_valid():
+        return
     if not (
         images := (
             event.message_chain.get(FlashImage) or event.message_chain.get(Image)

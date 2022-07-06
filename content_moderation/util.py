@@ -4,7 +4,7 @@ from tencentcloud.common import credential
 
 from library.config import config
 from library.orm import orm
-from module.content_moderation.table import ViolationCount
+from .table import ViolationCount
 
 channel = Channel.current()
 

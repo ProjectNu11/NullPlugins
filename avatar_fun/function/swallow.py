@@ -98,7 +98,7 @@ def swallow(*images: Image.Image) -> bytes:
     base = images[-1]
     frames: list[Image.Image] = []
     for i in range(121):
-        bg = Image.open(assets_dir / f"{i + 1}.png")
+        bg = Image.open(Path(assets_dir, f"{i + 1}.png"))
         times = len(pos_and_sizes)
         if i < times:
             frame = Image.new("RGBA", bg.size, "#ffffff")

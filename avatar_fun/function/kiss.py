@@ -42,7 +42,7 @@ def kiss(*images: Image.Image) -> bytes:
     target_avatar = images[-1]
     frames: list[Image.Image] = []
     for i in range(13):
-        frame = Image.open(assets_dir / f"{i}.png")
+        frame = Image.open(Path(assets_dir, f"{i}.png"))
         frame.paste(target_avatar, target_avatar_locations[i], mask=target_avatar)
         if self_avatar is not None:
             frame.paste(self_avatar, self_avatar_locations[i], mask=self_avatar)
