@@ -1,7 +1,7 @@
 from pathlib import Path
 from PIL import Image
 
-from module.avatar_fun.util import write_gif
+from module.avatar_fun.util import write_gif, crop_to_circle
 
 target_avatar_locations = [
     (58, 90),
@@ -38,8 +38,12 @@ assets_dir = Path(Path(__file__).parent.parent, "assets", "kiss")
 
 
 def kiss(*images: Image.Image) -> bytes:
-    self_avatar = images[0]
-    target_avatar = images[-1]
+    self_avatar = crop_to_circle(
+        images[0].convert("RGBA").resize((40, 40), Image.LANCZOS)
+    )
+    target_avatar = crop_to_circle(images[-1].convert("RGBA")).resize(
+        (50, 50), Image.LANCZOS
+    )
     frames: list[Image.Image] = []
     for i in range(13):
         frame = Image.open(Path(assets_dir, f"{i}.png"))
