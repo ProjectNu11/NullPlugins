@@ -1,7 +1,7 @@
 from pathlib import Path
 from PIL import Image
 
-from module.avatar_fun.util import write_gif
+from module.avatar_fun.util import write_gif, crop_to_circle
 
 locations = [
     (14, 20, 98, 98),
@@ -15,7 +15,7 @@ assets_dir = Path(Path(__file__).parent.parent, "assets", "pat")
 
 
 def pat(*images: Image.Image) -> bytes:
-    base = images[-1].convert("RGBA")
+    base = crop_to_circle(images[-1].convert("RGBA"))
     frames: list[Image.Image] = []
     for i in range(5):
         hand = Image.open(assets_dir / f"{i}.png")

@@ -6,7 +6,6 @@ from PIL import Image as PillowImage, ImageDraw, ImageChops
 from aiohttp import ClientResponseError
 from graia.ariadne.message.chain import MessageChain
 from graia.ariadne.message.element import Image, At, Plain
-from graia.ariadne.model import Member
 
 
 def get_match_element(message: MessageChain) -> list[int | Image | At]:
@@ -19,20 +18,18 @@ def get_match_element(message: MessageChain) -> list[int | Image | At]:
     return elements
 
 
-async def get_image(img: int | Image | Member) -> bytes:
+async def get_image(img: int | Image | At) -> bytes:
     async with aiohttp.ClientSession() as session:
+        if isinstance(img, At):
+            img = img.target
         if isinstance(img, int):
             async with session.get(
                 url=f"https://q1.qlogo.cn/g?b=qq&nk={img}&s=640"
             ) as resp:
                 return await resp.read()
         try:
-            if isinstance(img, Image):
-                return await img.get_bytes()
-            return await img.get_avatar()
+            return await img.get_bytes()
         except ClientResponseError:
-            if isinstance(img, Member):
-                return await get_image(img.id)
             img_id = img.id.split(".")[0][1:-1].replace("-", "")
             async with session.get(
                 url=f"https://gchat.qpic.cn/gchatpic_new/0/1-1-{img_id}/0"
