@@ -65,7 +65,7 @@ async def fake_leica(
         try:
             assert (quote := event.message_chain.get(Quote))
             assert (original := await ariadne.get_message_from_id(quote[0].id))
-            assert (img := original.get(Image))
+            assert (img := original.message_chain.get(Image))
             image_bytes = await img[0].get_bytes()
         except (UnknownTarget, AssertionError):
 
