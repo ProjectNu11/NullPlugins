@@ -1,0 +1,15 @@
+{
+    "name": "莱卡生成",
+    "pack": "module.fake_leica",
+    "version": "1.0",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": false,
+    "category": "entertainment",
+    "description": "",
+    "dependency": null,
+    "loaded": true,
+    "override_default": null,
+    "override_switch": null
+}
