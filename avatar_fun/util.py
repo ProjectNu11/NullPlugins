@@ -13,8 +13,9 @@ def get_match_element(message: MessageChain, args: str) -> list[int | Image | At
     elements: list[int | Image | At] = [
         element for element in message.__root__ if isinstance(element, (Image, At))
     ]
-    if not args.replace(" ", "").isdigit():
-        raise ExecutionStop
+    if _args := args.replace(" ", ""):
+        if not _args.isdigit():
+            raise ExecutionStop
     if matched := re.findall(r"(?<!\d)[1-9]\d{4,10}", args):
         elements.extend(map(lambda x: int(x), matched))
     return elements
