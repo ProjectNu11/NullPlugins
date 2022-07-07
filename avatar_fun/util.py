@@ -6,14 +6,16 @@ from PIL import Image as PillowImage, ImageDraw, ImageChops
 from aiohttp import ClientResponseError
 from graia.ariadne.message.chain import MessageChain
 from graia.ariadne.message.element import Image, At, Plain
+from graia.broadcast import ExecutionStop
 
 
-def get_match_element(message: MessageChain) -> list[int | Image | At]:
+def get_match_element(message: MessageChain, args: str) -> list[int | Image | At]:
     elements: list[int | Image | At] = [
         element for element in message.__root__ if isinstance(element, (Image, At))
     ]
-    msg = message.include(Plain).display
-    if matched := re.findall(r"(?<!\d)[1-9]\d{4,10}", msg):
+    if not args.replace(" ", "").isdigit():
+        raise ExecutionStop
+    if matched := re.findall(r"(?<!\d)[1-9]\d{4,10}", args):
         elements.extend(map(lambda x: int(x), matched))
     return elements
 
@@ -37,10 +39,12 @@ async def get_image(img: int | Image | At) -> bytes:
                 return await resp.read()
 
 
-async def get_element_image(message: MessageChain) -> list[PillowImage.Image]:
+async def get_element_image(
+    message: MessageChain, args: str
+) -> list[PillowImage.Image]:
     return [
         PillowImage.open(BytesIO(await get_image(element)))
-        for element in get_match_element(message)
+        for element in get_match_element(message, args)
     ]
 
 

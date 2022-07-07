@@ -5,7 +5,7 @@ from PIL import Image as PillowImage
 from graia.ariadne.app import Ariadne
 from graia.ariadne.event.message import GroupMessage, FriendMessage, MessageEvent
 from graia.ariadne.message.chain import MessageChain
-from graia.ariadne.message.element import Image
+from graia.ariadne.message.element import Image, Plain
 from graia.ariadne.message.parser.twilight import (
     Twilight,
     UnionMatch,
@@ -38,16 +38,19 @@ channel.description("")
                 [
                     FullMatch(config.func.prefix).space(SpacePolicy.NOSPACE),
                     UnionMatch(*__all__.keys()) @ "func",
-                    WildcardMatch(),
+                    WildcardMatch() @ "args",
                 ]
             )
         ],
         decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
-async def avatar_fun_one_element(app: Ariadne, event: MessageEvent, func: RegexResult):
+async def avatar_fun_one_element(
+    app: Ariadne, event: MessageEvent, func: RegexResult, args: RegexResult
+):
+    args: str = " ".join(plain.display for plain in args.result.get(Plain))
     elements = [PillowImage.open(BytesIO(await get_image(event.sender.id)))]
-    elements.extend(await get_element_image(event.message_chain))
+    elements.extend(await get_element_image(event.message_chain, args))
     loop = asyncio.get_event_loop()
     try:
         if not (
