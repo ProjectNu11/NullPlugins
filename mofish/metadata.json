@@ -1,12 +1,12 @@
 {
     "name": "摸鱼",
     "pack": "module.mofish",
-    "version": "1.0",
+    "version": "1.1",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": true,
-    "category": "entertainment",
+    "category": "utility",
     "description": "",
     "dependency": null,
     "loaded": true,
