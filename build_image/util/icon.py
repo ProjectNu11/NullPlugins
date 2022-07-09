@@ -1,18 +1,18 @@
 import asyncio
-from enum import Enum
 from pathlib import Path
-from typing import Union
 
 import numpy as np
 from PIL import Image
 
 
-class IconUtil(Enum):
+class IconUtil:
     def __int__(self):
         raise NotImplementedError("This class is not intended to be instantiated.")
 
     @classmethod
-    def get_icon(cls, icon: str, size: tuple = None, color: tuple = (63, 63, 63)):
+    def get_icon(
+        cls, icon: str, size: tuple = None, color: tuple[int, int, int] = (63, 63, 63)
+    ):
         """
         Get an icon from the assets/icons folder
 
@@ -33,7 +33,7 @@ class IconUtil(Enum):
 
     @classmethod
     async def async_get_icon(
-        cls, icon: str, size: tuple = None, color: tuple = (63, 63, 63)
+        cls, icon: str, size: tuple = None, color: tuple[int, int, int] = (63, 63, 63)
     ):
         """
         Get an icon from the assets/icons folder
@@ -48,7 +48,7 @@ class IconUtil(Enum):
         return await loop.run_in_executor(None, cls.get_icon, icon, size, color)
 
     @staticmethod
-    def replace_color(icon: Image.Image, color: tuple):
+    def replace_color(icon: Image.Image, color: tuple[int, int, int]):
         """
         Replace the color of the icon
 
@@ -66,7 +66,7 @@ class IconUtil(Enum):
         return icon
 
     @classmethod
-    async def async_replace_color(cls, icon: Image.Image, color: tuple):
+    async def async_replace_color(cls, icon: Image.Image, color: tuple[int, int, int]):
         """
         Replace the color of the icon
 
@@ -79,7 +79,7 @@ class IconUtil(Enum):
         return await loop.run_in_executor(None, cls.replace_color, icon, color)
 
     @staticmethod
-    def get_emoji(emoji: Union[str, int], size: tuple = None):
+    def get_emoji(emoji: str | int, size: tuple[int, int] = None):
         """
         Get an emoji from the assets/emoji folder
 

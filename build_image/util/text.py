@@ -4,7 +4,7 @@ import string
 from typing import Literal
 
 from PIL import ImageDraw, ImageFont, Image
-from .emoji import emoji_list
+from ..assets.emoji import emoji_list
 from .icon import IconUtil
 
 

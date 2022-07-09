@@ -2,6 +2,7 @@ import asyncio
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from loguru import logger
 
 
 class ImageUtil:
@@ -331,19 +332,34 @@ class ImageUtil:
         )
 
     @staticmethod
-    def get_font(font_size: int, font_name: str = "sarasa-mono-sc-nerd-light.ttf"):
+    def get_font(
+        font_size: int,
+        font_name: str = "sarasa-mono-sc-nerd-light.ttf",
+        variant: str = None,
+    ):
         """
         Get a font with the specified size, default to Sarasa Mono Nerd Light
 
         :param font_size: Size of the font
         :param font_name: Name of the font, must be in the assets/fonts folder
+        :param variant: Variant of the font, must be in the assets/fonts folder
         :return: Font with the specified size
         """
 
-        return ImageFont.truetype(
+        font = ImageFont.truetype(
             str(Path(Path(__file__).parent.parent, "assets", "fonts", font_name)),
             font_size,
         )
+
+        if not variant:
+            return font
+
+        try:
+            font.set_variation_by_name(variant)
+        except OSError:
+            logger.error(f"Font {font_name} is not a variation font.")
+        finally:
+            return font
 
     @staticmethod
     def draw_line(
