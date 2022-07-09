@@ -49,6 +49,7 @@ async def avatar_fun_one_element(
     app: Ariadne, event: MessageEvent, func: RegexResult, args: RegexResult
 ):
     args: str = " ".join(plain.display for plain in args.result.get(Plain))
+    print(args)
     elements = [PillowImage.open(BytesIO(await get_image(event.sender.id)))]
     elements.extend(await get_element_image(event.message_chain, args))
     loop = asyncio.get_event_loop()

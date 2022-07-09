@@ -5,7 +5,7 @@ import aiohttp
 from PIL import Image as PillowImage, ImageDraw, ImageChops
 from aiohttp import ClientResponseError
 from graia.ariadne.message.chain import MessageChain
-from graia.ariadne.message.element import Image, At, Plain
+from graia.ariadne.message.element import Image, At
 from graia.broadcast import ExecutionStop
 
 

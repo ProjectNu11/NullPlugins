@@ -24,7 +24,7 @@ assets_dir = Path(Path(__file__).parent.parent, "assets", "tuotoi")
 
 
 def tuotoi(*images: Image.Image) -> bytes:
-    self_avatar = crop_to_circle(images[0].convert("RGBA"))
+    self_avatar = crop_to_circle(images[0 if len(images) == 1 else -2].convert("RGBA"))
     target_avatar = crop_to_circle(images[-1].convert("RGBA"))
     frames: list[Image.Image] = []
     for i in range(6):
