@@ -5,15 +5,15 @@ from zhdate import ZhDate
 
 def __get_week_day(date):
     week_day_dict = {
-        0: "星期一",
-        1: "星期二",
-        2: "星期三",
-        3: "星期四",
-        4: "星期五",
-        5: "星期六",
-        6: "星期天",
+        0: "一",
+        1: "二",
+        2: "三",
+        3: "四",
+        4: "五",
+        5: "六",
+        6: "天",
     }
-    return week_day_dict[date.weekday()]
+    return f"星期{week_day_dict[date.weekday()]}"
 
 
 def __get_closing_time(opening_time: str = "09:00:00", closing_time: str = "17:00:00"):
@@ -82,7 +82,7 @@ def get_text():
     week_day_ = __get_week_day(today)
 
     if datetime.date.today().weekday() in (5, 6):
-        return f"{now_} {week_day_}\n不会有人周末还上班吧！\n\n摸鱼办"
+        return f"{now_} {week_day_}\n\n摸鱼办周末不上班"
 
     output = (
         f"{now_} {week_day_}"
