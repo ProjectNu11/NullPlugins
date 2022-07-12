@@ -66,6 +66,7 @@ def write_gif(
 
 
 def write_jpg(img: PillowImage.Image, quality=95) -> bytes:
+    img = img.convert("RGB")
     with BytesIO() as f:
         img.save(
             f,
