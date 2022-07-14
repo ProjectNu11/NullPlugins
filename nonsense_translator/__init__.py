@@ -1,9 +1,11 @@
+import asyncio
 import random
 import re
 
 from graia.ariadne import Ariadne
 from graia.ariadne.event.message import GroupMessage
 from graia.ariadne.message.chain import MessageChain
+from graia.ariadne.message.element import Source
 from graia.ariadne.message.parser.twilight import (
     Twilight,
     FullMatch,
@@ -66,10 +68,16 @@ async def nonsense_translate(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
             MessageChain("？这是在干什么"),
         )
+    await ariadne.send_message(
+        event.sender.group if isinstance(event, GroupMessage) else event.sender,
+        MessageChain(f"预计耗时：{round(times * 3)} 秒"),
+    )
     for _ in range(times - 1):
         text = await trans_engine.trans(text, trans_to=random.choice(languages))
+        await asyncio.sleep(2.5)
     text = await trans_engine.trans(text)
     await ariadne.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
         MessageChain(text),
+        quote=event.message_chain.get_first(Source),
     )
