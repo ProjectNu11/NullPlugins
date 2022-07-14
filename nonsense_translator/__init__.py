@@ -63,7 +63,7 @@ async def nonsense_translate(
         )
     times: int = times.result if times.matched else 20
     text = text.result.display
-    if times <= 0 or not text:
+    if times <= 0 or times > 100 or not text:
         return await ariadne.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
             MessageChain("？这是在干什么"),
