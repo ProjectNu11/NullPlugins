@@ -1,0 +1,17 @@
+{
+    "name": "聊天",
+    "pack": "module.chat",
+    "version": "0.1",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": false,
+    "category": "utility",
+    "description": "",
+    "dependency": [
+        "module.translator"
+    ],
+    "loaded": true,
+    "override_default": null,
+    "override_switch": null
+}
