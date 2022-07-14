@@ -1,0 +1,17 @@
+{
+    "name": "瞎翻译",
+    "pack": "module.nonsense_translator",
+    "version": "1.0",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": false,
+    "category": "entertainment",
+    "description": "",
+    "dependency": [
+        "module.translator"
+    ],
+    "loaded": true,
+    "override_default": null,
+    "override_switch": null
+}

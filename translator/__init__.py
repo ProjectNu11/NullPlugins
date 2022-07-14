@@ -23,14 +23,18 @@ from .engines import __all__
 saya = Saya.current()
 channel = Channel.current()
 
-channel.name("Translate")
+channel.name("Translator")
 channel.author("nullqwertyuiop")
 channel.description("")
 
 if not config.get_module_config(channel.module):
     config.update_module_config(
         channel.module,
-        {"default_engine": "youdao", "tencent_secret_id": "", "tencent_secret_key": ""},
+        {
+            "default_engine": "youdao",
+            "tencent_secret_id": None,
+            "tencent_secret_key": None,
+        },
     )
 
 

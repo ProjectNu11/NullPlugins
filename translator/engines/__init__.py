@@ -53,3 +53,23 @@ async def translate(
             f"Supported languages: {', '.join(languages)}"
         )
     return await trans_engine.trans(content, source, target, keep)
+
+
+def get_engine_data(engine: str | None = None) -> tuple[BaseTrans, list[str]] | None:
+    if engine is None:
+        engine = config.get_module_config(channel.module).get("default_engine")
+    if (data := __all__.get(engine, None)) is None:
+        return
+    return data
+
+
+def get_engine(engine: str | None = None) -> BaseTrans | None:
+    if data := get_engine_data(engine):
+        return data[0]
+    return
+
+
+def get_languages(engine: str | None = None) -> list[str] | None:
+    if data := get_engine_data(engine):
+        return data[1]
+    return
