@@ -19,6 +19,7 @@ from graia.saya.builtins.broadcast.schema import ListenerSchema
 
 from library import config
 from library.depend import Switch, FunctionCall
+from library.depend.interval import Interval
 from .function import __all__
 from .util import get_element_image, get_image
 
@@ -42,7 +43,10 @@ channel.description("")
                 ]
             )
         ],
-        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
+        decorators=[
+            Switch.check(channel.module),
+            FunctionCall.record(channel.module),
+        ],
     )
 )
 async def avatar_fun(
@@ -51,6 +55,12 @@ async def avatar_fun(
     args: str = " ".join(plain.display for plain in args.result.get(Plain))
     elements = [PillowImage.open(BytesIO(await get_image(event.sender.id)))]
     elements.extend(await get_element_image(event.message_chain, args))
+    await Interval.check_and_raise(
+        channel.module,
+        supplicant=event.sender,
+        seconds=15,
+        on_failure=MessageChain("休息一下罢！冷却 {interval}"),
+    )
     loop = asyncio.get_event_loop()
     try:
         if not (

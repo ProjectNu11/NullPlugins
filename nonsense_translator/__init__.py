@@ -20,6 +20,7 @@ from graia.saya.builtins.broadcast import ListenerSchema
 
 from library.config import config
 from library.depend import Switch, FunctionCall
+from library.depend.interval import Interval
 from module.translator.engines import BaseTrans, get_engine, get_languages
 
 saya = Saya.current()
@@ -62,19 +63,25 @@ async def nonsense_translate(
             MessageChain("无效的引擎"),
         )
     times: int = times.result if times.matched else 20
+    await Interval.check_and_raise(
+        module=channel.module,
+        supplicant=event.sender,
+        seconds=round(times * 1.5),
+        on_failure=MessageChain("要不让我先歇个 {interval}？"),
+    )
     text = text.result.display
-    if times <= 0 or times > 100 or not text:
+    if times <= 0 or not text:
         return await ariadne.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
             MessageChain("？这是在干什么"),
         )
     await ariadne.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
-        MessageChain(f"预计耗时：{round(times * 3)} 秒"),
+        MessageChain(f"预计耗时：{round(times * 1.5)} 秒"),
     )
     for _ in range(times - 1):
         text = await trans_engine.trans(text, trans_to=random.choice(languages))
-        await asyncio.sleep(2.5)
+        await asyncio.sleep(1)
     text = await trans_engine.trans(text)
     await ariadne.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,

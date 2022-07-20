@@ -14,17 +14,17 @@ from graia.ariadne.message.parser.twilight import (
 )
 from graia.broadcast.interrupt import InterruptControl
 from graia.broadcast.interrupt.waiter import Waiter
-from graia.saya import Saya, Channel
+from graia.saya import Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
 from library import config
 from library.depend import Switch, FunctionCall
+from library.depend.interval import Interval
 from module.image_searcher.engines import (
     __engines__,
     custom_cfg_keys,
 )
 
-saya = Saya.current()
 channel = Channel.current()
 
 channel.name("ImageSearcher")
@@ -74,7 +74,15 @@ else:
                 ]
             )
         ],
-        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
+        decorators=[
+            Switch.check(channel.module),
+            FunctionCall.record(channel.module),
+            Interval.check(
+                channel.module,
+                seconds=30,
+                on_failure=MessageChain("需冷却 {interval}才可再次进行搜图"),
+            ),
+        ],
     )
 )
 async def image_searcher(

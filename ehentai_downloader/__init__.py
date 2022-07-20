@@ -1,7 +1,7 @@
 import asyncio
 import re
+import traceback
 from pathlib import Path
-from typing import Tuple
 
 import pyzipper
 from aiohttp import ClientSession, ClientConnectorError, TCPConnector
@@ -16,6 +16,7 @@ from graia.ariadne.message.parser.twilight import (
     FullMatch,
     RegexResult,
     RegexMatch,
+    UnionMatch,
 )
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
@@ -24,11 +25,12 @@ from pydantic import BaseModel
 
 from library.config import config
 from library.depend import Switch, FunctionCall
+from library.depend.interval import Interval
 
 saya = Saya.current()
 channel = Channel.current()
 
-data_dir = config.path.data / channel.module
+data_dir = Path(config.path.data, channel.module)
 data_dir.mkdir(exist_ok=True)
 
 channel.name("EhentaiDownloader")
@@ -68,12 +70,19 @@ else:
             Twilight(
                 [
                     FullMatch(".eh"),
+                    UnionMatch(),
                     RegexMatch(r"(https?://)?e[-x]hentai\.org/g/\d+/[\da-z]+/?")
                     @ "url",
                 ]
             )
         ],
-        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
+        decorators=[
+            Switch.check(channel.module),
+            FunctionCall.record(channel.module),
+            Interval.check(
+                channel.module, minutes=5, on_failure=MessageChain("欲求不满的扫购...")
+            ),
+        ],
     )
 )
 async def ehentai_downloader(ariadne: Ariadne, event: GroupMessage, url: RegexResult):
@@ -88,6 +97,7 @@ async def ehentai_downloader(ariadne: Ariadne, event: GroupMessage, url: RegexRe
                 url, name = get_archiver_and_title(
                     BeautifulSoup(await resp.text(), "html.parser")
                 )
+                name = name_validator(name)
                 await ariadne.send_group_message(
                     event.sender.group,
                     MessageChain(f"已取得图库 [{gallery}] {name}，正在尝试下载..."),
@@ -123,21 +133,23 @@ async def ehentai_downloader(ariadne: Ariadne, event: GroupMessage, url: RegexRe
             event.sender.group, MessageChain(f"解压密码 {password}")
         )
     except AttributeError:
-        await ariadne.send_group_message(event.sender.group, MessageChain("请输入正确的链接"))
-    except ClientConnectorError as err:
-        logger.error(err)
-        await ariadne.send_group_message(event.sender.group, MessageChain("网络错误，请稍后再试"))
-    except RemoteException as err:
-        logger.error(err)
+        logger.error(traceback.format_exc())
         await ariadne.send_group_message(
-            event.sender.group, MessageChain("安全检查失败，无法上传该文件")
+            event.sender.group, MessageChain("图库链接无效或 GP 不足")
         )
+    except ClientConnectorError:
+        logger.error(traceback.format_exc())
+        await ariadne.send_group_message(event.sender.group, MessageChain("网络错误，请稍后再试"))
+    except RemoteException:
+        logger.error(traceback.format_exc())
+        await ariadne.send_group_message(event.sender.group, MessageChain("出现远端错误"))
+        raise
     except asyncio.exceptions.TimeoutError:
         await ariadne.send_group_message(event.sender.group, MessageChain("上传超时"))
         raise
 
 
-def get_archiver_and_title(soup: BeautifulSoup) -> Tuple[str, str]:
+def get_archiver_and_title(soup: BeautifulSoup) -> tuple[str, str]:
     return (
         soup.find("p", {"class": "g2 gsp"})
         .find("a")
@@ -160,17 +172,21 @@ def encrypt_zip(filename: str, data_bytes: bytes, password: str) -> bytes:
     with Path(data_dir / f"temp-{filename}").open("wb") as f:
         f.write(data_bytes)
     with pyzipper.AESZipFile(
-        Path(data_dir / filename),
+        Path(data_dir, filename),
         "w",
         compression=pyzipper.ZIP_LZMA,
         encryption=pyzipper.WZ_AES,
     ) as zf:
         zf.setpassword(password.encode())
-        zf.setencryption(pyzipper.WZ_AES, nbits=128)
+        zf.setencryption(pyzipper.WZ_AES)
         zf.write(Path(data_dir / f"temp-{filename}"), filename)
         Path(data_dir / f"temp-{filename}").unlink(missing_ok=True)
-    with Path(data_dir / filename).open("rb") as f:
+    with Path(data_dir, filename).open("rb") as f:
         data = f.read()
     if not config.get_module_config(channel.module, "caching"):
         Path(data_dir / filename).unlink(missing_ok=True)
     return data
+
+
+def name_validator(name: str) -> str:
+    return re.sub(r"[\\/:*?'\"<>|]", " ", name)
