@@ -45,7 +45,7 @@ async def random_dick_length(app: Ariadne, event: MessageEvent):
         dick_length_evaluate = "到了平均水准捏"
     elif dick_legth > 0 and dick_legth < 10:
         dick_length_evaluate = "好短！"
-    elif dick_legth < 0:
+    else:
         dick_length_evaluate = "dick ... 他 .. 他..他缩进去了！"
 
     await app.send_message(
