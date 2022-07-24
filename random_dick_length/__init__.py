@@ -33,7 +33,6 @@ channel = Channel.current()
                 [
                     UnionMatch("牛子", "牛至", optional=True),
                     UnionMatch("多长", "多長", "長度", "长度", optional=True),
-                    FullMatch("test1"),
                 ]
             )
         ],
