@@ -1,9 +1,9 @@
 {
-    "name": "发病",
-    "pack": "module.ill",
-    "version": "1.0.2",
+    "name": "随机牛子长度",
+    "pack": "module.random_dick_length",
+    "version": "1.0.0",
     "author": [
-        "nullqwertyuiop"
+        "SuChen"
     ],
     "pypi": false,
     "category": "entertainment",
