@@ -6,18 +6,29 @@ from io import BytesIO
 from pathlib import Path
 
 from graia.ariadne import Ariadne
-from graia.ariadne.event.message import GroupMessage, FriendMessage, MessageEvent
+from graia.ariadne.event.message import (
+    Member,
+    GroupMessage,
+    FriendMessage,
+    MessageEvent,
+)
 from graia.ariadne.message.chain import MessageChain
-from graia.ariadne.message.element import At
+from graia.ariadne.message.element import Image
 from graia.ariadne.message.parser.twilight import (
     Twilight,
-    FullMatch,
     RegexMatch,
     UnionMatch,
-
+    FullMatch,
+    RegexResult,
 )
-from graia.saya import Channel
-from graia.saya.builtins.broadcast import ListenerSchema
+from graia.ariadne.model import Friend
+from graia.saya import Saya, Channel
+from graia.saya.builtins.broadcast.schema import ListenerSchema
+from graia.scheduler import timers
+from graia.scheduler.saya import SchedulerSchema
+
+from library.depend import Switch, FunctionCall
+from library.depend.interval import Interval
 
 from library import config
 from library.depend import Switch, FunctionCall
@@ -41,12 +52,15 @@ channel = Channel.current()
     )
 )
 async def random_dick_length(app: Ariadne, event: MessageEvent):
+    RandomSeed(event.sender)
     await app.send_message(
         event.sender.group if isinstance(
             event, GroupMessage) else event.sender,
         MessageChain(f"你今天有一根{get_if_boki_status()}的,{get_angle_status()}角度为{get_angle()}的{get_if_phimosis_status()}的{get_dick_hardness()},并且蛋蛋{get_egg_weight()}的{dick_length()}"),
      )
-
+    random.seed()
+def RandomSeed(supplicant: Member | Friend):
+    random.seed(int(f"{datetime.now().strftime('%Y%m%d')}{supplicant.id}"))
 def get_if_boki_status():
     boki = random.randint(0,1)
     if boki == 0:
@@ -78,12 +92,12 @@ def get_if_phimosis_status():
     return phimosis_status
 
 def get_dick_hardness():
-    hardness = random.randint(0,10)
+    hardness = random.randint(1,10)
     dick_hardness = "莫氏硬度为" + str(hardness)
     return dick_hardness
 
 def get_egg_weight():
-    egg_weight = str(random.randint(0,10000)) + "克"
+    egg_weight = str(random.randint(0,1000)) + "克"
     return egg_weight
 
 def dick_length():
