@@ -31,8 +31,8 @@ channel = Channel.current()
         inline_dispatchers=[
             Twilight(
                 [
-                    UnionMatch("牛子", "牛至", optional=True),
-                    UnionMatch("多长", "多長", "長度", "长度", optional=True),
+                    UnionMatch("牛子", "牛至"),
+                    UnionMatch("多长", "多長", "長度", "长度"),
                 ]
             )
         ],
