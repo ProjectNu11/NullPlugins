@@ -53,54 +53,21 @@ channel = Channel.current()
 )
 async def random_dick_length(app: Ariadne, event: MessageEvent):
     RandomSeed(event.sender)
-    await app.send_message(
-        event.sender.group if isinstance(
-            event, GroupMessage) else event.sender,
-        MessageChain(f"你今天有一根{get_if_boki_status()}的,{get_angle_status()}角度为{get_angle()}的{get_if_phimosis_status()}的{get_dick_hardness()},并且蛋蛋{get_egg_weight()}的{dick_length()}"),
-     )
-    random.seed()
-def RandomSeed(supplicant: Member | Friend):
-    random.seed(int(f"{datetime.now().strftime('%Y%m%d')}{supplicant.id}"))
-def get_if_boki_status():
-    boki = random.randint(0,1)
-    if boki == 0:
+    if random.randint(0,1) == 1:
         boki_status = "勃起"
-    else:
-        boki_status = "软掉"
-    return boki_status
-
-def get_angle_status():
-    boki_status=get_if_boki_status()
-    if boki_status == "勃起":
         angle_status = "boki"
     else:
+        boki_status = "软掉"
         angle_status = ""
-    return angle_status
-    
-def get_angle():
     angle = str(random.randint(0,180))+"度"
-    return angle
-
-def get_if_phimosis_status():
-    phimosis = random.randint(0,2)
-    if phimosis == 0:
+    if random.randint(0,2) == 0:
         phimosis_status = "包茎"
-    elif phimosis == 1:
+    elif random.randint(0,2) == 1:
         phimosis_status = "半包茎"
     else:
         phimosis_status = "非包茎"
-    return phimosis_status
-
-def get_dick_hardness():
-    hardness = random.randint(1,10)
-    dick_hardness = "莫氏硬度为" + str(hardness)
-    return dick_hardness
-
-def get_egg_weight():
+    dick_hardness = "莫氏硬度为" + str(random.randint(1,10))
     egg_weight = str(random.randint(0,1000)) + "克"
-    return egg_weight
-
-def dick_length():
     dick_legth = random.randint(-10, 30)
     if dick_legth > 20:
         dick_length_evaluate = "哪来的兽人，怎么会这么长！"
@@ -115,4 +82,11 @@ def dick_length():
     else:
         dick_length_evaluate = "dick ... 他 .. 他..他缩进去了！"
     length_text = f"{str(dick_legth)}cm的牛子，{dick_length_evaluate}"
-    return length_text
+    await app.send_message(
+        event.sender.group if isinstance(
+            event, GroupMessage) else event.sender,
+        MessageChain(f"你今天有一根{boki_status}的,{angle_status}角度为{angle}的{phimosis_status}的{dick_hardness},并且蛋蛋{egg_weight}的{length_text}"),
+     )
+    random.seed()
+def RandomSeed(supplicant: Member | Friend):
+    random.seed(int(f"{datetime.now().strftime('%Y%m%d')}{supplicant.id}"))
