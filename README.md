@@ -2,7 +2,7 @@
 
 # Project. Null Plugin Repository
 
-_Compatible with Project. Null v0.1.0+_
+_Compatible with Project. Null_
 
 > [ ]
 
@@ -13,6 +13,12 @@ _Compatible with Project. Null v0.1.0+_
 
 ## 开始使用
 
+### 通过 PN-Hub 安装
+
+<! PlaceHolder !>
+
+### 手动安装
+
 <! PlaceHolder !>
 
 ## 上传插件
@@ -21,4 +27,8 @@ _Compatible with Project. Null v0.1.0+_
 
 ## 注意
 
-<! PlaceHolder !>
+本仓库仅提供插件存储，对插件内容并**没有具体审查**，请自行甄别
+
+## 注册仓库 WebHook
+
+<! PlaceHolder >
