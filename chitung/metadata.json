@@ -1,0 +1,18 @@
+{
+    "name": "七筒",
+    "pack": "module.chitung",
+    "version": "0.1",
+    "author": [
+        "角川烈",
+        "白门守望者",
+        "nullqwertyuiop",
+        "IshikawaKaito"
+    ],
+    "pypi": true,
+    "category": "utility",
+    "description": "",
+    "dependency": null,
+    "loaded": true,
+    "override_default": null,
+    "override_switch": null
+}
