@@ -132,7 +132,7 @@ async def chitung_fish_handler(
         reply_msg = MessageChain(At(event.sender.id))
         if w != Waters.General:  # 非常规水域扣费
             if vault.has_enough_money(
-                event.sender, Currency.CUCUMBER_PESO, FISHING_COST
+                event.sender, FISHING_COST, Currency.CUCUMBER_PESO
             ):
                 reply_msg = reply_msg + Plain(text=f"已收到您的捕鱼费用{FISHING_COST}黄瓜比索。")
             else:
@@ -287,12 +287,17 @@ def is_in_day_time() -> bool:
 
 async def save_record(record_id, fish_list):
     await write_lock.acquire()
+    fish_list = list(fish_list)
     records = load_fishing_records()
+    written = False
     for i, record in enumerate(records):
         if record["ID"] == record_id:
             collected = list(records[i]["recordList"])
             collected.extend(fish_list)
             records[i]["recordList"] = list(set(collected))
+            written = True
+    if not written:
+        records.append({"ID": record_id, "recordList": fish_list})
     with Path(record_dir).open("w", encoding="utf-8") as f:
         f.write(json.dumps({"singleRecords": records}, indent=4))
     write_lock.release()
@@ -398,7 +403,7 @@ async def async_get_handbook(record_id):
 
 
 assets_dir = Path(ASSETS / "fishing")
-record_dir = Path(config.path.data / "fishRecord.json")
+record_dir = Path(config.path.data / channel.module / "fishRecord.json")
 FISHING_LIST = load_fishing_list()
 FISHING_COST = 800
 fishing_record = []  # 为了计算过去一小时内的钓鱼人数，存时间戳

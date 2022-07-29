@@ -48,7 +48,7 @@ CORD = {
         inline_dispatchers=[
             Twilight(
                 [
-                    UnionMatch("ok ", "Ok ", "OK ", chitung_prefix),
+                    UnionMatch("ok", "Ok", "OK", chitung_prefix),
                     UnionMatch(
                         "Shiba",
                         "shiba",

@@ -26,7 +26,7 @@ from .vars import chitung_prefix
 from .utils.depends import FunctionControl
 
 channel = Channel.current()
-vault_dir = Path(config.path.data / "bank_record.json")
+vault_dir = Path(config.path.data / channel.module / "bank_record.json")
 
 
 class Currency(Enum):
@@ -183,10 +183,12 @@ class Vault:
             bool: 是否有足够余额
         """
 
-        if str(supplicant.id) in self.vault.keys():
-            return self.vault[str(supplicant.id)].get(c.value[0]) >= amount
-        else:
-            return False
+        if (
+            str(supplicant.id) in self.vault.keys()
+            and c.value[0] in self.vault[str(supplicant.id)].keys()
+        ):
+            return self.vault[str(supplicant.id)][c.value[0]] >= amount
+        return False
 
 
 vault = Vault()

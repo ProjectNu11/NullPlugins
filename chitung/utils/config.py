@@ -2,11 +2,14 @@ import json
 import os
 from pathlib import Path
 
+from graia.saya import Channel
+
 from library.config import config as nconfig
 from ..utils.models import Config, GroupConfigList
 
-config_path = Path(nconfig.path.data / "Config.json")
-group_config_path = Path(nconfig.path.data / "GroupConfig.json")
+channel = Channel.current()
+config_path = Path(nconfig.path.data / channel.module / "Config.json")
+group_config_path = Path(nconfig.path.data / channel.module / "GroupConfig.json")
 
 
 def load_config() -> Config:

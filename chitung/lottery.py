@@ -39,7 +39,7 @@ c4_activation_flags = []
         inline_dispatchers=[
             Twilight(
                 [
-                    UnionMatch("ok ", "Ok ", "OK ", chitung_prefix),
+                    UnionMatch("ok", "Ok", "OK", chitung_prefix),
                     FullMatch("winner"),
                 ]
             )
@@ -89,7 +89,7 @@ async def chitung_winner_handler(app: Ariadne, event: MessageEvent):
         inline_dispatchers=[
             Twilight(
                 [
-                    UnionMatch("ok ", "Ok ", "OK ", chitung_prefix),
+                    UnionMatch("ok", "Ok", "OK", chitung_prefix),
                     FullMatch("bummer"),
                 ]
             )
@@ -168,9 +168,7 @@ async def chitung_bummer_handler(app: Ariadne, event: GroupMessage):
         inline_dispatchers=[
             Twilight(
                 [
-                    UnionMatch("ok ", "Ok ", "OK ", chitung_prefix).space(
-                        SpacePolicy.NOSPACE
-                    ),
+                    UnionMatch("ok", "Ok", "OK", chitung_prefix),
                     FullMatch("c4"),
                 ]
             )
