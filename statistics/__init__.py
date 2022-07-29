@@ -26,7 +26,7 @@ from library.model import UserPerm
 from library.orm import orm
 from library.orm.table import FunctionCallRecord
 from module import modules
-from module.chat_recorder import SendRecord, ChatRecord
+from module.chat_recorder import SendRecord, ChatRecord, generate_pass
 
 channel = Channel.current()
 
@@ -35,16 +35,21 @@ channel.author("nullqwertyuiop")
 channel.description("收发信统计")
 
 
-async def generate_msg_stat(func):
+async def generate_msg_stat(func: str | int):
     if func == "收信":
         query = select(ChatRecord.time, ChatRecord.id).where(
             ChatRecord.time > datetime.now() - timedelta(days=3)
         )
-    else:
-        func = "发信"
+    elif func == "发信":
         query = select(SendRecord.time, SendRecord.id).where(
             SendRecord.time > datetime.now() - timedelta(days=3)
         )
+    else:
+        query = select(ChatRecord.time, ChatRecord.id).where(
+            ChatRecord.time > datetime.now() - timedelta(days=3),
+            ChatRecord.sender == generate_pass(func),
+        )
+        func = "消息"
     if data := await orm.all(query):
         stat = {
             key: len(list(items))
@@ -74,13 +79,18 @@ async def generate_msg_stat(func):
     return MessageChain(f"[{func}统计]\n暂无数据")
 
 
-async def generate_call_stat():
+async def generate_call_stat(sender: int = None):
     stat = {}
-    if data := await orm.all(
-        select(FunctionCallRecord.function).where(
+    if sender:
+        query = select(FunctionCallRecord.function).where(
+            FunctionCallRecord.time > datetime.now() - timedelta(days=30),
+            FunctionCallRecord.supplicant == sender,
+        )
+    else:
+        query = select(FunctionCallRecord.function).where(
             FunctionCallRecord.time > datetime.now() - timedelta(days=1)
         )
-    ):
+    if data := await orm.all(query):
         for func in data:
             stat[func[0]] = stat.get(func[0], 0) + 1
         messages = ["[模块调用统计]"]
@@ -94,12 +104,18 @@ async def generate_call_stat():
     return MessageChain(f"[模块调用统计]\n暂无数据")
 
 
-async def generate_all():
-    messages = [
-        await generate_msg_stat("收信"),
-        await generate_msg_stat("发信"),
-        await generate_call_stat(),
-    ]
+async def generate_all(supplicant: int = None):
+    if supplicant:
+        messages = [
+            await generate_msg_stat(supplicant),
+            await generate_call_stat(supplicant),
+        ]
+    else:
+        messages = [
+            await generate_msg_stat("收信"),
+            await generate_msg_stat("发信"),
+            await generate_call_stat(),
+        ]
     return MessageChain(
         [
             Forward(
@@ -162,3 +178,39 @@ async def send_daily(app: Ariadne):
         for dev_group in config.dev_group:
             await app.send_group_message(dev_group, message)
             await asyncio.sleep(1)
+
+
+@channel.use(
+    ListenerSchema(
+        listening_events=[GroupMessage, FriendMessage],
+        inline_dispatchers=[
+            Twilight(
+                [
+                    FullMatch(".我的"),
+                    UnionMatch("消息", "模块", "调用", "模块调用", optional=True) @ "which",
+                    FullMatch("统计"),
+                ]
+            )
+        ],
+        decorators=[
+            Switch.check(channel.module),
+            FunctionCall.record(channel.module),
+        ],
+    )
+)
+async def stats_no_permission_handler(
+    app: Ariadne, event: MessageEvent, which: MatchResult
+):
+    if which.matched:
+        func = which.result.display
+        if func == "消息":
+            msg = await generate_msg_stat(event.sender.id)
+        else:
+            msg = await generate_call_stat(event.sender.id)
+    else:
+        msg = await generate_all(event.sender.id)
+    if event.sender.id in config.owners:
+        await app.send_message(
+            event.sender.group if isinstance(event, GroupMessage) else event.sender,
+            msg,
+        )
