@@ -1,0 +1,15 @@
+{
+    "name": "统计",
+    "pack": "module.statistics",
+    "version": "1.0",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": false,
+    "category": "utility",
+    "description": "",
+    "dependency": null,
+    "loaded": true,
+    "override_default": null,
+    "override_switch": null
+}
