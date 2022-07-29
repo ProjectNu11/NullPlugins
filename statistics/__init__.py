@@ -161,11 +161,10 @@ async def stats_handler(app: Ariadne, event: MessageEvent, which: MatchResult):
             msg = await generate_call_stat()
     else:
         msg = await generate_all()
-    if event.sender.id in config.owners:
-        await app.send_message(
-            event.sender.group if isinstance(event, GroupMessage) else event.sender,
-            msg,
-        )
+    await app.send_message(
+        event.sender.group if isinstance(event, GroupMessage) else event.sender,
+        msg,
+    )
 
 
 @channel.use(SchedulerSchema(timer=timers.crontabify("0 0 * * *")))
@@ -209,8 +208,7 @@ async def stats_no_permission_handler(
             msg = await generate_call_stat(event.sender.id)
     else:
         msg = await generate_all(event.sender.id)
-    if event.sender.id in config.owners:
-        await app.send_message(
-            event.sender.group if isinstance(event, GroupMessage) else event.sender,
-            msg,
-        )
+    await app.send_message(
+        event.sender.group if isinstance(event, GroupMessage) else event.sender,
+        msg,
+    )
