@@ -60,6 +60,10 @@ class CityGroup(BaseModel):
     )
 )
 async def furry_group_search(app: Ariadne, event: MessageEvent, city: RegexResult):
+    return await app.send_message(
+        event.sender.group if isinstance(event, GroupMessage) else event.sender,
+        MessageChain("同城群查询 API 暂已停用")
+    )
     city = city.result.display
     async with ClientSession() as session:
         async with session.get(
