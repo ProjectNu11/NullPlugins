@@ -7,7 +7,7 @@
     ],
     "pypi": false,
     "category": "entertainment",
-    "description": "",
+    "description": "根据给定内容生成相应模因图",
     "dependency": [
         "module.build_image"
     ],

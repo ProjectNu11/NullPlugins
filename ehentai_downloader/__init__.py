@@ -130,7 +130,7 @@ async def ehentai_downloader(ariadne: Ariadne, event: GroupMessage, url: RegexRe
             name=f"[{gallery}] {name}.zip",
         )
         await ariadne.send_group_message(
-            event.sender.group, MessageChain(f"解压密码 {password}")
+            event.sender.group, MessageChain(f"解压密码 {password}，如未显示在消息记录中，可在群文件中下载")
         )
     except AttributeError:
         logger.error(traceback.format_exc())
