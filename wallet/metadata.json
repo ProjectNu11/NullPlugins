@@ -1,15 +1,16 @@
 {
     "name": "钱包",
     "pack": "module.wallet",
-    "version": "1.02b",
+    "version": "1.03",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": false,
     "category": "utility",
-    "description": "",
+    "description": "依赖包，用于插件间货币转换及储存",
     "dependency": null,
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

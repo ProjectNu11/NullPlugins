@@ -86,7 +86,7 @@ async def update(data_id: str, label: str, suggestion: str, sub_label: str) -> N
 
 
 async def query(data_id: str) -> tuple[int, ModerationLevel, str] | None:
-    if fetch := await orm.fetchone(
+    if fetch := await orm.first(
         select(
             ImageModeration.override,
             ImageModeration.suggestion,

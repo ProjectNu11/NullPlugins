@@ -125,12 +125,12 @@ class Wallet:
     @classmethod
     async def get_balance(
         cls,
-        field: Union[Group, int],
-        supplicant: Union[Member, Friend, int],
-    ) -> Union[None, Tuple[int, datetime]]:
+        field: Group | int,
+        supplicant: Member | Friend | int,
+    ) -> None | Tuple[int | datetime]:
         field = cls.model_to_int(field)
         supplicant = cls.model_to_int(supplicant)
-        if wallet := await orm.fetchall(
+        if wallet := await orm.all(
             select(WalletBalance.balance, WalletBalance.time).where(
                 WalletBalance.group_id == field,
                 WalletBalance.member_id == supplicant,
@@ -142,8 +142,8 @@ class Wallet:
     @classmethod
     async def update(
         cls,
-        field: Union[Group, int],
-        supplicant: Union[Member, Friend, int],
+        field: Group | int,
+        supplicant: Member | Friend | int,
         record: int,
         reason: str,
     ):
@@ -191,20 +191,18 @@ class Wallet:
     @classmethod
     async def charge(
         cls,
-        group: Union[Group, int],
-        member: Union[Member, int],
+        group: Group | int,
+        member: Member | int,
         record: int,
         reason: str,
     ):
         return await cls.update(group, member, (record * -1), reason)
 
     @classmethod
-    async def get_detail(
-        cls, field: Union[Group, int], supplicant: Union[Member, Friend, int]
-    ):
+    async def get_detail(cls, field: Group | int, supplicant: Member | Friend | int):
         field = cls.model_to_int(field)
         supplicant = cls.model_to_int(supplicant)
-        if wallet := await orm.fetchall(
+        if wallet := await orm.all(
             select(WalletDetail.record, WalletDetail.reason, WalletDetail.time).where(
                 WalletDetail.group_id == field, WalletDetail.member_id == supplicant
             )

@@ -1,15 +1,16 @@
 {
     "name": "头像表情包",
     "pack": "module.avatar_fun",
-    "version": "0.2.9b",
+    "version": "0.2.91",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": true,
     "category": "entertainment",
-    "description": "",
+    "description": "根据给定内容生成相应表情包",
     "dependency": null,
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

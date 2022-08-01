@@ -1,15 +1,16 @@
 {
     "name": "翻译",
     "pack": "module.translator",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": true,
     "category": "utility",
-    "description": "",
+    "description": "基于多种翻译接口的翻译工具",
     "dependency": null,
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

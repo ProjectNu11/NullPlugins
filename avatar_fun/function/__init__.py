@@ -16,6 +16,6 @@ __all__ = {
     "完美": perfect,
     "撕": rip,
     "吞": swallow,
-    "贴": tuotoi,
     "垃圾探头": trash,
+    "贴": tuotoi,
 }

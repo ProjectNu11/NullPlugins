@@ -8,7 +8,7 @@ from graia.ariadne import Ariadne
 from graia.ariadne.event.message import GroupMessage, MessageEvent
 from graia.ariadne.exception import UnknownTarget
 from graia.ariadne.message.chain import MessageChain
-from graia.ariadne.message.element import Image, Quote
+from graia.ariadne.message.element import Image, Quote, At
 from graia.ariadne.message.parser.twilight import (
     RegexMatch,
     Twilight,
@@ -39,6 +39,7 @@ DEVICES = {"三星": "samsung note20 ultra.png", "samsung": "samsung note20 ultr
         inline_dispatchers=[
             Twilight(
                 [
+                    ElementMatch(At, optional=True),
                     FullMatch(config.func.prefix).space(SpacePolicy.NOSPACE),
                     UnionMatch("leica", "莱卡"),
                     ArgumentMatch("-d", "--device", type=str, optional=True) @ "device",

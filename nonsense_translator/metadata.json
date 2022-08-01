@@ -1,17 +1,18 @@
 {
     "name": "瞎翻译",
     "pack": "module.nonsense_translator",
-    "version": "1.0.2b",
+    "version": "1.0.3",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": false,
     "category": "entertainment",
-    "description": "",
+    "description": "循环翻译文本一定次数",
     "dependency": [
         "module.translator"
     ],
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

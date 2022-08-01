@@ -1,15 +1,16 @@
 {
     "name": "以图搜图",
     "pack": "module.image_searcher",
-    "version": "1.0.1b",
+    "version": "1.0.2b",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": true,
     "category": "utility",
-    "description": "",
+    "description": "基于多引擎的图片搜索",
     "dependency": null,
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

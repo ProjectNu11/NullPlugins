@@ -2,7 +2,6 @@ import asyncio
 import urllib.parse
 from datetime import datetime, timedelta
 from io import BytesIO
-from typing import Optional
 
 import qrcode
 from aiohttp import ClientSession
@@ -34,7 +33,7 @@ channel.description("")
 class CityGroupLoc(BaseModel):
     id: int
     province: str
-    city: Optional[str]
+    city: str | None
 
 
 class CityGroup(BaseModel):
@@ -42,7 +41,7 @@ class CityGroup(BaseModel):
     group: int
     level: int
     name: str
-    url: Optional[str]
+    url: str | None
     valid: int
 
     @root_validator(pre=True, allow_reuse=True)
@@ -60,10 +59,6 @@ class CityGroup(BaseModel):
     )
 )
 async def furry_group_search(app: Ariadne, event: MessageEvent, city: RegexResult):
-    return await app.send_message(
-        event.sender.group if isinstance(event, GroupMessage) else event.sender,
-        MessageChain("同城群查询 API 暂已停用"),
-    )
     city = city.result.display
     async with ClientSession() as session:
         async with session.get(

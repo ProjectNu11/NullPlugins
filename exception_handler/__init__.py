@@ -8,16 +8,13 @@ from graia.ariadne.message.chain import MessageChain
 from graia.ariadne.message.element import Image, Plain
 from graia.ariadne.message.parser.twilight import Twilight, FullMatch
 from graia.broadcast.builtin.event import ExceptionThrowed
-from graia.saya import Channel, Saya
+from graia.saya import Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
 from library import config
 from library.depend import Permission
 from library.model import UserPerm
-from module import modules
 from module.build_image.aworda_text_to_image.text2image import create_image
-
-Saya.current().require(modules.get("build_image").pack)
 
 channel = Channel.current()
 

@@ -16,6 +16,7 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
 from library.depend import Switch, FunctionCall
+from library.depend.blacklist import Blacklist
 
 saya = Saya.current()
 channel = Channel.current()
@@ -36,7 +37,11 @@ channel.description("自己查")
                 ]
             )
         ],
-        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
+        decorators=[
+            Switch.check(channel.module),
+            FunctionCall.record(channel.module),
+            Blacklist.check(),
+        ],
     )
 )
 async def search_shortcut(app: Ariadne, event: MessageEvent, content: MatchResult):

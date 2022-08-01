@@ -1,15 +1,16 @@
 {
     "name": "群名片打乱",
     "pack": "module.namecard_shuffle",
-    "version": "1.0",
+    "version": "1.0.1",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": false,
     "category": "entertainment",
-    "description": "",
+    "description": "我是谁？",
     "dependency": null,
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

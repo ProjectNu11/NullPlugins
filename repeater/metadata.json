@@ -1,15 +1,16 @@
 {
     "name": "复读机",
     "pack": "module.repeater",
-    "version": "1.11",
+    "version": "1.12",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": false,
     "category": "entertainment",
-    "description": "",
+    "description": "已通过图灵测试的人类的本质",
     "dependency": null,
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

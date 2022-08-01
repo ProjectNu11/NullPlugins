@@ -1,15 +1,16 @@
 {
     "name": "统计",
     "pack": "module.statistics",
-    "version": "1.02",
+    "version": "1.03",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": false,
     "category": "utility",
-    "description": "",
+    "description": "使用情况统计",
     "dependency": null,
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

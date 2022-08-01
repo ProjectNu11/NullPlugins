@@ -1,15 +1,18 @@
 {
     "name": "终端执行器",
     "pack": "module.shell_executor",
-    "version": "1.01",
+    "version": "1.02",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": false,
     "category": "utility",
-    "description": "",
-    "dependency": null,
+    "description": "在当前服务器上执行 Shell 命令",
+    "dependency": [
+        "module.build_image"
+    ],
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

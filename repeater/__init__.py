@@ -8,11 +8,6 @@ from graia.ariadne.message.element import (
     AtAll,
     Face,
     Poke,
-    Forward,
-    App,
-    Json,
-    Xml,
-    MarketFace,
     MultimediaElement,
 )
 from graia.saya import Saya, Channel
@@ -33,20 +28,14 @@ group_repeat = {}
 @channel.use(
     ListenerSchema(
         listening_events=[GroupMessage],
-        decorators=[Switch.check(channel.module, log=False)],
+        decorators=[Switch.check(channel.module, no_notice=True, log=False)],
     )
 )
 async def repeater(app: Ariadne, event: GroupMessage):
     global group_repeat
     message = event.message_chain
     group = event.sender.group
-    if (
-        message.has(Forward)
-        or message.has(App)
-        or message.has(Json)
-        or message.has(Xml)
-        or message.has(MarketFace)
-    ):
+    if not message.only(Plain, Image, At, Quote, AtAll, Face, Poke):
         group_repeat[group.id] = {"msg": message.as_persistent_string(), "count": -1}
         return
     msg = message.copy()

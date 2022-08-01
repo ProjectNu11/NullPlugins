@@ -1,15 +1,16 @@
 {
     "name": "骰子",
     "pack": "module.dice",
-    "version": "0.1",
+    "version": "0.1.1b",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": false,
     "category": "utility",
-    "description": "",
+    "description": "简易骰子",
     "dependency": null,
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

@@ -1,3 +1,5 @@
+import pickle
+from hashlib import md5
 from io import BytesIO
 
 from aiohttp import ClientSession
@@ -14,9 +16,12 @@ from graia.ariadne.message.parser.twilight import (
 )
 from graia.saya import Channel
 from graia.saya.builtins.broadcast import ListenerSchema
+from pydantic import BaseModel
 
 from library import config
-from module.help_menu.util import HelpMenu
+from library.util.switch import switch
+from .util import HelpMenu
+from .. import modules
 
 channel = Channel.current()
 

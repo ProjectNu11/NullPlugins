@@ -10,6 +10,7 @@
     "description": "依赖包，用于构建图片",
     "dependency": null,
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

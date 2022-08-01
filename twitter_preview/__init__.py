@@ -4,7 +4,7 @@ import re
 from datetime import datetime, timedelta
 from io import BytesIO
 from pathlib import Path
-from typing import Optional, List, Union, Tuple
+from typing import Optional, List, Tuple
 
 import qrcode
 import youtube_dl
@@ -107,7 +107,7 @@ async def get_tweet(app: Ariadne, event: MessageEvent):
 
 
 class TwitterPreview:
-    session: Union[ClientSession, None] = None
+    session: ClientSession | None = None
     short_link_pattern = re.compile(
         r"(?:https?://)?(?:www\.)?(t\.co/[a-zA-Z\d_.-]{10})"
     )
@@ -316,7 +316,7 @@ class BuildTweet:
 
     def get_extended_url(
         self, index: int, offset: int, media_type: str
-    ) -> Tuple[Union[None, str], int]:
+    ) -> Tuple[None | str, int]:
         if media_type not in ("video", "photo"):
             return None, offset
         url = None
@@ -337,7 +337,7 @@ class BuildTweet:
 
     def get_media_urls(
         self,
-    ) -> Tuple[Optional[List[Tuple[str, str, Union[None, str]]]], bool]:
+    ) -> Tuple[Optional[List[Tuple[str, str, None | str]]], bool]:
         if not (media := self.__tweet["includes"].get("media", None)):
             return [], False
         media_urls = []

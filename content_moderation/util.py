@@ -1,3 +1,6 @@
+import pickle
+from pathlib import Path
+
 from graia.saya import Channel
 from sqlalchemy import select
 from tencentcloud.common import credential
@@ -9,12 +12,17 @@ from .table import ViolationCount
 channel = Channel.current()
 
 
-class TencentCredential:
-    __cred: credential.Credential
+class ContentModeration:
+    __cred: credential.Credential = None
+    __shared: Path = Path(config.path.shared, "tencent_credential.pickle")
     __valid: bool
     __error_count: int = 0
 
     def __init__(self, module: str):
+        if cred := self.__load_shared_credential_pickle():
+            self.__cred = cred
+            self.__valid = True
+            return
         cfg = config.get_module_config(module)
         if not cfg:
             self.__valid = False
@@ -24,6 +32,7 @@ class TencentCredential:
             return
         else:
             self.__cred = credential.Credential(cfg["secret_id"], cfg["secret_key"])
+            self.__save_shared_credential_pickle()
             self.__valid = True
 
     def invalidate(self):
@@ -47,12 +56,22 @@ class TencentCredential:
         if self.__error_count > 50:
             self.invalidate()
 
+    def __load_shared_credential_pickle(self):
+        if not self.__shared.exists():
+            return
+        with self.__shared.open("rb") as f:
+            return pickle.load(f)
 
-tencent_credential = TencentCredential(channel.module)
+    def __save_shared_credential_pickle(self):
+        with self.__shared.open("wb") as f:
+            pickle.dump(self.__cred, f)
+
+
+tencent_credential = ContentModeration(channel.module)
 
 
 async def get_violation_count(group_id: int, member_id: int) -> int:
-    if fetch := await orm.fetchone(
+    if fetch := await orm.first(
         select(ViolationCount.count).where(
             ViolationCount.group_id == group_id,
             ViolationCount.member_id == member_id,

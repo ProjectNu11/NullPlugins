@@ -1,15 +1,16 @@
 {
     "name": "摸鱼",
     "pack": "module.mofish",
-    "version": "1.2",
+    "version": "1.3b",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": true,
     "category": "utility",
-    "description": "",
+    "description": "来自摸鱼办的贴心小功能",
     "dependency": null,
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

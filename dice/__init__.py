@@ -39,7 +39,10 @@ channel.description("")
                 ]
             )
         ],
-        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
+        decorators=[
+            Switch.check(channel.module),
+            FunctionCall.record(channel.module),
+        ],
     )
 )
 async def chat_record(

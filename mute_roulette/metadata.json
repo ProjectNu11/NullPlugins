@@ -1,15 +1,16 @@
 {
     "name": "轮盘禁言",
     "pack": "module.mute_roulette",
-    "version": "1.0",
+    "version": "1.0.1",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": false,
     "category": "entertainment",
-    "description": "",
+    "description": "俄罗斯转盘，但是禁言",
     "dependency": null,
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

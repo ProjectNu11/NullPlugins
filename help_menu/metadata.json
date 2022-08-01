@@ -7,11 +7,12 @@
     ],
     "pypi": false,
     "category": "utility",
-    "description": "",
+    "description": "生成帮助菜单（老式）",
     "dependency": [
         "module.build_image"
     ],
-    "loaded": true,
+    "loaded": false,
+    "hidden": false,
     "override_default": true,
     "override_switch": true
 }

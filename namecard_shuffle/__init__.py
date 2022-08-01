@@ -130,7 +130,7 @@ async def add_backup(time: datetime, group: int, member: int, before: str, after
 
 
 async def query_backup(group: int):
-    if fetch := await orm.fetchall(
+    if fetch := await orm.all(
         select(
             NameCardBackup.time,
             NameCardBackup.member,

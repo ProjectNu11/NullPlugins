@@ -18,8 +18,7 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
 from library import config
-from library.depend import Switch, FunctionCall
-from library.depend.interval import Interval
+from library.depend import Switch, FunctionCall, Interval
 from .function import __all__
 from .util import get_element_image, get_image
 

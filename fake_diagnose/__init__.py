@@ -11,19 +11,22 @@ from library.depend import Switch, FunctionCall
 
 channel = Channel.current()
 
+ILLNESS = ["疼", "痛"]
+
 
 @channel.use(
     ListenerSchema(
         listening_events=[GroupMessage],
-        inline_dispatchers=[Twilight([RegexMatch(r".+(疼|痛)\w*")])],
+        inline_dispatchers=[Twilight([RegexMatch(rf".+({'|'.join(ILLNESS)}).*")])],
         decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
 async def fake_diagnose(
     app: Ariadne, event: MessageEvent, source: Source, message: MessageChain
 ):
-    msg = message.as_display()
-    msg = msg.replace("疼", "癌").replace("痛", "癌")
+    msg = message.display
+    for illness in ILLNESS:
+        msg = msg.replace(illness, "癌")
     if cut := list(jieba.cut(msg.split("癌")[0])):
         illness = f"得了{cut[-1]}癌"
     else:

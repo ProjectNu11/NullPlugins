@@ -1,15 +1,16 @@
 {
     "name": "好大的图",
     "pack": "module.huge_image",
-    "version": "1.02",
+    "version": "1.03b",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": false,
     "category": "entertainment",
-    "description": "",
+    "description": "真的好大的图",
     "dependency": null,
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

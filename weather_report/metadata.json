@@ -1,15 +1,16 @@
 {
-    "name": "天气预报",
+    "name": "实时天气",
     "pack": "module.weather_report",
-    "version": "1.02",
+    "version": "1.03",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": false,
     "category": "utility",
-    "description": "",
+    "description": "获取某地实时天气",
     "dependency": null,
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

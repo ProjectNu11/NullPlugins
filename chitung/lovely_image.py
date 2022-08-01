@@ -105,7 +105,7 @@ CORD = {
 async def chitung_animal_handler(
     app: Ariadne, event: MessageEvent, animal: MatchResult
 ):
-    key, animal_name = get_animal_name(animal.result.display)
+    key, animal_name = get_animal_name(animal.result.display.lower())
     await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
         MessageChain(f"正在获取{animal_name}>>>>>>>"),

@@ -1,15 +1,16 @@
 {
     "name": "E-hentai 下载器",
     "pack": "module.ehentai_downloader",
-    "version": "1.02b",
+    "version": "1.02",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": true,
     "category": "utility",
-    "description": "",
+    "description": "下载 E-hentai 的图库",
     "dependency": null,
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

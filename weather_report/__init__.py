@@ -113,7 +113,7 @@ async def weather_report(ariadne: Ariadne, event: FriendMessage, city: RegexResu
                     InterruptControl(ariadne.broadcast).wait(time_waiter), 30
                 ):
                     update = False
-                    if same_time := await orm.fetchall(
+                    if same_time := await orm.all(
                         select(
                             WeatherSchedule.time,
                         ).where(WeatherSchedule.supplicant == event.sender.id)
@@ -159,7 +159,7 @@ async def weather_report(ariadne: Ariadne, event: FriendMessage, city: RegexResu
 
 @channel.use(SchedulerSchema(timer=timers.crontabify("* * * * * 30")))
 async def weather_schedule(app: Ariadne):
-    if schedules := await orm.fetchall(
+    if schedules := await orm.all(
         select(
             WeatherSchedule.supplicant,
             WeatherSchedule.city,
@@ -174,7 +174,7 @@ async def weather_schedule(app: Ariadne):
 
 async def get_city(
     city_name: str, session: aiohttp.ClientSession
-) -> Union[None, Tuple[str, str]]:
+) -> None | Tuple[str | str]:
     async with session.get(
         url="https://geoapi.qweather.com/v2/city/lookup"
         f"?key={config.get_module_config(channel.module, 'key')}"
@@ -199,13 +199,13 @@ class RealtimeWeather(BaseModel):
     precip: float
     pressure: int
     vis: int
-    cloud: Union[None, int]
-    dew: Union[None, int]
+    cloud: None | int
+    dew: None | int
 
 
 async def get_realtime_weather(
     city_code: str, session: aiohttp.ClientSession
-) -> Union[None, RealtimeWeather]:
+) -> None | RealtimeWeather:
     async with session.get(
         url="https://devapi.qweather.com/v7/weather/now"
         f"?key={config.get_module_config(channel.module, 'key')}"
@@ -217,7 +217,7 @@ async def get_realtime_weather(
                 return RealtimeWeather(**data["now"])
 
 
-async def get_realtime_weather_msg(city_name: str) -> Union[None, MessageChain]:
+async def get_realtime_weather_msg(city_name: str) -> None | MessageChain:
     msg = None
     try:
         async with aiohttp.ClientSession() as session:

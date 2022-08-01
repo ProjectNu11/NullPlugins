@@ -1,15 +1,16 @@
 {
     "name": "豆瓣电影",
     "pack": "module.douban_movie",
-    "version": "1.0",
+    "version": "1.1b",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": true,
     "category": "utility",
-    "description": "",
+    "description": "查询豆瓣电影简介",
     "dependency": null,
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

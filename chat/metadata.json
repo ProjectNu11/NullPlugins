@@ -1,17 +1,18 @@
 {
     "name": "聊天",
     "pack": "module.chat",
-    "version": "0.1",
+    "version": "0.1.1b",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": false,
     "category": "utility",
-    "description": "",
+    "description": "基于多引擎的聊天模块",
     "dependency": [
         "module.translator"
     ],
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

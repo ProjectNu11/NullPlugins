@@ -1,15 +1,16 @@
 {
     "name": "B 站链接解析",
     "pack": "module.bilibili_link_resolve",
-    "version": "1.1",
+    "version": "1.2b",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": false,
     "category": "utility",
-    "description": "",
+    "description": "发送 B 站链接自动解析视频内容",
     "dependency": null,
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

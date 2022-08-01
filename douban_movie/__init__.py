@@ -1,7 +1,6 @@
 import re
 import urllib.parse
 from datetime import datetime, timedelta
-from typing import List
 
 from aiohttp import ClientSession
 from bs4 import BeautifulSoup
@@ -117,7 +116,7 @@ async def douban_movie_info(app: Ariadne, event: MessageEvent, movie: RegexResul
 
 async def search_movie(
     soup: BeautifulSoup, session: ClientSession
-) -> List[ForwardNode]:
+) -> list[ForwardNode]:
     fwd_node_list = []
     example_id = 0
     delta = 0
@@ -198,7 +197,7 @@ async def search_movie(
 
 async def get_movie_info(
     soup: BeautifulSoup, session: ClientSession
-) -> List[ForwardNode]:
+) -> list[ForwardNode]:
     title = (
         soup.find("div", attrs={"id": "content"})
         .find("h1")

@@ -1,15 +1,16 @@
 {
     "name": "Furry 同城群搜索",
     "pack": "module.furry_group_search",
-    "version": "1.01",
+    "version": "1.01b",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": false,
     "category": "utility",
-    "description": "",
+    "description": "同城群搜索，移植自洇岚",
     "dependency": null,
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

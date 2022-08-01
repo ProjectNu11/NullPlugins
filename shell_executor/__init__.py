@@ -85,7 +85,10 @@ def execute(command: str) -> Tuple[str, str]:
     )
     stdout = process.stdout
     stderr = process.stderr
-    return stdout.decode("utf-8"), stderr.decode("utf-8")
+    try:
+        return stdout.decode("utf-8"), stderr.decode("utf-8")
+    except UnicodeDecodeError:
+        return stdout.decode("gbk"), stderr.decode("gbk")
 
 
 async def async_execute(command: str) -> Tuple[str, str]:

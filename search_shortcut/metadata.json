@@ -1,15 +1,16 @@
 {
     "name": "帮你搜搜",
     "pack": "module.search_shortcut",
-    "version": "0.11",
+    "version": "0.12",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": false,
     "category": "utility",
-    "description": "",
+    "description": "懒得开浏览器，直接在群里搜",
     "dependency": null,
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

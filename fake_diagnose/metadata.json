@@ -1,16 +1,17 @@
 {
     "name": "百度看病",
     "pack": "module.fake_diagnose",
-    "version": "0.12",
+    "version": "0.13b",
     "author": [
         "nullqwertyuiop",
         "Little-LinNian"
     ],
     "pypi": false,
     "category": "entertainment",
-    "description": "",
+    "description": "您好，您可能得了癌症。",
     "dependency": null,
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

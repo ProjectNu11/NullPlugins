@@ -1,15 +1,16 @@
 {
     "name": "莱卡生成",
     "pack": "module.fake_leica",
-    "version": "1.1",
+    "version": "1.2b",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": false,
     "category": "entertainment",
-    "description": "",
+    "description": "最新最靓的莱卡水印生成器",
     "dependency": null,
     "loaded": true,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }

@@ -1,15 +1,16 @@
 {
     "name": "内容审核",
     "pack": "module.content_moderation",
-    "version": "0.1.1",
+    "version": "0.1.2b",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": true,
     "category": "utility",
-    "description": "",
+    "description": "基于腾讯云的内容审核接口",
     "dependency": null,
-    "loaded": true,
+    "loaded": false,
+    "hidden": false,
     "override_default": null,
     "override_switch": null
 }
