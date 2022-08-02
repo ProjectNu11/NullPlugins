@@ -14,8 +14,8 @@ locations = [
 assets_dir = Path(Path(__file__).parent.parent, "assets", "pat")
 
 
-def pat(*images: Image.Image) -> bytes:
-    base = crop_to_circle(images[-1].convert("RGBA"))
+def pat(*data: Image.Image) -> bytes:
+    base = crop_to_circle(data[-1].convert("RGBA"))
     frames: list[Image.Image] = []
     for i in range(5):
         hand = Image.open(Path(assets_dir, f"{i}.png"))

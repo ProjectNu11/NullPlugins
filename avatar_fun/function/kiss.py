@@ -37,13 +37,13 @@ self_avatar_locations = [
 assets_dir = Path(Path(__file__).parent.parent, "assets", "kiss")
 
 
-def kiss(*images: Image.Image) -> bytes:
+def kiss(*data: Image.Image) -> bytes:
     self_avatar = crop_to_circle(
-        images[0 if len(images) == 1 else -2]
+        data[0 if len(data) == 1 else -2]
         .convert("RGBA")
         .resize((40, 40), Image.LANCZOS)
     )
-    target_avatar = crop_to_circle(images[-1].convert("RGBA")).resize(
+    target_avatar = crop_to_circle(data[-1].convert("RGBA")).resize(
         (50, 50), Image.LANCZOS
     )
     frames: list[Image.Image] = []

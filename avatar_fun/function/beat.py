@@ -39,8 +39,8 @@ locs = [(11, 73, 106, 100), (8, 79, 112, 96)]
 assets_dir = Path(Path(__file__).parent.parent, "assets", "beat")
 
 
-def beat(*images: Image.Image) -> bytes:
-    base = images[-1]
+def beat(*data: Image.Image) -> bytes:
+    base = data[-1]
     img_frames: list[Image.Image] = []
     for i in range(10):
         frame = Image.new("RGBA", (235, 196), "#ffffff")

@@ -94,8 +94,8 @@ pos_and_sizes = [
 assets_dir = Path(Path(__file__).parent.parent, "assets", "swallow")
 
 
-def swallow(*images: Image.Image) -> bytes:
-    base = images[-1]
+def swallow(*data: Image.Image) -> bytes:
+    base = data[-1]
     frames: list[Image.Image] = []
     for i in range(121):
         bg = Image.open(Path(assets_dir, f"{i + 1}.png"))
