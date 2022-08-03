@@ -10,7 +10,13 @@ from aiohttp import ClientSession
 from graia.saya import Channel
 
 from library import config
-from library.image.oneui_mock.elements import Banner, GeneralBox, is_dark, Column
+from library.image.oneui_mock.elements import (
+    Banner,
+    GeneralBox,
+    is_dark,
+    Column,
+    OneUIMock,
+)
 from .model import PostModel
 from ..base import BaseSearch
 
@@ -107,7 +113,8 @@ class E621Search(BaseSearch):
                 box2.add(text=f"来源 {index + 1}", description=source)
         column.add(box3)
 
-        return column.render()
+        mock = OneUIMock(column, dark=dark)
+        return mock.render()
 
     @staticmethod
     def get_username() -> str:
