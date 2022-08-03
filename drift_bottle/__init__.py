@@ -61,7 +61,7 @@ DRIFT_BOTTLE_CHAR_LIMIT = 400
             FunctionCall.record(channel.module),
             Interval.check(
                 channel.module,
-                seconds=30,
+                seconds=5,
                 on_failure=MessageChain("冷却 {interval} 后才可继续操作"),
             ),
         ],
