@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, AnyHttpUrl
+from pydantic import BaseModel
 
 
 class FileModel(BaseModel):
@@ -35,4 +35,4 @@ class PostModel(BaseModel):
     score: ScoreModel
     tags: TagModel
     rating: Literal["s", "q", "e"]
-    sources: list[AnyHttpUrl]
+    sources: list[str]
