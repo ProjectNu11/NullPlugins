@@ -42,6 +42,7 @@ def compose_error(engine: BaseSearch, err_text: str) -> Image.Image:
     hint = HintBox(
         "可以尝试以下解决方案",
         "换用其他搜索引擎",
+        "换用英文标签",
         "检查标签是否存在",
         "检查网络连接是否正常",
         "检查标签是否在屏蔽词内",
