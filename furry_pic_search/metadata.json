@@ -1,0 +1,16 @@
+{
+    "name": "Furry 图片搜索",
+    "pack": "module.furry_pic_search",
+    "version": "0.1.1b",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": false,
+    "category": "utility",
+    "description": "搜索来自网络的 Furry 图片",
+    "dependency": null,
+    "loaded": true,
+    "hidden": false,
+    "override_default": null,
+    "override_switch": null
+}
