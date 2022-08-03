@@ -42,7 +42,7 @@ def emoji_to_codepoint(emoji: str) -> str:
     return "-".join(hex(ord(char))[2:] for char in emoji)
 
 
-def get_mix_emoji_url(emoji1: str, emoji2: str) -> str:
+def get_mix_emoji_url(emoji1: str, emoji2: str) -> str | None:
     emoji1 = emoji_to_codepoint(emoji1)
     emoji2 = emoji_to_codepoint(emoji2)
     for date, _emoji1, _emoji2 in MIX_DATA:

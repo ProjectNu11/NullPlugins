@@ -53,9 +53,8 @@ async def emoji_mix(
     emoji2: str = emoji2.result.display
     try:
         async with ClientSession() as session:
-            async with session.get(
-                get_mix_emoji_url(emoji1, emoji2), proxy=config.proxy
-            ) as resp:
+            assert (link := get_mix_emoji_url(emoji1, emoji2)), "无法获取合成链接"
+            async with session.get(link, proxy=config.proxy) as resp:
                 assert resp.status == 200, "图片获取失败"
                 image = await resp.read()
         return await app.send_message(
