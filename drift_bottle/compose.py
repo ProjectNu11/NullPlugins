@@ -76,7 +76,7 @@ def compose_add_bottle_success(bottle_id: str) -> bytes:
 def compose_bottle(bottle: DBottle, *replies: DBReply) -> bytes:
     column = Column()
     banner = Banner("漂流瓶")
-    box = GeneralBox(text=f"来自 {bottle.sender[:6]} 的漂流瓶", description=bottle.content)
+    box = GeneralBox(text=f"来自 {bottle.sender[:16]} 的漂流瓶", description=bottle.content)
     box.add(text="发送时间", description=bottle.time.strftime("%Y-%m-%d %H:%M:%S"))
     box.add(text="查看次数", description=str(bottle.view_times))
     box.add(text="漂流瓶 ID", description=str(bottle.id))
@@ -85,7 +85,7 @@ def compose_bottle(bottle: DBottle, *replies: DBReply) -> bytes:
 
     for index, reply in enumerate(replies):
         reply_box.add(
-            text=f"#{index + 1} 来自 {reply.sender[:6]} 的回复",
+            text=f"#{index + 1} 来自 {reply.sender[:16]} 的回复",
             description=reply.content,
         )
 
@@ -115,7 +115,7 @@ def reply_bottle_success(reply_id: str) -> bytes:
 def compose_my_stat(me: DBUser, avatar: bytes) -> bytes:
     column = Column()
     banner = Banner("漂流瓶")
-    header = Header(me.name[:6], "漂流瓶统计", Image.open(BytesIO(avatar)))
+    header = Header(me.name[:16], "漂流瓶统计", Image.open(BytesIO(avatar)))
     box = GeneralBox(text="捞取漂流瓶数", description=str(me.view_count))
     box.add(text="扔回漂流瓶数", description=str(me.view_count - me.delete_count))
     box.add(text="丢弃漂流瓶数", description=str(me.delete_count))

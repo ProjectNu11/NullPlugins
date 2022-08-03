@@ -15,7 +15,7 @@ async def register(supplicant: int, name: str | None = None) -> DBUser | None:
         f"该用户已注册，ID 为 {_.id}，注册时间为 {_.register_time.strftime('%Y-%m-%d %H:%M:%S')}"
     )
     if name:
-        assert len(name) <= 6, "用户名长度不能超过 6 个字符"
+        assert len(name) <= 16, "用户名长度不能超过 16 个字符"
     _supplicant = md5(str(supplicant).encode()).hexdigest()
     await orm.insert_or_update(
         DriftBottleUser,

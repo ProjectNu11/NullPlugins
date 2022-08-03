@@ -99,7 +99,7 @@ async def drift_bottle(
         if function == "注册":
             user = await register(supplicant, content)
             image = await compose(compose_register_success, user)
-            await app.send_message(
+            return await app.send_message(
                 event.sender.group if isinstance(event, GroupMessage) else event.sender,
                 MessageChain(Image(data_bytes=image)),
             )
