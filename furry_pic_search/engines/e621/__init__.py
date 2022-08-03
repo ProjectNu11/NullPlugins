@@ -1,6 +1,6 @@
 import asyncio
-import urllib.parse
 import random
+import urllib.parse
 from datetime import datetime, timedelta
 from io import BytesIO
 from typing import Literal
@@ -11,8 +11,8 @@ from graia.saya import Channel
 
 from library import config
 from library.image.oneui_mock.elements import Banner, GeneralBox, is_dark, Column
-from ..base import BaseSearch
 from .model import PostModel
+from ..base import BaseSearch
 
 channel = Channel.current()
 
@@ -24,10 +24,10 @@ DEFAULT_RATING = "s"
 E621_CFG_KEYS = ["username"]
 VERSION = "1.0.0"
 
-last_query: datetime = datetime.fromtimestamp(0)
-
 
 class E621Search(BaseSearch):
+    last_query: datetime = datetime.fromtimestamp(0)
+
     __name__ = "E621"
 
     async def get(
@@ -37,7 +37,8 @@ class E621Search(BaseSearch):
         rating: Literal["s", "q", "e"] | None = None,
     ) -> Image.Image:
 
-        assert last_query < datetime.now() - timedelta(seconds=5), "查询速率过快"
+        assert self.last_query < datetime.now() - timedelta(seconds=5), "查询速率过快"
+        self.last_query = datetime.now()
 
         tags = "+".join(tags).lower()
         tags = urllib.parse.quote(tags, safe="+")
