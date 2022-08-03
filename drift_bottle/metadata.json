@@ -1,0 +1,16 @@
+{
+    "name": "漂流瓶",
+    "pack": "module.drift_bottle",
+    "version": "1.0",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": false,
+    "category": "entertainment",
+    "description": "",
+    "dependency": null,
+    "loaded": true,
+    "hidden": false,
+    "override_default": null,
+    "override_switch": null
+}
