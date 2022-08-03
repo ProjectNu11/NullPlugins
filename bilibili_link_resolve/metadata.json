@@ -1,7 +1,7 @@
 {
     "name": "B 站链接解析",
     "pack": "module.bilibili_link_resolve",
-    "version": "1.2b",
+    "version": "1.2",
     "author": [
         "nullqwertyuiop"
     ],

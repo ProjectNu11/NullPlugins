@@ -8,6 +8,7 @@ from library.image.oneui_mock.elements import (
     is_dark,
     GeneralBox,
     HintBox,
+    OneUIMock,
 )
 from .base import BaseSearch
 from .e621 import E621Search, E621_CFG_KEYS
@@ -51,4 +52,5 @@ def compose_error(engine: BaseSearch, err_text: str) -> Image.Image:
         dark=dark,
     )
     column.add(hint)
-    return column.render()
+    mock = OneUIMock(column, dark=dark)
+    return mock.render()
