@@ -8,6 +8,7 @@ from typing import Literal
 from PIL import Image
 from aiohttp import ClientSession
 from graia.saya import Channel
+from pydantic import ValidationError
 
 from library import config
 from library.image.oneui_mock.elements import (
@@ -52,6 +53,7 @@ class E621Search(BaseSearch):
         assert "rating%3As" not in tags, "不被允许的标签：rating:s"
         assert "rating%3Aq" not in tags, "不被允许的标签：rating:q"
         assert "rating%3Ae" not in tags, "不被允许的标签：rating:e"
+        assert "rating%3A" not in tags, "不被允许的标签：rating:"
 
         if rating is None:
             rating = DEFAULT_RATING
@@ -68,7 +70,12 @@ class E621Search(BaseSearch):
 
                 data = await response.json()
 
-            posts: list[PostModel] = [PostModel(**post) for post in data["posts"]]
+            posts: list[PostModel] = []
+            for post in data["posts"]:
+                try:
+                    posts.append(PostModel(**post))
+                except ValidationError:
+                    continue
             assert posts, "该标签组合下无搜索结果"
 
             if get_random:
