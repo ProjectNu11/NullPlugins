@@ -28,7 +28,7 @@ from .engines import __all__, BaseSearch, run_search
 saya = Saya.current()
 channel = Channel.current()
 
-channel.name("Chat")
+channel.name("MusicSearch")
 channel.author("nullqwertyuiop")
 channel.description("")
 
@@ -60,7 +60,7 @@ if not (__cfg := config.get_module_config(channel.module)):
         ],
     )
 )
-async def furry_pic_search(
+async def music_search(
     ariadne: Ariadne,
     event: GroupMessage,
     engine: ArgResult,
@@ -114,7 +114,9 @@ async def furry_pic_search(
                             _msg = int(_msg)
                             return _msg if 0 < _msg <= _max_count else _max_count
 
-            count = await FunctionWaiter(waiter, [GroupMessage]).wait(60)
+            assert (
+                count := await FunctionWaiter(waiter, [GroupMessage]).wait(60)
+            ), "输入内容非数字，取消点歌"
         else:
 
             async def waiter(
@@ -129,10 +131,11 @@ async def furry_pic_search(
                             return _msg if 0 < _msg <= _max_count else _max_count
 
             count = await FunctionWaiter(waiter, [FriendMessage]).wait(60)
-    except asyncio.exceptions.TimeoutError:
+    except (asyncio.exceptions.TimeoutError, AssertionError) as err:
+        err_text = err.args[0] if isinstance(err, AssertionError) else "超时，已取消本次点歌"
         return await ariadne.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
-            MessageChain("超时，已取消本次查询"),
+            MessageChain(err_text),
         )
 
     await ariadne.send_message(
