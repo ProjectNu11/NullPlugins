@@ -62,6 +62,21 @@ async def get_user(*, user_id: int | str = None, name: str = None) -> DBUser | N
         )
 
 
+async def update_user_count(
+    supplicant: int, view: int = 0, reply: int = 0, delete: int = 0
+) -> None:
+    _user = md5(str(supplicant).encode()).hexdigest()
+    await orm.insert_or_update(
+        DriftBottleUser,
+        [DriftBottleUser.id == _user],
+        {
+            "view_count": DriftBottleUser.view_count + view,
+            "reply_count": DriftBottleUser.reply_count + reply,
+            "delete_count": DriftBottleUser.delete_count + delete,
+        },
+    )
+
+
 async def get_bottle(supplicant: int = None, bottle_id: str = None) -> list[DBottle]:
     if supplicant:
         condition = [

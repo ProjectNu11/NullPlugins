@@ -38,6 +38,7 @@ from module.drift_bottle.util import (
     get_user,
     user_keep_bottle,
     add_reply,
+    update_user_count,
 )
 
 channel = Channel.current()
@@ -114,6 +115,7 @@ async def drift_bottle(
             await update_bottle_status(bottle.id, 1)
             await update_bottle_view_times(bottle.id)
             await user_keep_bottle(supplicant, bottle.id)
+            await update_user_count(supplicant, view=1)
             image = await compose(compose_bottle, bottle, *replies)
         elif function in ("写", "扔"):
             assert content, "漂流瓶内容不得为空"
@@ -133,6 +135,7 @@ async def drift_bottle(
                 deleted = False
             else:
                 await update_bottle_status(bottle_id, 2)
+                await update_user_count(supplicant, delete=1)
                 deleted = True
             await user_keep_bottle(supplicant, "")
             image = await compose(return_or_delete_bottle_success, bottle_id, deleted)
@@ -145,6 +148,7 @@ async def drift_bottle(
             bottle_id = user.kept_bottle
             await update_bottle_status(bottle_id, 0)
             await user_keep_bottle(supplicant, "")
+            await update_user_count(supplicant, reply=1)
             reply_id = await add_reply(bottle_id, supplicant, content)
             image = await compose(reply_bottle_success, reply_id)
         elif function == "查看":

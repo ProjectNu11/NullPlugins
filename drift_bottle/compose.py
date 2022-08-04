@@ -83,6 +83,8 @@ def compose_bottle(bottle: DBottle, *replies: DBReply) -> bytes:
 
     reply_box = GeneralBox()
 
+    replies = sorted(list(replies), key=lambda x: x.time, reverse=True)
+
     for index, reply in enumerate(replies):
         reply_box.add(
             text=f"#{index + 1} 来自 {reply.sender[:16]} 的回复",
