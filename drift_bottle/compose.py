@@ -83,7 +83,7 @@ def compose_bottle(bottle: DBottle, *replies: DBReply) -> bytes:
 
     reply_box = GeneralBox()
 
-    replies = sorted(list(replies), key=lambda x: x.time, reverse=True)
+    replies = sorted(list(replies), key=lambda x: x.time)
 
     for index, reply in enumerate(replies):
         reply_box.add(
