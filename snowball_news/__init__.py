@@ -106,6 +106,7 @@ async def snowball_news(
                         ]
                     ),
                 )
+            assert _match <= 50, "最多只能查看最新的 50 条新闻"
             news = await bulk_fetch_from_db(count=_match, set_sent=False)
             img = await async_compose(*news)
             return await app.send_message(
