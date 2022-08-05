@@ -36,7 +36,7 @@ HEADERS = {
 }
 LIVENEWS_URL = "https://xueqiu.com/statuses/livenews/list.json?since_id={since_id}"
 
-INTERVAL = 1
+INTERVAL = 10
 QUERY_INTERVAL = 1
 
 cookie = None
