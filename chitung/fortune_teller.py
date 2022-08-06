@@ -53,7 +53,7 @@ async def chitung_fortune_teller_handler(app: Ariadne, event: MessageEvent):
                 ]
             ),
         )
-    mahjong_of_the_day = random.randint(1, 144)
+    mahjong_of_the_day = random.randint(1, 143)
     if mahjong_of_the_day < 36:
         mahjong_numero = mahjong_of_the_day % 9
         mahjong = f"{chinese_num[mahjong_of_the_day % 9]}筒"
@@ -71,7 +71,7 @@ async def chitung_fortune_teller_handler(app: Ariadne, event: MessageEvent):
         mahjong = zhong_fa_bai[mahjong_of_the_day % 3]
     else:
         mahjong_numero = mahjong_of_the_day - 102
-        mahjong = f"花牌（{hua_pai[mahjong_of_the_day - 137]}）"
+        mahjong = f"花牌（{hua_pai[mahjong_of_the_day - 136]}）"
     pre_chain = (
         [At(supplicant), Plain(text="\n")] if isinstance(supplicant, Member) else []
     )
