@@ -1,5 +1,3 @@
-raise Exception
-
 import contextlib
 
 from graia.ariadne import Ariadne

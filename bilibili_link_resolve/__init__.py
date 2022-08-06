@@ -17,7 +17,6 @@ from graia.saya.builtins.broadcast.schema import ListenerSchema
 from library.depend import Switch, FunctionCall
 from library.image.oneui_mock.elements import (
     Banner,
-    is_dark,
     Column,
     GeneralBox,
     OneUIMock,

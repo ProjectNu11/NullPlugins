@@ -17,6 +17,7 @@ from graia.ariadne.message.parser.twilight import (
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
+from library import PrefixMatch
 from library.config import config
 from library.depend import Switch, FunctionCall
 
@@ -33,7 +34,12 @@ channel.description("")
         listening_events=[GroupMessage, FriendMessage],
         inline_dispatchers=[
             Twilight(
-                [FullMatch(".douban"), FullMatch("search"), WildcardMatch() @ "movie"]
+                [
+                    PrefixMatch,
+                    FullMatch("douban"),
+                    FullMatch("search"),
+                    WildcardMatch() @ "movie",
+                ]
             )
         ],
         decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
@@ -79,7 +85,12 @@ async def douban_movie_search(app: Ariadne, event: MessageEvent, movie: RegexRes
         listening_events=[GroupMessage, FriendMessage],
         inline_dispatchers=[
             Twilight(
-                [FullMatch(".douban"), FullMatch("info"), WildcardMatch() @ "movie"]
+                [
+                    PrefixMatch,
+                    FullMatch("douban"),
+                    FullMatch("info"),
+                    WildcardMatch() @ "movie",
+                ]
             )
         ],
         decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],

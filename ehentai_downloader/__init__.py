@@ -23,6 +23,7 @@ from graia.saya.builtins.broadcast import ListenerSchema
 from loguru import logger
 from pydantic import BaseModel
 
+from library import PrefixMatch
 from library.config import config
 from library.depend import Switch, FunctionCall
 from library.depend.interval import Interval
@@ -69,10 +70,10 @@ else:
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(".eh"),
+                    PrefixMatch,
+                    FullMatch("eh"),
                     UnionMatch(),
-                    RegexMatch(r"(https?://)?e[-x]hentai\.org/g/\d+/[\da-z]+/?")
-                    @ "url",
+                    RegexMatch(r"(https?://)?e-hentai\.org/g/\d+/[\da-z]+/?") @ "url",
                 ]
             )
         ],
@@ -130,7 +131,7 @@ async def ehentai_downloader(ariadne: Ariadne, event: GroupMessage, url: RegexRe
             name=f"[{gallery}] {name}.zip",
         )
         await ariadne.send_group_message(
-            event.sender.group, MessageChain(f"解压密码 {password}，如未显示在消息记录中，可在群文件中下载")
+            event.sender.group, MessageChain(f"解压密码 {password}")
         )
     except AttributeError:
         logger.error(traceback.format_exc())

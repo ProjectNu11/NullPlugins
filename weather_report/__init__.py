@@ -2,7 +2,7 @@ import asyncio
 import re
 import urllib.parse
 from datetime import datetime
-from typing import Union, Tuple
+from typing import Tuple
 
 import aiohttp
 from graia.ariadne.app import Ariadne
@@ -28,6 +28,7 @@ from graia.scheduler.saya import SchedulerSchema
 from pydantic import BaseModel
 from sqlalchemy import select
 
+from library import PrefixMatch
 from library.config import config
 from library.depend import Switch, FunctionCall
 from library.orm import orm
@@ -47,7 +48,7 @@ if not config.get_module_config(channel.module, "key"):
 @channel.use(
     ListenerSchema(
         listening_events=[GroupMessage, FriendMessage],
-        inline_dispatchers=[Twilight([RegexMatch(r"\.(?!订阅).+天气")])],
+        inline_dispatchers=[Twilight([PrefixMatch, RegexMatch(r"(?!订阅).+天气")])],
         decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
@@ -64,7 +65,14 @@ async def weather_report(app: Ariadne, event: MessageEvent):
     ListenerSchema(
         listening_events=[FriendMessage],
         inline_dispatchers=[
-            Twilight([FullMatch(".订阅"), WildcardMatch() @ "city", FullMatch("天气")])
+            Twilight(
+                [
+                    PrefixMatch,
+                    FullMatch("订阅"),
+                    WildcardMatch() @ "city",
+                    FullMatch("天气"),
+                ]
+            )
         ],
         decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )

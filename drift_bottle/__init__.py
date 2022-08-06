@@ -6,8 +6,6 @@ from graia.ariadne.message.chain import MessageChain
 from graia.ariadne.message.element import Image
 from graia.ariadne.message.parser.twilight import (
     Twilight,
-    FullMatch,
-    SpacePolicy,
     UnionMatch,
     WildcardMatch,
     RegexResult,
@@ -15,7 +13,7 @@ from graia.ariadne.message.parser.twilight import (
 from graia.saya import Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
-from library import config
+from library import config, PrefixMatch
 from library.depend import Switch, FunctionCall, Interval
 from module.drift_bottle.compose import (
     compose,
@@ -51,7 +49,7 @@ DRIFT_BOTTLE_CHAR_LIMIT = 400
         listening_events=[GroupMessage, FriendMessage],
         inline_dispatchers=[
             Twilight(
-                FullMatch(config.func.prefix).space(SpacePolicy.NOSPACE),
+                PrefixMatch,
                 UnionMatch("捞", "写", "扔", "扔回", "丢弃", "注册", "回复", "查看", "我的") @ "func",
                 UnionMatch("漂流瓶", "drift"),
                 WildcardMatch() @ "content",

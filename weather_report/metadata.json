@@ -1,7 +1,7 @@
 {
     "name": "实时天气",
     "pack": "module.weather_report",
-    "version": "1.03",
+    "version": "1.04",
     "author": [
         "nullqwertyuiop"
     ],

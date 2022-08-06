@@ -1,5 +1,4 @@
 import asyncio
-import contextlib
 import re
 from io import BytesIO
 
@@ -14,13 +13,13 @@ from graia.ariadne.message.parser.twilight import (
     ArgResult,
     RegexResult,
     FullMatch,
-    SpacePolicy,
 )
 from graia.ariadne.model import Group, Friend
 from graia.ariadne.util.interrupt import FunctionWaiter
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
+from library import PrefixMatch
 from library.config import config
 from library.depend import Switch, FunctionCall
 from .engines import __all__, BaseSearch, run_search
@@ -47,7 +46,7 @@ if not (__cfg := config.get_module_config(channel.module)):
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(config.func.prefix).space(SpacePolicy.NOSPACE),
+                    PrefixMatch,
                     FullMatch("点歌"),
                     ArgumentMatch("-e", "--engine", type=str, optional=True) @ "engine",
                     WildcardMatch().flags(re.S) @ "keywords",

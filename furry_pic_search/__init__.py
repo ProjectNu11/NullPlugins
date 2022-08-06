@@ -12,11 +12,11 @@ from graia.ariadne.message.parser.twilight import (
     ArgResult,
     RegexResult,
     FullMatch,
-    SpacePolicy,
 )
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
+from library import PrefixMatch
 from library.config import config
 from library.depend import Switch, FunctionCall
 from .engines import __all__, BaseSearch, run_search, __cfg__
@@ -53,7 +53,7 @@ else:
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(config.func.prefix).space(SpacePolicy.NOSPACE),
+                    PrefixMatch,
                     FullMatch("兽图"),
                     ArgumentMatch("-n", "--no-random", optional=True) @ "no_random",
                     ArgumentMatch("-e", "--engine", type=str, optional=True) @ "engine",

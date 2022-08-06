@@ -54,8 +54,10 @@ async def chitung_greeting(app: Ariadne, event: GroupMessage):
             )
         ],
         decorators=[
+            Switch.check(channel.module),
             Blacklist.check(),
             FunctionControl.enable(FunctionControl.Responder),
+            FunctionCall.record(channel.module),
         ],
     )
 )
@@ -77,8 +79,10 @@ async def chitung_goodbye(app: Ariadne, event: GroupMessage):
             )
         ],
         decorators=[
+            Switch.check(channel.module),
             Blacklist.check(),
             FunctionControl.enable(FunctionControl.Responder),
+            FunctionCall.record(channel.module),
         ],
     )
 )
@@ -105,8 +109,10 @@ async def chitung_anti_ow(app: Ariadne, event: GroupMessage):
             )
         ],
         decorators=[
+            Switch.check(channel.module),
             Blacklist.check(),
             FunctionControl.enable(FunctionControl.Responder),
+            FunctionCall.record(channel.module),
         ],
     )
 )

@@ -6,20 +6,17 @@ from PIL import Image as PillowImage
 from graia.ariadne.app import Ariadne
 from graia.ariadne.event.message import GroupMessage, FriendMessage, MessageEvent
 from graia.ariadne.message.chain import MessageChain
-from graia.ariadne.message.element import Image, Plain
+from graia.ariadne.message.element import Image
 from graia.ariadne.message.parser.twilight import (
     Twilight,
     UnionMatch,
     WildcardMatch,
     RegexResult,
-    FullMatch,
-    SpacePolicy,
 )
-from graia.broadcast import ExecutionStop
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
-from library import config
+from library import PrefixMatch
 from library.depend import Switch, FunctionCall, Interval
 from .function import __all__, check_and_run
 from .util import get_element_image, get_image
@@ -38,7 +35,7 @@ channel.description("")
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(config.func.prefix).space(SpacePolicy.NOSPACE),
+                    PrefixMatch,
                     UnionMatch(*__all__.keys()) @ "func",
                     WildcardMatch().flags(re.S),
                 ]

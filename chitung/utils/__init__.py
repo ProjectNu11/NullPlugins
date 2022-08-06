@@ -16,7 +16,7 @@ from graia.saya.builtins.broadcast import ListenerSchema
 from library.depend import Permission, Blacklist, Switch, FunctionCall
 from library.model import UserPerm
 from .config import config, group_config, save_group_config, save_config, reset_config
-from ..vars import chitung_prefix
+from ..vars import CHITUNG_PREFIX
 
 channel = Channel.current()
 
@@ -24,9 +24,7 @@ channel = Channel.current()
 @channel.use(
     ListenerSchema(
         listening_events=[GroupMessage, FriendMessage],
-        inline_dispatchers=[
-            Twilight([FullMatch(chitung_prefix), FullMatch("adminhelp")])
-        ],
+        inline_dispatchers=[Twilight([*CHITUNG_PREFIX, FullMatch("adminhelp")])],
         decorators=[
             Switch.check(channel.module),
             Blacklist.check(),
@@ -45,9 +43,9 @@ async def chitung_admin_help_handler(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
         MessageChain(
             "Bank：\n"
-            f"{chitung_prefix}laundry 空格 金额：为自己增加/减少钱\n"
-            f"{chitung_prefix}set 空格 QQ号 空格 钱：设置用户的钱的数量\n"
-            f"{chitung_prefix}bank 空格 QQ号：查询用户的钱的数量\n\n"
+            f"{CHITUNG_PREFIX}laundry 空格 金额：为自己增加/减少钱\n"
+            f"{CHITUNG_PREFIX}set 空格 QQ号 空格 钱：设置用户的钱的数量\n"
+            f"{CHITUNG_PREFIX}bank 空格 QQ号：查询用户的钱的数量\n\n"
             # "Broadcast:\n"
             # "/broadcast -f 或者 -g：进行好友或者群聊广播\n\n"
             # "Reset：\n"
@@ -61,9 +59,9 @@ async def chitung_admin_help_handler(
             # "/config -h：查看 config 的帮助\n"
             # "/config 空格 数字序号 空格 true/false：开关相应配置\n\n"
             "Data：\n"
-            f"{chitung_prefix}num -f：查看好友数量\n"
-            f"{chitung_prefix}num -g：查看群聊数量\n"
-            f"{chitung_prefix}coverage：查看总覆盖人数"
+            f"{CHITUNG_PREFIX}num -f：查看好友数量\n"
+            f"{CHITUNG_PREFIX}num -g：查看群聊数量\n"
+            f"{CHITUNG_PREFIX}coverage：查看总覆盖人数"
         ),
     )
 
@@ -74,7 +72,7 @@ async def chitung_admin_help_handler(
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(chitung_prefix),
+                    *CHITUNG_PREFIX,
                     UnionMatch("coverage", "num -f", "num -g") @ "func",
                 ]
             )
@@ -116,9 +114,7 @@ async def chitung_admin_tools_handler(
     ListenerSchema(
         listening_events=[GroupMessage, FriendMessage],
         inline_dispatchers=[
-            Twilight(
-                [FullMatch(chitung_prefix), FullMatch("reset"), RegexMatch("config")]
-            )
+            Twilight([*CHITUNG_PREFIX, FullMatch("reset"), RegexMatch("config")])
         ],
         decorators=[
             Switch.check(channel.module),
@@ -143,7 +139,7 @@ async def chitung_reset_config_handler(app: Ariadne, event: MessageEvent):
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(chitung_prefix),
+                    *CHITUNG_PREFIX,
                     UnionMatch("open", "close") @ "option",
                     UnionMatch(
                         "global",

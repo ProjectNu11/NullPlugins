@@ -10,7 +10,6 @@ from graia.ariadne.message.element import Image, Plain
 from graia.ariadne.message.parser.twilight import (
     Twilight,
     FullMatch,
-    SpacePolicy,
     WildcardMatch,
     UnionMatch,
     RegexResult,
@@ -20,7 +19,7 @@ from graia.saya.builtins.broadcast import ListenerSchema
 from graia.scheduler import timers
 from graia.scheduler.saya import SchedulerSchema
 
-from library import config
+from library import PrefixMatch
 from library.depend import Switch, FunctionCall
 from .util import (
     run_once,
@@ -64,7 +63,7 @@ async def snowball_send_news(app: Ariadne):
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(config.func.prefix).space(SpacePolicy.NOSPACE),
+                    PrefixMatch,
                     FullMatch("实时新闻"),
                     UnionMatch("开启", "关闭", "查看", optional=True) @ "func",
                     WildcardMatch() @ "args",
@@ -87,7 +86,7 @@ async def snowball_news(
             assert args.matched, "未指定参数，可选的参数有 [编号]、[数字]条"
             arguments: str = args.result.display
             is_number: bool = arguments.isdigit()
-            if _match := re.findall("(\d+)条?", arguments):
+            if _match := re.findall(r"(\d+)条?", arguments):
                 _match = int(_match[0])
             if is_number:
                 assert (news := await fetch_from_db(_match)), "数据库中暂无该编号的新闻"

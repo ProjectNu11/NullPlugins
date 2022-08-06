@@ -131,12 +131,12 @@ async def bulk_fetch_from_db(
     result.sort(key=lambda x: x[0], reverse=True)
     if not sent_id and not since_id:
         count = 10 if count is None else count
-    if set_sent:
+    if not since_id:
+        since_id = sent_id
+    if set_sent and not since_id:
         sent_id = result[0][0]
     if count:
         return [NewsItem(**item) for item in result[:count]]
-    if not since_id:
-        since_id = sent_id
     return [NewsItem(**item) for item in result if item[0] > since_id]
 
 

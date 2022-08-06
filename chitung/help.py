@@ -16,9 +16,9 @@ from graia.saya import Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
 from library.depend import Blacklist, Switch, FunctionCall
-from module.chitung.vars import chitung_prefix
 from module.chitung.utils.config import config, group_config
 from module.chitung.utils.depends import FunctionControl
+from module.chitung.vars import CHITUNG_PREFIX
 
 channel = Channel.current()
 
@@ -27,7 +27,7 @@ channel = Channel.current()
     ListenerSchema(
         listening_events=[GroupMessage, FriendMessage],
         inline_dispatchers=[
-            Twilight([FullMatch(chitung_prefix), FullMatch("funct", optional=True)])
+            Twilight([*CHITUNG_PREFIX, FullMatch("funct", optional=True)])
         ],
         decorators=[
             Switch.check(channel.module),
@@ -50,7 +50,7 @@ async def chitung_help_image_handler(app: Ariadne, event: MessageEvent):
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(chitung_prefix),
+                    *CHITUNG_PREFIX,
                     UnionMatch("help", "intro", "usage", "discl", "conta") @ "which",
                 ]
             )
@@ -70,25 +70,25 @@ async def chitung_help_desk_handler(
     if which == "help":
         msg = MessageChain(
             "输入下方带有斜杠的关键词可以获得相关信息。\n\n"
-            f"{chitung_prefix}intro {config.botName}简介\n"
-            f"{chitung_prefix}usage 如何在自己的群中使用{config.botName}\n"
-            f"{chitung_prefix}discl 免责协议\n"
-            f"{chitung_prefix}conta 联系营运者和开发者"
+            f"{CHITUNG_PREFIX}intro {config.botName}简介\n"
+            f"{CHITUNG_PREFIX}usage 如何在自己的群中使用{config.botName}\n"
+            f"{CHITUNG_PREFIX}discl 免责协议\n"
+            f"{CHITUNG_PREFIX}conta 联系营运者和开发者"
         )
     elif which == "intro":
         msg = MessageChain(
             "本机器人使用基于七筒开放版开发的 Chitung-python——一个致力于服务简体中文 Furry 社群的 QQ 机器人项目，"
-            f"皆在试图为群聊增加一些乐趣。请发送{chitung_prefix}funct 来了解如何使用本机器人。注意，不要和我，也不要和生活太较真。"
+            f"皆在试图为群聊增加一些乐趣。请发送{CHITUNG_PREFIX}funct 来了解如何使用本机器人。注意，不要和我，也不要和生活太较真。"
         )
     elif which == "usage":
         msg = MessageChain(
             f"点击头像添加{config.botName}为好友，并将其邀请到QQ群聊中，即可在该群聊中使用服务。"
-            f"如果需要查看功能列表，请输入{chitung_prefix}funct。"
+            f"如果需要查看功能列表，请输入{CHITUNG_PREFIX}funct。"
         )
     elif which == "discl":
         msg = MessageChain(
             "本项目由基于七筒开放版开发的 Chitung-python 驱动，但并非由官方直接运营，如有任何问题请联系该机器人的运营者。"
-            f"如需使用该项目请查询 Github - Chitung Python，或者联系七筒项目的开发者（见{chitung_prefix}conta）。"
+            f"如需使用该项目请查询 Github - Chitung Python，或者联系七筒项目的开发者（见{CHITUNG_PREFIX}conta）。"
         )
     else:
         msg = MessageChain(

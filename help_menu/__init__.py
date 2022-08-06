@@ -1,5 +1,3 @@
-import pickle
-from hashlib import md5
 from io import BytesIO
 
 from aiohttp import ClientSession
@@ -10,18 +8,14 @@ from graia.ariadne.message.element import Image
 from graia.ariadne.message.parser.twilight import (
     Twilight,
     FullMatch,
-    SpacePolicy,
     ParamMatch,
     RegexResult,
 )
 from graia.saya import Channel
 from graia.saya.builtins.broadcast import ListenerSchema
-from pydantic import BaseModel
 
-from library import config
-from library.util.switch import switch
+from library import config, PrefixMatch
 from .util import HelpMenu
-from .. import modules
 
 channel = Channel.current()
 
@@ -35,7 +29,7 @@ if not config.get_module_config(channel.module):
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(config.func.prefix).space(SpacePolicy.NOSPACE),
+                    PrefixMatch,
                     FullMatch("help"),
                     ParamMatch(optional=True) @ "module",
                 ]

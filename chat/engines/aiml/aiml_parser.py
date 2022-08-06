@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """     AIML文件的解析器       """
 import sys
-from xml.sax.handler import ContentHandler
-from xml.sax.xmlreader import Locator
 import xml.sax
 import xml.sax.handler
+from xml.sax.handler import ContentHandler
+from xml.sax.xmlreader import Locator
 
 from .lang_support import split_chinese
 

@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from PIL import Image
 
 from module.avatar_fun.util import write_jpg

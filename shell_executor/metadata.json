@@ -1,7 +1,7 @@
 {
     "name": "终端执行器",
     "pack": "module.shell_executor",
-    "version": "1.02",
+    "version": "1.03",
     "author": [
         "nullqwertyuiop"
     ],

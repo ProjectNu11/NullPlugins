@@ -5,8 +5,6 @@ from graia.ariadne.event.message import GroupMessage
 from graia.ariadne.message.chain import MessageChain
 from graia.ariadne.message.parser.twilight import (
     Twilight,
-    FullMatch,
-    SpacePolicy,
     ArgumentMatch,
     WildcardMatch,
     ArgResult,
@@ -16,6 +14,7 @@ from graia.ariadne.message.parser.twilight import (
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
+from library import PrefixMatch
 from library.config import config
 from library.depend import Switch, FunctionCall
 from .engines import __all__
@@ -44,7 +43,7 @@ if not config.get_module_config(channel.module):
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(config.func.prefix).space(SpacePolicy.NOSPACE),
+                    PrefixMatch,
                     UnionMatch("translate", "翻译"),
                     ArgumentMatch("-e", "--engine", type=str, optional=True) @ "engine",
                     ArgumentMatch("-s", "--source", type=str, optional=True) @ "source",

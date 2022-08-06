@@ -7,14 +7,13 @@ from graia.ariadne.event.message import GroupMessage
 from graia.ariadne.message.chain import MessageChain
 from graia.ariadne.message.parser.twilight import (
     Twilight,
-    FullMatch,
     UnionMatch,
 )
 from graia.saya import Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
 from library.depend import Blacklist, Switch, FunctionCall
-from module.chitung import ASSETS, chitung_prefix
+from module.chitung import ASSETS, CHITUNG_PREFIX
 from module.chitung.utils.depends import FunctionControl
 
 channel = Channel.current()
@@ -29,7 +28,7 @@ with Path(ASSETS, "clusters", "herolines.json").open("r", encoding="utf-8") as f
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(chitung_prefix),
+                    *CHITUNG_PREFIX,
                     UnionMatch("大招", "英雄不朽"),
                 ]
             )

@@ -5,7 +5,7 @@ from graia.ariadne.app import Ariadne
 from graia.ariadne.event.message import Group, Member, GroupMessage
 from graia.ariadne.message.chain import MessageChain
 from graia.ariadne.message.element import Source, At, Image, Forward, ForwardNode
-from graia.ariadne.message.parser.twilight import Twilight, FullMatch, SpacePolicy
+from graia.ariadne.message.parser.twilight import Twilight
 from graia.ariadne.message.parser.twilight import (
     UnionMatch,
     RegexMatch,
@@ -17,7 +17,7 @@ from graia.broadcast.interrupt.waiter import Waiter
 from graia.saya import Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
-from library import config
+from library import config, PrefixMatch
 from library.depend import Switch, FunctionCall
 from library.depend.interval import Interval
 from module.image_searcher.engines import (
@@ -67,7 +67,7 @@ else:
             Twilight(
                 [
                     ElementMatch(At, optional=True),
-                    FullMatch(config.func.prefix).space(SpacePolicy.NOSPACE),
+                    PrefixMatch,
                     UnionMatch("搜图", "识图", "以图搜图"),
                     RegexMatch(r"[\s]+", optional=True),
                     ElementMatch(Image, optional=True) @ "image",

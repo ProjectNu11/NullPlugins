@@ -20,7 +20,7 @@ from graia.scheduler import timers
 from graia.scheduler.saya import SchedulerSchema
 from sqlalchemy import select
 
-from library import config
+from library import config, PrefixMatch
 from library.depend import Permission, FunctionCall, Switch
 from library.model import UserPerm
 from library.orm import orm
@@ -137,7 +137,7 @@ async def generate_all(supplicant: int = None):
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch("."),
+                    PrefixMatch,
                     UnionMatch("收信", "发信", "模块", "调用", "模块调用", optional=True) @ "which",
                     FullMatch("统计"),
                 ]
@@ -185,7 +185,8 @@ async def send_daily(app: Ariadne):
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(".我的"),
+                    PrefixMatch,
+                    FullMatch("我的"),
                     UnionMatch("消息", "模块", "调用", "模块调用", optional=True) @ "which",
                     FullMatch("统计"),
                 ]

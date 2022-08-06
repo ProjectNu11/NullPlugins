@@ -4,27 +4,29 @@
 
 # from __future__ import print_function
 
-import sys
 import copy
 import glob
 import os
 import random
 import re
 import string
+import sys
 import threading
 import time
 import xml.sax
 from collections import namedtuple
 from configparser import ConfigParser
-from loguru import logger
 from typing import Optional
 
-from .utils import sentences_split
+from loguru import logger
+
 from .aiml_parser import create_parser
 from .default_subs import defaultGender, defaultPerson, defaultPerson2, defaultNormal
 from .lang_support import split_chinese
 from .pattern_manager import PatternMgr
+from .utils import sentences_split
 from .word_sub import WordSub
+
 
 # from constants import *
 

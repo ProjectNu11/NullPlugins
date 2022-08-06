@@ -1,9 +1,7 @@
 import asyncio
-import json
 import urllib.parse
 
 from PIL import Image
-from aiohttp import ClientSession
 from graia.ariadne import Ariadne
 from graia.ariadne.message.element import MusicShare, MusicShareKind
 from graia.saya import Channel
