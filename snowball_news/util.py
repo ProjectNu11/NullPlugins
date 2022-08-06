@@ -133,7 +133,7 @@ async def bulk_fetch_from_db(
         count = 10 if count is None else count
     if not since_id:
         since_id = sent_id
-    if set_sent and not since_id:
+    if set_sent:
         sent_id = result[0][0]
     if count:
         return [NewsItem(**item) for item in result[:count]]
