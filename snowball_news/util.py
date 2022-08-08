@@ -133,7 +133,7 @@ async def bulk_fetch_from_db(
         count = 10 if count is None else count
     if not since_id:
         since_id = sent_id
-    if set_sent:
+    if set_sent and not since_id:
         sent_id = result[0][0]
     if count:
         return [NewsItem(**item) for item in result[:count]]
@@ -159,10 +159,10 @@ def compose(*news: NewsItem) -> bytes:
     column.add(
         HintBox(
             "可用功能",
-            f"{config.func.prefix}实时新闻 开启\n    -> 开启实时新闻推送",
-            f"{config.func.prefix}实时新闻 关闭\n    -> 关闭实时新闻推送",
-            f"{config.func.prefix}实时新闻 查看 [编号]\n    -> 查看特定[编号]的新闻",
-            f"{config.func.prefix}实时新闻 查看 [数字]条\n    -> 查看最新的[数字]条新闻",
+            f"{config.func.prefix[0]}实时新闻 开启\n    -> 开启实时新闻推送",
+            f"{config.func.prefix[0]}实时新闻 关闭\n    -> 关闭实时新闻推送",
+            f"{config.func.prefix[0]}实时新闻 查看 [编号]\n    -> 查看特定[编号]的新闻",
+            f"{config.func.prefix[0]}实时新闻 查看 [数字]条\n    -> 查看最新的[数字]条新闻",
         ),
         cfg,
     )

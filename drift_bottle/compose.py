@@ -27,15 +27,15 @@ def compose_error(err_text: str) -> bytes:
     box = GeneralBox(text="运行时出现错误", description=err_text)
     hint = HintBox(
         "可用的功能有：",
-        f"\n{config.func.prefix}捞漂流瓶\n    -> 捞一个漂流瓶",
-        f"\n{config.func.prefix}写漂流瓶 内容\n    -> 写一个漂流瓶",
-        f"\n{config.func.prefix}扔漂流瓶 内容\n    -> 写一个漂流瓶",
-        f"\n{config.func.prefix}扔回漂流瓶\n    -> 将捞到的漂流瓶扔回（可被捞取）",
-        f"\n{config.func.prefix}丢弃漂流瓶\n    -> 将捞到的漂流瓶丢弃（不可被捞取）",
-        f"\n{config.func.prefix}回复漂流瓶 内容\n    -> 在捞到的漂流瓶下回复并扔回",
-        f"\n{config.func.prefix}注册漂流瓶 昵称（可选）\n    -> 注册漂流瓶，不可更改昵称",
-        f"\n{config.func.prefix}查看漂流瓶\n    -> 查看捞到的漂流瓶",
-        f"\n{config.func.prefix}我的漂流瓶\n    -> 查看自己的漂流瓶统计",
+        f"\n{config.func.prefix[0]}捞漂流瓶\n    -> 捞一个漂流瓶",
+        f"\n{config.func.prefix[0]}写漂流瓶 内容\n    -> 写一个漂流瓶",
+        f"\n{config.func.prefix[0]}扔漂流瓶 内容\n    -> 写一个漂流瓶",
+        f"\n{config.func.prefix[0]}扔回漂流瓶\n    -> 将捞到的漂流瓶扔回（可被捞取）",
+        f"\n{config.func.prefix[0]}丢弃漂流瓶\n    -> 将捞到的漂流瓶丢弃（不可被捞取）",
+        f"\n{config.func.prefix[0]}回复漂流瓶 内容\n    -> 在捞到的漂流瓶下回复并扔回",
+        f"\n{config.func.prefix[0]}注册漂流瓶 昵称（可选）\n    -> 注册漂流瓶，不可更改昵称",
+        f"\n{config.func.prefix[0]}查看漂流瓶\n    -> 查看捞到的漂流瓶",
+        f"\n{config.func.prefix[0]}我的漂流瓶\n    -> 查看自己的漂流瓶统计",
     )
     column.add(banner, box, hint)
     mock = OneUIMock(column)
@@ -49,15 +49,15 @@ def compose_register_success(user: DBUser) -> bytes:
     box.add(text="注册时间", description=user.register_time.strftime("%Y-%m-%d %H:%M:%S"))
     hint = HintBox(
         "可用的功能有：",
-        f"\n{config.func.prefix}捞漂流瓶\n    -> 捞一个漂流瓶",
-        f"\n{config.func.prefix}写漂流瓶 内容\n    -> 写一个漂流瓶",
-        f"\n{config.func.prefix}扔漂流瓶 内容\n    -> 写一个漂流瓶",
-        f"\n{config.func.prefix}扔回漂流瓶\n    -> 将捞到的漂流瓶扔回（可被捞取）",
-        f"\n{config.func.prefix}丢弃漂流瓶\n    -> 将捞到的漂流瓶丢弃（不可被捞取）",
-        f"\n{config.func.prefix}回复漂流瓶 内容\n    -> 在捞到的漂流瓶下回复并扔回",
-        f"\n{config.func.prefix}注册漂流瓶 昵称（可选）\n    -> 注册漂流瓶，不可更改昵称",
-        f"\n{config.func.prefix}查看漂流瓶\n    -> 查看捞到的漂流瓶",
-        f"\n{config.func.prefix}我的漂流瓶\n    -> 查看自己的漂流瓶统计",
+        f"\n{config.func.prefix[0]}捞漂流瓶\n    -> 捞一个漂流瓶",
+        f"\n{config.func.prefix[0]}写漂流瓶 内容\n    -> 写一个漂流瓶",
+        f"\n{config.func.prefix[0]}扔漂流瓶 内容\n    -> 写一个漂流瓶",
+        f"\n{config.func.prefix[0]}扔回漂流瓶\n    -> 将捞到的漂流瓶扔回（可被捞取）",
+        f"\n{config.func.prefix[0]}丢弃漂流瓶\n    -> 将捞到的漂流瓶丢弃（不可被捞取）",
+        f"\n{config.func.prefix[0]}回复漂流瓶 内容\n    -> 在捞到的漂流瓶下回复并扔回",
+        f"\n{config.func.prefix[0]}注册漂流瓶 昵称（可选）\n    -> 注册漂流瓶，不可更改昵称",
+        f"\n{config.func.prefix[0]}查看漂流瓶\n    -> 查看捞到的漂流瓶",
+        f"\n{config.func.prefix[0]}我的漂流瓶\n    -> 查看自己的漂流瓶统计",
     )
     column.add(banner, box, hint)
     mock = OneUIMock(column)
@@ -93,12 +93,12 @@ def compose_bottle(bottle: DBottle, *replies: DBReply) -> bytes:
 
     hint_box = HintBox(
         "可发送以下指令继续操作",
-        f"\n{config.func.prefix}扔回漂流瓶\n    -> 将捞到的漂流瓶扔回（可被捞取）",
-        f"\n{config.func.prefix}丢弃漂流瓶\n    -> 将捞到的漂流瓶丢弃（不可被捞取）",
-        f"\n{config.func.prefix}回复漂流瓶 内容\n    -> 在捞到的漂流瓶下回复并扔回",
+        f"\n{config.func.prefix[0]}扔回漂流瓶\n    -> 将捞到的漂流瓶扔回（可被捞取）",
+        f"\n{config.func.prefix[0]}丢弃漂流瓶\n    -> 将捞到的漂流瓶丢弃（不可被捞取）",
+        f"\n{config.func.prefix[0]}回复漂流瓶 内容\n    -> 在捞到的漂流瓶下回复并扔回",
     )
 
-    hint = HintBox("保证漂流瓶池的良性循环", f"建议使用 {config.func.prefix}扔回漂流瓶")
+    hint = HintBox("保证漂流瓶池的良性循环", f"建议使用 {config.func.prefix[0]}扔回漂流瓶")
 
     column.add(banner, box, reply_box, hint_box, hint)
     mock = OneUIMock(column)
