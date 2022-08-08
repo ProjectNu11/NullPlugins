@@ -1,17 +1,15 @@
 {
     "name": "推特预览",
     "pack": "module.twitter_preview",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": true,
     "category": "utility",
     "description": "发送推特链接自动生成预览图",
-    "dependency": [
-        "module.build_image"
-    ],
-    "loaded": false,
+    "dependency": null,
+    "loaded": true,
     "hidden": false,
     "override_default": null,
     "override_switch": null
