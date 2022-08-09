@@ -1,18 +1,26 @@
+from typing import Literal
+
 from aiohttp import ClientSession
 from pydantic import BaseModel
 
 from library import config
 
 
+class AnimatedGif(BaseModel):
+    type: Literal["animated_gif"]
+    preview_image_url: str
+    media_key: str
+
+
 class Video(BaseModel):
-    type: str
+    type: Literal["video"]
     preview_image_url: str
     duration_ms: int
     media_key: str
 
 
 class Photo(BaseModel):
-    url: str
+    url: Literal["photo"]
     type: str
     media_key: str
 
@@ -31,5 +39,5 @@ class User(BaseModel):
 
 
 class Includes(BaseModel):
-    media: list[Photo | Video]
+    media: list[Photo | Video | AnimatedGif]
     users: list[User]

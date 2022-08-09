@@ -37,6 +37,7 @@ async def query(
                 data = await resp.json()
                 return Response(**data)
             except ValidationError:
+                raise
                 err_resp = ErrorResponse(**data)
                 if not exclude_error:
                     return err_resp
@@ -51,6 +52,7 @@ async def query(
         loop = asyncio.get_event_loop()
         return await loop.run_in_executor(None, compose_error, err.args[0], banner_text)
     except Exception as err:
+        raise
         loop = asyncio.get_event_loop()
         return await loop.run_in_executor(None, compose_error, str(err), banner_text)
 

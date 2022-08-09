@@ -17,12 +17,20 @@ from library.image.oneui_mock.elements import (
     GeneralBox,
     OneUIMock,
 )
-from .include import Photo, User, Video
+from .include import Photo, User, Video, AnimatedGif
 from ..var import STATUS_LINK
 
 
 class Attachments(BaseModel):
     media_keys: list[str] = []
+
+
+class EntityAnnotation(BaseModel):
+    start: int
+    end: int
+    probability: float
+    type: str
+    normalized_text: str
 
 
 class EntityURLExternalImage(BaseModel):
@@ -60,6 +68,7 @@ class EntityHashtag(BaseModel):
 
 
 class Entities(BaseModel):
+    annotations: list[EntityAnnotation] = []
     hashtags: list[EntityHashtag] = []
     urls: list[EntityURLMedia | EntityURLExternal] = []
 
@@ -83,13 +92,15 @@ class UnparsedTweet(BaseModel):
 
 
 class ParsedTweet(UnparsedTweet):
-    media: list[Photo | Video] = []
+    media: list[Photo | Video | AnimatedGif] = []
     user: User
     has_video: bool = False
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.has_video = bool(list(filter(lambda x: isinstance(x, Video), self.media)))
+        self.has_video = bool(
+            list(filter(lambda x: isinstance(x, (Video, AnimatedGif)), self.media))
+        )
 
     async def get_images(self) -> list[bytes]:
         images: list[bytes] = []
@@ -98,7 +109,7 @@ class ParsedTweet(UnparsedTweet):
                 url = None
                 if isinstance(media, Photo):
                     url = media.url
-                elif isinstance(media, Video):
+                elif isinstance(media, (Video, AnimatedGif)):
                     url = media.preview_image_url
                 if not url:
                     continue
@@ -109,7 +120,7 @@ class ParsedTweet(UnparsedTweet):
     async def get_video_bytes(self) -> tuple[bytes, str]:
         def get_video_info() -> dict | None:
             for media in self.media:
-                if not isinstance(media, Video):
+                if not isinstance(media, (Video, AnimatedGif)):
                     continue
                 with youtube_dl.YoutubeDL() as ydl:
                     return ydl.extract_info(
