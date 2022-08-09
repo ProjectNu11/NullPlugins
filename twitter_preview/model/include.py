@@ -20,8 +20,8 @@ class Video(BaseModel):
 
 
 class Photo(BaseModel):
-    url: Literal["photo"]
-    type: str
+    url: str
+    type: Literal["photo"]
     media_key: str
 
 
