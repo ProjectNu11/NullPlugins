@@ -160,7 +160,7 @@ async def query_backup(group: int):
 async def restore_name_card(group: Group, supplicant: Member):
     ariadne = Ariadne.current()
     if not (history := await query_backup(group.id)):
-        await ariadne.send_group_message(group, MessageChain("暂无本群打乱历史"))
+        return await ariadne.send_group_message(group, MessageChain("暂无本群打乱历史"))
     history = history[:20]
     count = len(history)
     fwd_nodes = [
