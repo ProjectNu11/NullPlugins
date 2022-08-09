@@ -78,7 +78,9 @@ async def name_card_shuffle(ariadne: Ariadne, event: MessageEvent, restore: ArgR
         await ariadne.send_group_message(
             group, MessageChain("群人数大于设定的人数限制，仅对最近发言的 20 人进行打乱。")
         )
-    original_info = [(member, member.name) for member in member_list]
+    original_info = [
+        (member, member.name) for member in member_list if member.id != 80000000
+    ]
     original_info = sorted(
         original_info, key=lambda x: x[0].last_speak_timestamp, reverse=True
     )[:20]
