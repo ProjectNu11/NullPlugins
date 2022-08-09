@@ -30,7 +30,7 @@ from sqlalchemy import select
 
 from library import PrefixMatch
 from library.config import config
-from library.depend import Switch, FunctionCall
+from library.depend import Switch, FunctionCall, Blacklist
 from library.orm import orm
 from .table import WeatherSchedule
 
@@ -49,7 +49,11 @@ if not config.get_module_config(channel.module, "key"):
     ListenerSchema(
         listening_events=[GroupMessage, FriendMessage],
         inline_dispatchers=[Twilight([PrefixMatch, RegexMatch(r"(?!订阅).+天气")])],
-        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
+        decorators=[
+            Switch.check(channel.module),
+            Blacklist.check(),
+            FunctionCall.record(channel.module),
+        ],
     )
 )
 async def weather_report(app: Ariadne, event: MessageEvent):
@@ -74,7 +78,11 @@ async def weather_report(app: Ariadne, event: MessageEvent):
                 ]
             )
         ],
-        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
+        decorators=[
+            Switch.check(channel.module),
+            Blacklist.check(),
+            FunctionCall.record(channel.module),
+        ],
     )
 )
 async def weather_report(ariadne: Ariadne, event: FriendMessage, city: RegexResult):

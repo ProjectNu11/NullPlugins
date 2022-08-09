@@ -25,7 +25,7 @@ from pydantic import BaseModel
 
 from library import PrefixMatch
 from library.config import config
-from library.depend import Switch, FunctionCall
+from library.depend import Switch, FunctionCall, Blacklist
 from library.depend.interval import Interval
 
 saya = Saya.current()
@@ -79,6 +79,7 @@ else:
         ],
         decorators=[
             Switch.check(channel.module),
+            Blacklist.check(),
             FunctionCall.record(channel.module),
             Interval.check(
                 channel.module, minutes=5, on_failure=MessageChain("欲求不满的扫购...")

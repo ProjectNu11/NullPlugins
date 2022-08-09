@@ -24,7 +24,7 @@ from graia.saya.builtins.broadcast.schema import ListenerSchema
 from graia.saya.channel import Channel
 
 from library import PrefixMatch
-from library.depend import Switch, FunctionCall
+from library.depend import Switch, FunctionCall, Blacklist
 
 channel = Channel.current()
 
@@ -46,7 +46,11 @@ DEVICES = {"三星": "samsung note20 ultra.png", "samsung": "samsung note20 ultr
                 ]
             )
         ],
-        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
+        decorators=[
+            Switch.check(channel.module),
+            Blacklist.check(),
+            FunctionCall.record(channel.module),
+        ],
     )
 )
 async def fake_leica(

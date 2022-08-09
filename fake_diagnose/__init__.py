@@ -7,7 +7,7 @@ from graia.ariadne.message.parser.twilight import RegexMatch, Twilight
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 from graia.saya.channel import Channel
 
-from library.depend import Switch, FunctionCall
+from library.depend import Switch, FunctionCall, Blacklist
 
 channel = Channel.current()
 
@@ -18,7 +18,11 @@ ILLNESS = ["疼", "痛"]
     ListenerSchema(
         listening_events=[GroupMessage],
         inline_dispatchers=[Twilight([RegexMatch(rf".+({'|'.join(ILLNESS)}).*")])],
-        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
+        decorators=[
+            Switch.check(channel.module),
+            Blacklist.check(),
+            FunctionCall.record(channel.module),
+        ],
     )
 )
 async def fake_diagnose(

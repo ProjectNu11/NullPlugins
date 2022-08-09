@@ -18,7 +18,7 @@ from graia.saya import Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
 from library import PrefixMatch
-from library.depend import Switch, FunctionCall
+from library.depend import Switch, FunctionCall, Blacklist
 
 channel = Channel.current()
 
@@ -40,7 +40,11 @@ with Path(assets_path, "ill_templates.json").open("r", encoding="UTF-8") as f:
                 ]
             )
         ],
-        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
+        decorators=[
+            Switch.check(channel.module),
+            Blacklist.check(),
+            FunctionCall.record(channel.module),
+        ],
     )
 )
 async def ill(app: Ariadne, event: MessageEvent, at: ElementResult, text: RegexResult):

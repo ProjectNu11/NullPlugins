@@ -12,7 +12,7 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
 from library import config, PrefixMatch
-from library.depend import Switch, FunctionCall
+from library.depend import Switch, FunctionCall, Blacklist
 
 # from .text_engine.text_engine import TextEngine
 from .aworda_text_to_image.text2image import create_image
@@ -38,7 +38,7 @@ utils = {
         inline_dispatchers=[
             Twilight(
                 [
-                    PrefixMatch.help(f"匹配指令前缀 {config.func.prefix}"),
+                    PrefixMatch.help(f"匹配指令前缀 {config.func.prefix[0]}"),
                     FullMatch(f"build_image").help("匹配 build_image"),
                     ArgumentMatch("--help", action="store_true", optional=True).help(
                         "显示该帮助文本"
@@ -79,7 +79,11 @@ utils = {
                 ],
             )
         ],
-        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
+        decorators=[
+            Switch.check(channel.module),
+            Blacklist.check(),
+            FunctionCall.record(channel.module),
+        ],
     )
 )
 async def build_image(

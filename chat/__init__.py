@@ -17,7 +17,7 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
 from library.config import config
-from library.depend import Switch, FunctionCall
+from library.depend import Switch, FunctionCall, Blacklist
 from .engines import __all__
 from .engines.base import BaseChat
 
@@ -58,6 +58,7 @@ if not config.get_module_config(channel.module):
         decorators=[
             MentionMe(),
             Switch.check(channel.module),
+            Blacklist.check(),
             FunctionCall.record(channel.module),
         ],
         priority=999,

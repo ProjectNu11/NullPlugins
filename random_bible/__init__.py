@@ -23,7 +23,7 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
 from library.config import config
-from library.depend import Switch, FunctionCall
+from library.depend import Switch, FunctionCall, Blacklist
 
 saya = Saya.current()
 channel = Channel.current()
@@ -40,7 +40,11 @@ data_dir.mkdir(exist_ok=True)
     ListenerSchema(
         listening_events=[GroupMessage],
         inline_dispatchers=[Twilight([FullMatch("随机圣经")])],
-        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
+        decorators=[
+            Switch.check(channel.module),
+            Blacklist.check(),
+            FunctionCall.record(channel.module),
+        ],
     )
 )
 async def get_bible(ariadne: Ariadne, event: GroupMessage):
@@ -70,7 +74,11 @@ waiting = set()
                 ]
             )
         ],
-        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
+        decorators=[
+            Switch.check(channel.module),
+            Blacklist.check(),
+            FunctionCall.record(channel.module),
+        ],
     )
 )
 async def upload_bible(ariadne: Ariadne, event: GroupMessage, image: ElementResult):
@@ -151,7 +159,11 @@ async def upload_bible(ariadne: Ariadne, event: GroupMessage, image: ElementResu
     ListenerSchema(
         listening_events=[GroupMessage],
         inline_dispatchers=[Twilight([FullMatch("本群圣经总数")])],
-        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
+        decorators=[
+            Switch.check(channel.module),
+            Blacklist.check(),
+            FunctionCall.record(channel.module),
+        ],
     )
 )
 async def get_bible_count(app: Ariadne, event: GroupMessage):

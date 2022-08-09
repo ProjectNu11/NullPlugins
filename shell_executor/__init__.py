@@ -23,7 +23,7 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
 from library.config import config
-from library.depend import Switch, Permission, FunctionCall
+from library.depend import Switch, Permission, FunctionCall, Blacklist
 from library.model import UserPerm
 from module.build_image import create_image
 
@@ -56,6 +56,7 @@ data_dir.mkdir(exist_ok=True)
             MentionMe(),
             Permission.require(UserPerm.BOT_OWNER, MessageChain("Permission denied.")),
             Switch.check(channel.module),
+            Blacklist.check(),
             FunctionCall.record(channel.module),
         ],
     )

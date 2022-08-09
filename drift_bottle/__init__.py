@@ -14,7 +14,7 @@ from graia.saya import Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
 from library import config, PrefixMatch
-from library.depend import Switch, FunctionCall, Interval
+from library.depend import Switch, FunctionCall, Interval, Blacklist
 from module.drift_bottle.compose import (
     compose,
     compose_register_success,
@@ -57,6 +57,7 @@ DRIFT_BOTTLE_CHAR_LIMIT = 400
         ],
         decorators=[
             Switch.check(channel.module),
+            Blacklist.check(),
             FunctionCall.record(channel.module),
             Interval.check(
                 channel.module,

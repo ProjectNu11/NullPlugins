@@ -21,7 +21,7 @@ from graia.scheduler.saya import SchedulerSchema
 from sqlalchemy import select
 
 from library import config, PrefixMatch
-from library.depend import Permission, FunctionCall, Switch
+from library.depend import Permission, FunctionCall, Switch, Blacklist
 from library.model import UserPerm
 from library.orm import orm
 from library.orm.table import FunctionCallRecord
@@ -148,6 +148,7 @@ async def generate_all(supplicant: int = None):
             Permission.require(
                 UserPerm.BOT_OWNER, MessageChain("权限不足，你需要来自 所有人 的权限才能进行本操作")
             ),
+            Blacklist.check(),
             FunctionCall.record(channel.module),
         ],
     )

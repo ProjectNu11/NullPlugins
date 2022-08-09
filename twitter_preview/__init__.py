@@ -12,7 +12,7 @@ from graia.saya.builtins.broadcast import ListenerSchema
 from loguru import logger
 
 from library import config
-from library.depend import Switch, FunctionCall
+from library.depend import Switch, FunctionCall, Blacklist
 from .model.response import ErrorResponse
 from .util import get_status_id, query
 
@@ -39,6 +39,7 @@ if not config.get_module_config(channel.module):
         ],
         decorators=[
             Switch.check(channel.module),
+            Blacklist.check(),
             FunctionCall.record(channel.module),
         ],
     )

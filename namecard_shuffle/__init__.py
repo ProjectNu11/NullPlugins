@@ -21,7 +21,7 @@ from sqlalchemy import select
 
 from library import PrefixMatch
 from library.config import config
-from library.depend import Switch, FunctionCall
+from library.depend import Switch, FunctionCall, Blacklist
 from library.orm import orm
 from .table import NameCardBackup
 
@@ -48,7 +48,11 @@ shuffle_flags = {}
                 ]
             )
         ],
-        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
+        decorators=[
+            Switch.check(channel.module),
+            Blacklist.check(),
+            FunctionCall.record(channel.module),
+        ],
     )
 )
 async def name_card_shuffle(ariadne: Ariadne, event: MessageEvent, restore: ArgResult):

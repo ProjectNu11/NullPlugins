@@ -18,7 +18,7 @@ from graia.saya import Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
 from library import config, PrefixMatch
-from library.depend import Switch, FunctionCall
+from library.depend import Switch, FunctionCall, Blacklist
 from library.depend.interval import Interval
 from module.image_searcher.engines import (
     __engines__,
@@ -76,6 +76,7 @@ else:
         ],
         decorators=[
             Switch.check(channel.module),
+            Blacklist.check(),
             FunctionCall.record(channel.module),
             Interval.check(
                 channel.module,
