@@ -45,6 +45,7 @@ shuffle_flags = {}
                     PrefixMatch,
                     FullMatch("shuffle"),
                     ArgumentMatch("-r", "--restore", action="store_true") @ "restore",
+                    ArgumentMatch("-l", "--latest", action="store_true") @ "latest",
                 ]
             )
         ],
@@ -55,7 +56,9 @@ shuffle_flags = {}
         ],
     )
 )
-async def name_card_shuffle(ariadne: Ariadne, event: MessageEvent, restore: ArgResult):
+async def name_card_shuffle(
+    ariadne: Ariadne, event: MessageEvent, restore: ArgResult, latest: ArgResult
+):
     global last_active, shuffle_flags
     group = event.sender.group
     if str(group.id) in shuffle_flags and shuffle_flags[str(group.id)]["status"] == 1:
@@ -75,7 +78,7 @@ async def name_card_shuffle(ariadne: Ariadne, event: MessageEvent, restore: ArgR
         return
     if restore.matched:
         last_active = datetime.now()
-        return await restore_name_card(group, event.sender)
+        return await restore_name_card(group, event.sender, latest.matched)
     if not (member_list := await ariadne.get_member_list(group)):
         return
     if len(member_list) > 20:
@@ -157,62 +160,66 @@ async def query_backup(group: int):
         )
 
 
-async def restore_name_card(group: Group, supplicant: Member):
+async def restore_name_card(group: Group, supplicant: Member, latest: bool):
     ariadne = Ariadne.current()
     if not (history := await query_backup(group.id)):
         return await ariadne.send_group_message(group, MessageChain("暂无本群打乱历史"))
-    history = history[:20]
-    count = len(history)
-    fwd_nodes = [
-        ForwardNode(
-            target=config.account,
-            name=f"{config.name}#{config.num}",
-            time=datetime.now(),
-            message=MessageChain(f"本群共有 {count} 条打乱历史\n\n可在 1 分钟内发送序号进行恢复操作"),
-        )
-    ] + [
-        ForwardNode(
-            target=config.account,
-            name=f"{config.name}#{config.num}",
-            time=datetime.now() + timedelta(seconds=15) * (index + 1),
-            message=MessageChain(
-                [
-                    Plain(f"#{index + 1} "),
-                    Plain(chunk[0][0].strftime("%Y年%m月%d日 %H:%M:%S")),
-                ]
-                + [
-                    Plain(f"\n\n{before} -> {after}")
-                    for _, _, before, after in list(chunk)
-                ]
-            ),
-        )
-        for index, chunk in enumerate(history)
-    ]
-    await ariadne.send_group_message(
-        group,
-        MessageChain([Forward(fwd_nodes)]),
-    )
-
-    @Waiter.create_using_function(listening_events=[GroupMessage])
-    async def response_waiter(
-        waiter_group: Group, waiter_member: Member, waiter_message: MessageChain
-    ):
-        if waiter_group.id == group.id and waiter_member.id == supplicant.id:
-            if waiter_message.display.isdigit() and int(waiter_message.display) <= len(
-                history
-            ):
-                return int(waiter_message.display) - 1
-            return False
-
-    try:
-        if not (
-            response := await asyncio.wait_for(
-                InterruptControl(ariadne.broadcast).wait(response_waiter), 60
+    if not latest:
+        history = history[:20]
+        count = len(history)
+        fwd_nodes = [
+            ForwardNode(
+                target=config.account,
+                name=f"{config.name}#{config.num}",
+                time=datetime.now(),
+                message=MessageChain(f"本群共有 {count} 条打乱历史\n\n可在 1 分钟内发送序号进行恢复操作"),
             )
+        ] + [
+            ForwardNode(
+                target=config.account,
+                name=f"{config.name}#{config.num}",
+                time=datetime.now(),
+                message=MessageChain(
+                    [
+                        Plain(f"#{index + 1} "),
+                        Plain(chunk[0][0].strftime("%Y年%m月%d日 %H:%M:%S")),
+                    ]
+                    + [
+                        Plain(f"\n\n{before} -> {after}")
+                        for _, _, before, after in list(chunk)
+                    ]
+                ),
+            )
+            for index, chunk in enumerate(history)
+        ]
+        await ariadne.send_group_message(
+            group,
+            MessageChain([Forward(fwd_nodes)]),
+        )
+
+        @Waiter.create_using_function(listening_events=[GroupMessage])
+        async def response_waiter(
+            waiter_group: Group, waiter_member: Member, waiter_message: MessageChain
         ):
-            return await ariadne.send_group_message(group, MessageChain("已取消本次操作"))
-    except asyncio.TimeoutError:
-        return await ariadne.send_group_message(group, MessageChain("等待超时"))
+            if waiter_group.id == group.id and waiter_member.id == supplicant.id:
+                if waiter_message.display.isdigit() and int(
+                    waiter_message.display
+                ) <= len(history):
+                    return int(waiter_message.display) - 1
+                return False
+
+        try:
+            if not (
+                response := await asyncio.wait_for(
+                    InterruptControl(ariadne.broadcast).wait(response_waiter), 60
+                )
+            ):
+                return await ariadne.send_group_message(group, MessageChain("已取消本次操作"))
+        except asyncio.TimeoutError:
+            return await ariadne.send_group_message(group, MessageChain("等待超时"))
+
+    else:
+        response = 0
 
     restore_list = [
         (await ariadne.get_member(group, member), before)
