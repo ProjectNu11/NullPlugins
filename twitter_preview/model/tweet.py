@@ -25,7 +25,26 @@ class Attachments(BaseModel):
     media_keys: list[str] = []
 
 
-class EntityURL(BaseModel):
+class EntityURLExternalImage(BaseModel):
+    url: str
+    width: int
+    height: int
+
+
+class EntityURLExternal(BaseModel):
+    start: int
+    end: int
+    url: str
+    expanded_url: str
+    display_url: str
+    images: list[EntityURLExternalImage] = []
+    status: int
+    title: str
+    description: str
+    unwound_url: str
+
+
+class EntityURLMedia(BaseModel):
     start: int
     end: int
     url: str
@@ -34,8 +53,15 @@ class EntityURL(BaseModel):
     media_key: str
 
 
+class EntityHashtag(BaseModel):
+    start: int
+    end: int
+    tag: str
+
+
 class Entities(BaseModel):
-    urls: list[EntityURL] = []
+    hashtags: list[EntityHashtag] = []
+    urls: list[EntityURLMedia | EntityURLExternal] = []
 
 
 class PublicMetrics(BaseModel):
@@ -119,6 +145,36 @@ class ParsedTweet(UnparsedTweet):
             box = GeneralBox(text="正文", description=self.text, highlight=True)
             box.add(text="私人推特", description="推特是否对外不可见", switch=self.user.protected)
             column.add(box)
+
+            if hashtags := self.entities.hashtags:
+                column.add(
+                    GeneralBox(
+                        text="标签",
+                        description=" ".join(
+                            [f"#{hashtag.tag}" for hashtag in hashtags]
+                        ),
+                    )
+                )
+
+            if urls := self.entities.urls:
+                external_urls: list[EntityURLExternal] = []
+                for url in urls:
+                    if not isinstance(url, EntityURLExternal):
+                        continue
+                    external_urls.append(url)
+                if external_urls:
+                    for index, url in enumerate(external_urls):
+                        box = GeneralBox()
+                        box.add(text=f"外部链接 #{index + 1}", description=url.expanded_url)
+                        box.add(
+                            text="标题",
+                            description=url.title,
+                        )
+                        box.add(
+                            text="描述",
+                            description=url.description,
+                        )
+                        column.add(box)
 
             box = GeneralBox(
                 text="转推", description=str(self.public_metrics.retweet_count)
