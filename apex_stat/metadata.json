@@ -1,0 +1,17 @@
+{
+    "name": "Apex 数据查询",
+    "pack": "module.apex_stat",
+    "version": "1.0",
+    "author": [
+        "SAGIRI-kawaii",
+        "nullqwertyuiop"
+    ],
+    "pypi": false,
+    "category": "utility",
+    "description": "",
+    "dependency": null,
+    "loaded": true,
+    "hidden": false,
+    "override_default": null,
+    "override_switch": null
+}
