@@ -1,6 +1,6 @@
 [
     {
-        "name": "Apex \u6570\u636e\u67e5\u8be2",
+        "name": "Apex 数据查询",
         "pack": "module.apex_stat",
         "version": "1.0",
         "author": [
@@ -17,7 +17,7 @@
         "override_switch": null
     },
     {
-        "name": "\u5934\u50cf\u8868\u60c5\u5305",
+        "name": "头像表情包",
         "pack": "module.avatar_fun",
         "version": "0.3.2",
         "author": [
@@ -25,7 +25,7 @@
         ],
         "pypi": true,
         "category": "entertainment",
-        "description": "\u6839\u636e\u7ed9\u5b9a\u5185\u5bb9\u751f\u6210\u76f8\u5e94\u8868\u60c5\u5305",
+        "description": "根据给定内容生成相应表情包",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -33,7 +33,7 @@
         "override_switch": null
     },
     {
-        "name": "B \u7ad9\u94fe\u63a5\u89e3\u6790",
+        "name": "B 站链接解析",
         "pack": "module.bilibili_link_resolve",
         "version": "1.3",
         "author": [
@@ -41,7 +41,7 @@
         ],
         "pypi": false,
         "category": "utility",
-        "description": "\u53d1\u9001 B \u7ad9\u94fe\u63a5\u81ea\u52a8\u89e3\u6790\u89c6\u9891\u5185\u5bb9",
+        "description": "发送 B 站链接自动解析视频内容",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -49,7 +49,7 @@
         "override_switch": null
     },
     {
-        "name": "\u56fe\u7247\u6784\u5efa\u5668",
+        "name": "图片构建器",
         "pack": "module.build_image",
         "version": "1.0.1",
         "author": [
@@ -57,7 +57,7 @@
         ],
         "pypi": true,
         "category": "utility",
-        "description": "\u4f9d\u8d56\u5305\uff0c\u7528\u4e8e\u6784\u5efa\u56fe\u7247",
+        "description": "依赖包，用于构建图片",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -65,7 +65,7 @@
         "override_switch": null
     },
     {
-        "name": "\u804a\u5929",
+        "name": "聊天",
         "pack": "module.chat",
         "version": "0.1.1",
         "author": [
@@ -73,7 +73,7 @@
         ],
         "pypi": false,
         "category": "utility",
-        "description": "\u57fa\u4e8e\u591a\u5f15\u64ce\u7684\u804a\u5929\u6a21\u5757",
+        "description": "基于多引擎的聊天模块",
         "dependency": [
             "module.translator"
         ],
@@ -83,7 +83,7 @@
         "override_switch": null
     },
     {
-        "name": "\u804a\u5929\u8bb0\u5f55\u50a8\u5b58",
+        "name": "聊天记录储存",
         "pack": "module.chat_recorder",
         "version": "1.1",
         "author": [
@@ -91,7 +91,7 @@
         ],
         "pypi": true,
         "category": "utility",
-        "description": "\u4f9d\u8d56\u5305\uff0c\u7528\u4e8e\u50a8\u5b58\u673a\u5668\u4eba\u6536\u5230\u53ca\u53d1\u9001\u7684\u6d88\u606f\u3002",
+        "description": "依赖包，用于储存机器人收到及发送的消息。",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -99,18 +99,18 @@
         "override_switch": null
     },
     {
-        "name": "\u4e03\u7b52",
+        "name": "七筒",
         "pack": "module.chitung",
         "version": "0.1.5",
         "author": [
-            "\u89d2\u5ddd\u70c8",
-            "\u767d\u95e8\u5b88\u671b\u8005",
+            "角川烈",
+            "白门守望者",
             "nullqwertyuiop",
             "IshikawaKaito"
         ],
         "pypi": true,
         "category": "utility",
-        "description": "\u4e03\u7b52 Python",
+        "description": "七筒 Python",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -118,7 +118,7 @@
         "override_switch": null
     },
     {
-        "name": "\u5185\u5bb9\u5ba1\u6838",
+        "name": "内容审核",
         "pack": "module.content_moderation",
         "version": "0.1.2b",
         "author": [
@@ -126,7 +126,7 @@
         ],
         "pypi": true,
         "category": "utility",
-        "description": "\u57fa\u4e8e\u817e\u8baf\u4e91\u7684\u5185\u5bb9\u5ba1\u6838\u63a5\u53e3",
+        "description": "基于腾讯云的内容审核接口",
         "dependency": null,
         "loaded": false,
         "hidden": false,
@@ -134,7 +134,7 @@
         "override_switch": null
     },
     {
-        "name": "\u9ab0\u5b50",
+        "name": "骰子",
         "pack": "module.dice",
         "version": "0.1.2",
         "author": [
@@ -142,7 +142,7 @@
         ],
         "pypi": false,
         "category": "utility",
-        "description": "\u7b80\u6613\u9ab0\u5b50",
+        "description": "简易骰子",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -150,7 +150,7 @@
         "override_switch": null
     },
     {
-        "name": "\u8c46\u74e3\u7535\u5f71",
+        "name": "豆瓣电影",
         "pack": "module.douban_movie",
         "version": "1.2",
         "author": [
@@ -158,7 +158,7 @@
         ],
         "pypi": true,
         "category": "utility",
-        "description": "\u67e5\u8be2\u8c46\u74e3\u7535\u5f71\u7b80\u4ecb",
+        "description": "查询豆瓣电影简介",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -166,7 +166,7 @@
         "override_switch": null
     },
     {
-        "name": "\u6f02\u6d41\u74f6",
+        "name": "漂流瓶",
         "pack": "module.drift_bottle",
         "version": "1.0.4",
         "author": [
@@ -182,7 +182,7 @@
         "override_switch": null
     },
     {
-        "name": "E-hentai \u4e0b\u8f7d\u5668",
+        "name": "E-hentai 下载器",
         "pack": "module.ehentai_downloader",
         "version": "1.04",
         "author": [
@@ -190,7 +190,7 @@
         ],
         "pypi": true,
         "category": "utility",
-        "description": "\u4e0b\u8f7d E-hentai \u7684\u56fe\u5e93",
+        "description": "下载 E-hentai 的图库",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -198,7 +198,7 @@
         "override_switch": null
     },
     {
-        "name": "Emoji \u5408\u6210",
+        "name": "Emoji 合成",
         "pack": "module.emoji_mix",
         "version": "1.0.2",
         "author": [
@@ -214,7 +214,7 @@
         "override_switch": null
     },
     {
-        "name": "\u9519\u8bef\u5904\u7406",
+        "name": "错误处理",
         "pack": "module.exception_handler",
         "version": "1.1",
         "author": [
@@ -222,7 +222,7 @@
         ],
         "pypi": false,
         "category": "utility",
-        "description": "\u6293\u53d6\u9519\u8bef\u4fe1\u606f\u5e76\u8f93\u51fa",
+        "description": "抓取错误信息并输出",
         "dependency": [
             "module.build_image"
         ],
@@ -232,7 +232,7 @@
         "override_switch": true
     },
     {
-        "name": "\u767e\u5ea6\u770b\u75c5",
+        "name": "百度看病",
         "pack": "module.fake_diagnose",
         "version": "0.13",
         "author": [
@@ -241,7 +241,7 @@
         ],
         "pypi": false,
         "category": "entertainment",
-        "description": "\u60a8\u597d\uff0c\u60a8\u53ef\u80fd\u5f97\u4e86\u764c\u75c7\u3002",
+        "description": "您好，您可能得了癌症。",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -249,7 +249,7 @@
         "override_switch": null
     },
     {
-        "name": "\u83b1\u5361\u751f\u6210",
+        "name": "莱卡生成",
         "pack": "module.fake_leica",
         "version": "1.3",
         "author": [
@@ -257,7 +257,7 @@
         ],
         "pypi": false,
         "category": "entertainment",
-        "description": "\u6700\u65b0\u6700\u9753\u7684\u83b1\u5361\u6c34\u5370\u751f\u6210\u5668",
+        "description": "最新最靓的莱卡水印生成器",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -265,7 +265,7 @@
         "override_switch": null
     },
     {
-        "name": "Furry \u540c\u57ce\u7fa4\u641c\u7d22",
+        "name": "Furry 同城群搜索",
         "pack": "module.furry_group_search",
         "version": "1.02",
         "author": [
@@ -273,7 +273,7 @@
         ],
         "pypi": false,
         "category": "utility",
-        "description": "\u540c\u57ce\u7fa4\u641c\u7d22\uff0c\u79fb\u690d\u81ea\u6d07\u5c9a",
+        "description": "同城群搜索，移植自洇岚",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -281,7 +281,7 @@
         "override_switch": null
     },
     {
-        "name": "Furry \u56fe\u7247\u641c\u7d22",
+        "name": "Furry 图片搜索",
         "pack": "module.furry_pic_search",
         "version": "1.0.2",
         "author": [
@@ -289,7 +289,7 @@
         ],
         "pypi": false,
         "category": "utility",
-        "description": "\u641c\u7d22\u6765\u81ea\u7f51\u7edc\u7684 Furry \u56fe\u7247",
+        "description": "搜索来自网络的 Furry 图片",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -297,7 +297,7 @@
         "override_switch": null
     },
     {
-        "name": "\u5e2e\u52a9\u83dc\u5355",
+        "name": "帮助菜单",
         "pack": "module.help_menu",
         "version": "0.2",
         "author": [
@@ -305,7 +305,7 @@
         ],
         "pypi": false,
         "category": "utility",
-        "description": "\u751f\u6210\u5e2e\u52a9\u83dc\u5355\uff08\u8001\u5f0f\uff09",
+        "description": "生成帮助菜单（老式）",
         "dependency": [
             "module.build_image"
         ],
@@ -315,7 +315,7 @@
         "override_switch": true
     },
     {
-        "name": "\u597d\u5927\u7684\u56fe",
+        "name": "好大的图",
         "pack": "module.huge_image",
         "version": "1.04",
         "author": [
@@ -323,7 +323,7 @@
         ],
         "pypi": false,
         "category": "entertainment",
-        "description": "\u771f\u7684\u597d\u5927\u7684\u56fe",
+        "description": "真的好大的图",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -331,7 +331,7 @@
         "override_switch": null
     },
     {
-        "name": "\u53d1\u75c5",
+        "name": "发病",
         "pack": "module.ill",
         "version": "1.02",
         "author": [
@@ -339,7 +339,7 @@
         ],
         "pypi": false,
         "category": "entertainment",
-        "description": "\u70e7\uff01",
+        "description": "烧！",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -347,7 +347,7 @@
         "override_switch": null
     },
     {
-        "name": "\u4ee5\u56fe\u641c\u56fe",
+        "name": "以图搜图",
         "pack": "module.image_searcher",
         "version": "1.0.3",
         "author": [
@@ -355,7 +355,7 @@
         ],
         "pypi": true,
         "category": "utility",
-        "description": "\u57fa\u4e8e\u591a\u5f15\u64ce\u7684\u56fe\u7247\u641c\u7d22",
+        "description": "基于多引擎的图片搜索",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -363,7 +363,7 @@
         "override_switch": null
     },
     {
-        "name": "\u6a21\u56e0",
+        "name": "模因",
         "pack": "module.meme",
         "version": "1.0.2",
         "author": [
@@ -371,7 +371,7 @@
         ],
         "pypi": false,
         "category": "entertainment",
-        "description": "\u6839\u636e\u7ed9\u5b9a\u5185\u5bb9\u751f\u6210\u76f8\u5e94\u6a21\u56e0\u56fe",
+        "description": "根据给定内容生成相应模因图",
         "dependency": [
             "module.build_image"
         ],
@@ -381,7 +381,7 @@
         "override_switch": null
     },
     {
-        "name": "\u6478\u9c7c",
+        "name": "摸鱼",
         "pack": "module.mofish",
         "version": "1.4",
         "author": [
@@ -389,7 +389,7 @@
         ],
         "pypi": true,
         "category": "utility",
-        "description": "\u6765\u81ea\u6478\u9c7c\u529e\u7684\u8d34\u5fc3\u5c0f\u529f\u80fd",
+        "description": "来自摸鱼办的贴心小功能",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -397,7 +397,7 @@
         "override_switch": null
     },
     {
-        "name": "\u70b9\u6b4c",
+        "name": "点歌",
         "pack": "module.music_search",
         "version": "1.0.3",
         "author": [
@@ -405,7 +405,7 @@
         ],
         "pypi": false,
         "category": "utility",
-        "description": "\u57fa\u4e8e\u591a\u5f15\u64ce\u7684\u70b9\u6b4c\u63d2\u4ef6",
+        "description": "基于多引擎的点歌插件",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -413,7 +413,7 @@
         "override_switch": null
     },
     {
-        "name": "\u8f6e\u76d8\u7981\u8a00",
+        "name": "轮盘禁言",
         "pack": "module.mute_roulette",
         "version": "1.0.3",
         "author": [
@@ -421,7 +421,7 @@
         ],
         "pypi": false,
         "category": "entertainment",
-        "description": "\u4fc4\u7f57\u65af\u8f6c\u76d8\uff0c\u4f46\u662f\u7981\u8a00",
+        "description": "俄罗斯转盘，但是禁言",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -429,7 +429,7 @@
         "override_switch": null
     },
     {
-        "name": "\u7fa4\u540d\u7247\u6253\u4e71",
+        "name": "群名片打乱",
         "pack": "module.namecard_shuffle",
         "version": "1.0.6",
         "author": [
@@ -437,7 +437,7 @@
         ],
         "pypi": false,
         "category": "entertainment",
-        "description": "\u6211\u662f\u8c01\uff1f",
+        "description": "我是谁？",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -445,7 +445,7 @@
         "override_switch": null
     },
     {
-        "name": "\u778e\u7ffb\u8bd1",
+        "name": "瞎翻译",
         "pack": "module.nonsense_translator",
         "version": "1.0.5",
         "author": [
@@ -453,7 +453,7 @@
         ],
         "pypi": false,
         "category": "entertainment",
-        "description": "\u5faa\u73af\u7ffb\u8bd1\u6587\u672c\u4e00\u5b9a\u6b21\u6570",
+        "description": "循环翻译文本一定次数",
         "dependency": [
             "module.translator"
         ],
@@ -463,7 +463,7 @@
         "override_switch": null
     },
     {
-        "name": "\u968f\u673a\u5723\u7ecf",
+        "name": "随机圣经",
         "pack": "module.random_bible",
         "version": "1.03",
         "author": [
@@ -471,7 +471,7 @@
         ],
         "pypi": true,
         "category": "entertainment",
-        "description": "\u5404\u7fa4\u72ec\u7acb\u7684\u5723\u7ecf",
+        "description": "各群独立的圣经",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -479,7 +479,7 @@
         "override_switch": null
     },
     {
-        "name": "\u968f\u673a\u725b\u5b50\u957f\u5ea6",
+        "name": "随机牛子长度",
         "pack": "module.random_dick_length",
         "version": "1.0.6",
         "author": [
@@ -487,7 +487,7 @@
         ],
         "pypi": false,
         "category": "entertainment",
-        "description": "\u83b7\u53d6\u4f60\u7684\u6bcf\u65e5\u725b\u5b50",
+        "description": "获取你的每日牛子",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -495,7 +495,7 @@
         "override_switch": null
     },
     {
-        "name": "\u590d\u8bfb\u673a",
+        "name": "复读机",
         "pack": "module.repeater",
         "version": "1.12",
         "author": [
@@ -503,7 +503,7 @@
         ],
         "pypi": false,
         "category": "entertainment",
-        "description": "\u5df2\u901a\u8fc7\u56fe\u7075\u6d4b\u8bd5\u7684\u4eba\u7c7b\u7684\u672c\u8d28",
+        "description": "已通过图灵测试的人类的本质",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -511,7 +511,7 @@
         "override_switch": null
     },
     {
-        "name": "\u5e2e\u4f60\u641c\u641c",
+        "name": "帮你搜搜",
         "pack": "module.search_shortcut",
         "version": "0.13",
         "author": [
@@ -519,7 +519,7 @@
         ],
         "pypi": false,
         "category": "utility",
-        "description": "\u61d2\u5f97\u5f00\u6d4f\u89c8\u5668\uff0c\u76f4\u63a5\u5728\u7fa4\u91cc\u641c",
+        "description": "懒得开浏览器，直接在群里搜",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -527,7 +527,7 @@
         "override_switch": null
     },
     {
-        "name": "\u7ec8\u7aef\u6267\u884c\u5668",
+        "name": "终端执行器",
         "pack": "module.shell_executor",
         "version": "1.04",
         "author": [
@@ -535,7 +535,7 @@
         ],
         "pypi": false,
         "category": "utility",
-        "description": "\u5728\u5f53\u524d\u670d\u52a1\u5668\u4e0a\u6267\u884c Shell \u547d\u4ee4",
+        "description": "在当前服务器上执行 Shell 命令",
         "dependency": [
             "module.build_image"
         ],
@@ -545,7 +545,7 @@
         "override_switch": null
     },
     {
-        "name": "\u96ea\u7403\u65b0\u95fb",
+        "name": "雪球新闻",
         "pack": "module.snowball_news",
         "version": "0.1.5",
         "author": [
@@ -561,7 +561,7 @@
         "override_switch": null
     },
     {
-        "name": "\u7edf\u8ba1",
+        "name": "统计",
         "pack": "module.statistics",
         "version": "1.05",
         "author": [
@@ -569,7 +569,7 @@
         ],
         "pypi": false,
         "category": "utility",
-        "description": "\u4f7f\u7528\u60c5\u51b5\u7edf\u8ba1",
+        "description": "使用情况统计",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -577,7 +577,7 @@
         "override_switch": null
     },
     {
-        "name": "\u7ffb\u8bd1",
+        "name": "翻译",
         "pack": "module.translator",
         "version": "1.0.4",
         "author": [
@@ -585,7 +585,7 @@
         ],
         "pypi": true,
         "category": "utility",
-        "description": "\u57fa\u4e8e\u591a\u79cd\u7ffb\u8bd1\u63a5\u53e3\u7684\u7ffb\u8bd1\u5de5\u5177",
+        "description": "基于多种翻译接口的翻译工具",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -593,7 +593,7 @@
         "override_switch": null
     },
     {
-        "name": "\u63a8\u7279\u9884\u89c8",
+        "name": "推特预览",
         "pack": "module.twitter_preview",
         "version": "1.0.6",
         "author": [
@@ -601,7 +601,7 @@
         ],
         "pypi": true,
         "category": "utility",
-        "description": "\u53d1\u9001\u63a8\u7279\u94fe\u63a5\u81ea\u52a8\u751f\u6210\u9884\u89c8\u56fe",
+        "description": "发送推特链接自动生成预览图",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -609,7 +609,7 @@
         "override_switch": null
     },
     {
-        "name": "\u94b1\u5305",
+        "name": "钱包",
         "pack": "module.wallet",
         "version": "1.04",
         "author": [
@@ -617,7 +617,7 @@
         ],
         "pypi": false,
         "category": "utility",
-        "description": "\u4f9d\u8d56\u5305\uff0c\u7528\u4e8e\u63d2\u4ef6\u95f4\u8d27\u5e01\u8f6c\u6362\u53ca\u50a8\u5b58",
+        "description": "依赖包，用于插件间货币转换及储存",
         "dependency": null,
         "loaded": true,
         "hidden": false,
@@ -625,7 +625,7 @@
         "override_switch": null
     },
     {
-        "name": "\u5b9e\u65f6\u5929\u6c14",
+        "name": "实时天气",
         "pack": "module.weather_report",
         "version": "1.05",
         "author": [
@@ -633,7 +633,7 @@
         ],
         "pypi": false,
         "category": "utility",
-        "description": "\u83b7\u53d6\u67d0\u5730\u5b9e\u65f6\u5929\u6c14",
+        "description": "获取某地实时天气",
         "dependency": null,
         "loaded": true,
         "hidden": false,
