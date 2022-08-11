@@ -55,5 +55,5 @@ def pack_module(module: Module):
 
 def combine_metadata(*modules: Module):
     with Path("metadata.json").open("w") as f:
-        f.write(json.dumps([m.dict() for m in modules], indent=4))
+        f.write(json.dumps([m.dict() for m in modules], indent=4, ensure_ascii=False))
         print("metadata.json: combined")

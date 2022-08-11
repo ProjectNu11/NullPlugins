@@ -33,11 +33,6 @@ jobs:
       - name: Package
         run: python __workflow__/main.py
 
-      - name: Post-run
-        run: |
-          tree
-          git status
-
       - name: Commit
         run: |
           git config user.name "github-actions[bot]"
