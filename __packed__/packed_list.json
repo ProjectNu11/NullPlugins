@@ -67,7 +67,6 @@
         "0.1"
     ],
     "douban_movie": [
-        "nullqwertyuio",
         "1.2",
         "1.1b",
         "1.1",
@@ -198,9 +197,6 @@
         "1.0.2",
         "1.0.1",
         "1.0"
-    ],
-    "packed_list.json": [
-        "packed_list.json"
     ],
     "random_bible": [
         "1.03",
