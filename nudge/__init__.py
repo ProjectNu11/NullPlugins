@@ -21,7 +21,7 @@ from graia.saya.builtins.broadcast.schema import ListenerSchema
 from loguru import logger
 
 from library import config, PrefixMatch
-from library.depend import Switch, Blacklist, FunctionCall
+from library.depend import Switch, Blacklist, FunctionCall, Interval
 from library.util.switch import switch
 
 channel = Channel.current()
@@ -60,6 +60,7 @@ async def nudged(app: Ariadne, event: NudgeEvent):
     if not (member := await app.get_member(event.group_id, event.supplicant)):
         return
     logger.info(f"机器人被群 <{member.group.name}> 中用户 <{member.name}> 戳了戳。")
+    await Interval.check_and_raise(channel.module, event.supplicant, seconds=5)
     times, last_run = nudged_data.get(event.supplicant, [1, datetime.fromtimestamp(0)])
     if last_run + REFRESH_TIME < datetime.now():
         times = 1
