@@ -1,4 +1,7 @@
 {
+    "abbreviated_prediction": [
+        "1.0.0"
+    ],
     "apex_stat": [
         "1.0.0",
         "1.0"
@@ -199,6 +202,7 @@
         "1.0"
     ],
     "nudge": [
+        "1.0.1",
         "1.0.0"
     ],
     "random_bible": [

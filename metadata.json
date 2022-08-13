@@ -1,5 +1,22 @@
 [
     {
+        "name": "缩写预测",
+        "pack": "module.abbreviated_prediction",
+        "version": "1.0.0",
+        "author": [
+            "SAGIRI-kawaii",
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "utility",
+        "description": "",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
         "name": "Apex 数据查询",
         "pack": "module.apex_stat",
         "version": "1.0.0",
@@ -465,7 +482,7 @@
     {
         "name": "戳一戳",
         "pack": "module.nudge",
-        "version": "1.0.0",
+        "version": "1.0.1",
         "author": [
             "nullqwertyuiop"
         ],
