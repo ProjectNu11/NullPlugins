@@ -1,0 +1,124 @@
+{
+    "apex_stat": [
+        "apex_stat-1.0.0.zip",
+        "apex_stat-1.0.zip"
+    ],
+    "avatar_fun": [
+        "avatar_fun-0.3.2.zip"
+    ],
+    "bilibili_link_resolve": [
+        "bilibili_link_resolve-1.3.zip"
+    ],
+    "build_image": [
+        "build_image-1.0.1.zip"
+    ],
+    "chat": [
+        "chat-0.1.1.zip"
+    ],
+    "chat_recorder": [
+        "chat_recorder-1.1.zip"
+    ],
+    "chitung": [
+        "chitung-0.1.5.zip"
+    ],
+    "content_moderation": [
+        "content_moderation-0.1.2b.zip"
+    ],
+    "dice": [
+        "dice-0.1.2.zip"
+    ],
+    "douban_movie": [
+        "douban_movie-1.2.zip"
+    ],
+    "drift_bottle": [
+        "drift_bottle-1.0.4.zip"
+    ],
+    "ehentai_downloader": [
+        "ehentai_downloader-1.04.zip"
+    ],
+    "emoji_mix": [
+        "emoji_mix-1.0.2.zip",
+        "emoji_mix-1.0.3.zip"
+    ],
+    "exception_handler": [
+        "exception_handler-1.1.zip"
+    ],
+    "fake_diagnose": [
+        "fake_diagnose-0.13.zip"
+    ],
+    "fake_leica": [
+        "fake_leica-1.3.zip"
+    ],
+    "furry_group_search": [
+        "furry_group_search-1.02.zip"
+    ],
+    "furry_pic_search": [
+        "furry_pic_search-1.0.2.zip"
+    ],
+    "help_menu": [
+        "help_menu-0.2.zip"
+    ],
+    "huge_image": [
+        "huge_image-1.04.zip"
+    ],
+    "ill": [
+        "ill-1.02.zip"
+    ],
+    "image_searcher": [
+        "image_searcher-1.0.3.zip"
+    ],
+    "meme": [
+        "meme-1.0.2.zip",
+        "meme-1.0.3.zip"
+    ],
+    "mofish": [
+        "mofish-1.4.zip"
+    ],
+    "music_search": [
+        "music_search-1.0.3.zip"
+    ],
+    "mute_roulette": [
+        "mute_roulette-1.0.3.zip"
+    ],
+    "namecard_shuffle": [
+        "namecard_shuffle-1.0.6.zip"
+    ],
+    "nonsense_translator": [
+        "nonsense_translator-1.0.5.zip"
+    ],
+    "random_bible": [
+        "random_bible-1.03.zip"
+    ],
+    "random_dick_length": [
+        "random_dick_length-1.0.6.zip"
+    ],
+    "repeater": [
+        "repeater-1.12.zip"
+    ],
+    "search_shortcut": [
+        "search_shortcut-0.13.zip"
+    ],
+    "shell_executor": [
+        "shell_executor-1.04.zip"
+    ],
+    "snowball_news": [
+        "snowball_news-0.1.5.zip",
+        "snowball_news-0.1.6.zip"
+    ],
+    "statistics": [
+        "statistics-1.05.zip"
+    ],
+    "translator": [
+        "translator-1.0.4.zip"
+    ],
+    "twitter_preview": [
+        "twitter_preview-1.0.6.zip",
+        "twitter_preview-1.0.7.zip"
+    ],
+    "wallet": [
+        "wallet-1.04.zip"
+    ],
+    "weather_report": [
+        "weather_report-1.05.zip"
+    ]
+}

@@ -2,7 +2,7 @@
     {
         "name": "Apex 数据查询",
         "pack": "module.apex_stat",
-        "version": "1.0",
+        "version": "1.0.0",
         "author": [
             "SAGIRI-kawaii",
             "nullqwertyuiop"
@@ -200,7 +200,7 @@
     {
         "name": "Emoji 合成",
         "pack": "module.emoji_mix",
-        "version": "1.0.2",
+        "version": "1.0.3",
         "author": [
             "nullqwertyuiop"
         ],
@@ -365,7 +365,7 @@
     {
         "name": "模因",
         "pack": "module.meme",
-        "version": "1.0.2",
+        "version": "1.0.3",
         "author": [
             "nullqwertyuiop"
         ],
@@ -547,7 +547,7 @@
     {
         "name": "雪球新闻",
         "pack": "module.snowball_news",
-        "version": "0.1.5",
+        "version": "0.1.6",
         "author": [
             "nullqwertyuiop"
         ],
@@ -595,7 +595,7 @@
     {
         "name": "推特预览",
         "pack": "module.twitter_preview",
-        "version": "1.0.6",
+        "version": "1.0.7",
         "author": [
             "nullqwertyuiop"
         ],
