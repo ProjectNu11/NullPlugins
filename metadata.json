@@ -463,6 +463,22 @@
         "override_switch": null
     },
     {
+        "name": "戳一戳",
+        "pack": "module.nudge",
+        "version": "1.0.0",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "entertainment",
+        "description": "对戳一戳作出回应",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
         "name": "随机圣经",
         "pack": "module.random_bible",
         "version": "1.03",
