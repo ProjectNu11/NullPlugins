@@ -64,7 +64,11 @@ def combine_metadata(*modules: Module):
 def generate_packed_list():
     files = [p.name for p in PACKAGE_PATH.iterdir() if p.is_file()]
     data = {
-        k: list(v) for k, v in groupby(sorted(files), key=lambda f: f.split("-")[0])
+        k: sorted(
+            (lambda x: [_x.rstrip(".zip").split("-")[-1] for _x in x])(list(v)),
+            reverse=True,
+        )
+        for k, v in groupby(sorted(files), key=lambda _: _.split("-")[0])
     }
     with (PACKAGE_PATH / "packed_list.json").open("w") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
