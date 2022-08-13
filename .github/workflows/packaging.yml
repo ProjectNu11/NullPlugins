@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  Packaging:
+  Packing:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,7 +30,7 @@ jobs:
       - name: Format code
         run: black .
 
-      - name: Package
+      - name: Pack modules
         run: python __workflow__/main.py
 
       - name: Commit
