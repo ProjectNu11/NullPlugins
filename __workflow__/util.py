@@ -69,6 +69,7 @@ def generate_packed_list():
             reverse=True,
         )
         for k, v in groupby(sorted(files), key=lambda _: _.split("-")[0])
+        if k != "packed_list.json"
     }
     with (PACKAGE_PATH / "packed_list.json").open("w") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
