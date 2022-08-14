@@ -350,7 +350,7 @@
     {
         "name": "发病",
         "pack": "module.ill",
-        "version": "1.02",
+        "version": "1.0.3",
         "author": [
             "nullqwertyuiop"
         ],
