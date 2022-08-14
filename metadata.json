@@ -350,7 +350,7 @@
     {
         "name": "发病",
         "pack": "module.ill",
-        "version": "1.02",
+        "version": "1.0.3",
         "author": [
             "nullqwertyuiop"
         ],
@@ -514,13 +514,13 @@
     {
         "name": "随机牛子长度",
         "pack": "module.random_dick_length",
-        "version": "1.0.6",
+        "version": "1.0.6b",
         "author": [
             "SuChen"
         ],
         "pypi": false,
         "category": "entertainment",
-        "description": "获取你的每日牛子",
+        "description": "获取你的每日牛子，每天一根，不许多拿！",
         "dependency": null,
         "loaded": true,
         "hidden": false,
