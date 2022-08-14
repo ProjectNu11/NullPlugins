@@ -60,8 +60,6 @@ with settings_file.open("r", encoding="UTF-8") as f:
 _data
 
 
-
-
 @channel.use(
     ListenerSchema(
         [GroupMessage, FriendMessage],
@@ -81,10 +79,9 @@ async def random_dick_length(app: Ariadne, event: MessageEvent):
     dick_color = random.choice(COLOR_TEMPLATES)
     dick_outward = random.choice(OUTWARD_TEMPLATES)
     if random.randint(0, 4) == 0:
-        dick_enchant =  random.choice(ENCHANT_TEMPLATES)
+        dick_enchant = random.choice(ENCHANT_TEMPLATES)
     else:
-        dick_enchant =""
-
+        dick_enchant = ""
 
     if random.randint(0, 1) == 1:
         boki_status = "勃起"
@@ -94,7 +91,7 @@ async def random_dick_length(app: Ariadne, event: MessageEvent):
         angle_status = ""
         dick_color = ""
         dick_outward = ""
-        
+
     angle = f"{random.randint(0, 180)}度"
 
     if random.randint(0, 2) == 0:
@@ -131,10 +128,10 @@ async def random_dick_length(app: Ariadne, event: MessageEvent):
     else:
         dick_length_evaluate = random.choice(EVALUATE_TEMPLATES_5)
         dick_comment = random.choice(COMMENT_TEMPLATES_5)
-        dick_comment_score =  random.uniform(3, 10)
+        dick_comment_score = random.uniform(3, 10)
     a = "\n"
     length_text = f"{dick_legth}cm的牛子，{a}{dick_length_evaluate}"
-    dick_comment_score_1 = round(dick_comment_score,1)
+    dick_comment_score_1 = round(dick_comment_score, 1)
 
     await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
