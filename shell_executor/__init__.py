@@ -18,6 +18,7 @@ from graia.ariadne.message.parser.twilight import (
     MatchResult,
     RegexMatch,
 )
+from graia.broadcast import PropagationCancelled
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
@@ -74,6 +75,7 @@ async def execute_shell(ariadne: Ariadne, event: GroupMessage, command: MatchRes
         event.sender.group,
         MessageChain([Image(data_bytes=await create_image(msg, cut=120))]),
     )
+    raise PropagationCancelled
 
 
 def execute(command: str) -> Tuple[str, str]:

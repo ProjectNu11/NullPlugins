@@ -30,7 +30,7 @@ from .fish_enum import Waters, Time
 from .. import ASSETS
 from ..bank import vault, Currency
 from ..utils.depends import FunctionControl
-from ..vars import chitung_prefix
+from ..vars import CHITUNG_PREFIX
 
 channel = Channel.current()
 
@@ -44,7 +44,7 @@ fishing_process_flag = []
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(chitung_prefix),
+                    *CHITUNG_PREFIX,
                     UnionMatch("endfish", "collection", "fishhelp", "handbook")
                     @ "function",
                 ]
@@ -104,7 +104,7 @@ async def chitung_fish_tool_handler(
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(chitung_prefix),
+                    *CHITUNG_PREFIX,
                     FullMatch("fish"),
                     RegexMatch(r"\s*[AaBbCc]?") @ "pool",
                 ]

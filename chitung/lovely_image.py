@@ -12,7 +12,7 @@ from graia.saya import Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
 from library.depend import Blacklist, Switch, FunctionCall
-from .vars import chitung_prefix
+from . import OK_CHITUNG_PREFIX
 from .utils.depends import FunctionControl
 
 channel = Channel.current()
@@ -48,7 +48,7 @@ CORD = {
         inline_dispatchers=[
             Twilight(
                 [
-                    UnionMatch("ok", "Ok", "OK", chitung_prefix),
+                    OK_CHITUNG_PREFIX,
                     UnionMatch(
                         "Shiba",
                         "shiba",

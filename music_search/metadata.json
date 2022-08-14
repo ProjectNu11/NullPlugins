@@ -1,0 +1,16 @@
+{
+    "name": "点歌",
+    "pack": "module.music_search",
+    "version": "1.0.2",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": false,
+    "category": "utility",
+    "description": "基于多引擎的点歌插件",
+    "dependency": null,
+    "loaded": true,
+    "hidden": false,
+    "override_default": null,
+    "override_switch": null
+}

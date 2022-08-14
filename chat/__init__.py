@@ -60,6 +60,7 @@ if not config.get_module_config(channel.module):
             Switch.check(channel.module),
             FunctionCall.record(channel.module),
         ],
+        priority=999,
     )
 )
 async def chat(

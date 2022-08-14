@@ -32,7 +32,9 @@ channel.description("一个记录聊天记录的插件，可配合词云等插�
 
 
 @channel.use(
-    ListenerSchema(listening_events=[GroupMessage, FriendMessage, TempMessage])
+    ListenerSchema(
+        listening_events=[GroupMessage, FriendMessage, TempMessage], priority=0
+    )
 )
 async def chat_record(event: MessageEvent):
     if isinstance(event, GroupMessage):

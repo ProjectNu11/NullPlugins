@@ -1,0 +1,16 @@
+{
+    "name": "雪球新闻",
+    "pack": "module.snowball_news",
+    "version": "0.1.4",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": false,
+    "category": "utility",
+    "description": "",
+    "dependency": null,
+    "loaded": true,
+    "hidden": false,
+    "override_default": null,
+    "override_switch": null
+}

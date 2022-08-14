@@ -12,8 +12,6 @@ from graia.ariadne.message.element import Image, Quote, At
 from graia.ariadne.message.parser.twilight import (
     RegexMatch,
     Twilight,
-    FullMatch,
-    SpacePolicy,
     ElementMatch,
     ElementResult,
     ArgumentMatch,
@@ -25,7 +23,7 @@ from graia.broadcast.interrupt import Waiter, InterruptControl
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 from graia.saya.channel import Channel
 
-from library import config
+from library import PrefixMatch
 from library.depend import Switch, FunctionCall
 
 channel = Channel.current()
@@ -40,7 +38,7 @@ DEVICES = {"三星": "samsung note20 ultra.png", "samsung": "samsung note20 ultr
             Twilight(
                 [
                     ElementMatch(At, optional=True),
-                    FullMatch(config.func.prefix).space(SpacePolicy.NOSPACE),
+                    PrefixMatch,
                     UnionMatch("leica", "莱卡"),
                     ArgumentMatch("-d", "--device", type=str, optional=True) @ "device",
                     RegexMatch(r"[\n\r]?", optional=True),

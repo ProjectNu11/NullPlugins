@@ -9,7 +9,6 @@ from graia.ariadne.message.element import At
 from graia.ariadne.message.parser.twilight import (
     Twilight,
     FullMatch,
-    SpacePolicy,
     ElementMatch,
     ParamMatch,
     ElementResult,
@@ -18,7 +17,7 @@ from graia.ariadne.message.parser.twilight import (
 from graia.saya import Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
-from library import config
+from library import PrefixMatch
 from library.depend import Switch, FunctionCall
 
 channel = Channel.current()
@@ -34,7 +33,7 @@ with Path(assets_path, "ill_templates.json").open("r", encoding="UTF-8") as f:
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(config.func.prefix).space(SpacePolicy.NOSPACE),
+                    PrefixMatch,
                     FullMatch("发病"),
                     ElementMatch(At, optional=True) @ "at",
                     ParamMatch(optional=True) @ "text",

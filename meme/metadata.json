@@ -1,13 +1,13 @@
 {
     "name": "模因",
     "pack": "module.meme",
-    "version": "1.0",
+    "version": "1.0.1",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": false,
     "category": "entertainment",
-    "description": "",
+    "description": "根据给定内容生成相应模因图",
     "dependency": [
         "module.build_image"
     ],

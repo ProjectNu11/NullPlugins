@@ -34,8 +34,8 @@ pos_data = [
 ]
 
 
-def trash(*images: Image.Image) -> bytes:
-    avatar = images[-1].resize((77, 77), Image.LANCZOS)
+def trash(*data: Image.Image) -> bytes:
+    avatar = data[-1].resize((77, 77), Image.LANCZOS)
     frames: list[Image.Image] = []
     for index, position in pos_data:
         base = Image.open(Path(assets_dir, f"{index}.png"))

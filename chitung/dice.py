@@ -9,14 +9,13 @@ from graia.ariadne.message.parser.twilight import (
     RegexResult,
     SpacePolicy,
     UnionMatch,
-    FullMatch,
 )
 from graia.saya import Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
 from library.depend import Blacklist, Switch, FunctionCall
-from .vars import chitung_prefix
 from .utils.depends import FunctionControl
+from .vars import CHITUNG_PREFIX
 
 channel = Channel.current()
 
@@ -27,7 +26,7 @@ channel = Channel.current()
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(chitung_prefix),
+                    *CHITUNG_PREFIX,
                     RegexMatch(r"([Dd](ice)? ?)|(\[Dd])").space(SpacePolicy.NOSPACE),
                     RegexMatch(r"[1-9]\d{0,7}") @ "faces",
                 ]
@@ -57,7 +56,7 @@ async def chitung_single_dice_handler(
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(chitung_prefix),
+                    *CHITUNG_PREFIX,
                     RegexMatch(r"[1-9]\d{0,2}").space(SpacePolicy.NOSPACE) @ "times",
                     UnionMatch("d", "D").space(SpacePolicy.NOSPACE),
                     RegexMatch(r"[1-9]\d{0,7}") @ "faces",

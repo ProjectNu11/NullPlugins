@@ -23,6 +23,7 @@ from graia.saya.builtins.broadcast import ListenerSchema
 from loguru import logger
 from pydantic import BaseModel
 
+from library import PrefixMatch
 from library.config import config
 from library.depend import Switch, FunctionCall
 from library.depend.interval import Interval
@@ -69,10 +70,10 @@ else:
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(".eh"),
+                    PrefixMatch,
+                    FullMatch("eh"),
                     UnionMatch(),
-                    RegexMatch(r"(https?://)?e[-x]hentai\.org/g/\d+/[\da-z]+/?")
-                    @ "url",
+                    RegexMatch(r"(https?://)?e-hentai\.org/g/\d+/[\da-z]+/?") @ "url",
                 ]
             )
         ],

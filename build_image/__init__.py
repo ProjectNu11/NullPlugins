@@ -7,12 +7,11 @@ from graia.ariadne.message.parser.twilight import (
     FullMatch,
     ArgumentMatch,
     ArgResult,
-    SpacePolicy,
 )
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
-from library import config
+from library import config, PrefixMatch
 from library.depend import Switch, FunctionCall
 
 # from .text_engine.text_engine import TextEngine
@@ -39,9 +38,7 @@ utils = {
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(config.func.prefix)
-                    .space(SpacePolicy.NOSPACE)
-                    .help(f"匹配指令前缀 {config.func.prefix}"),
+                    PrefixMatch.help(f"匹配指令前缀 {config.func.prefix}"),
                     FullMatch(f"build_image").help("匹配 build_image"),
                     ArgumentMatch("--help", action="store_true", optional=True).help(
                         "显示该帮助文本"

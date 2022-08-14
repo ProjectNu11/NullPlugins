@@ -22,8 +22,8 @@ from graia.saya.builtins.broadcast import ListenerSchema
 from library import config
 from library.depend import Permission, Blacklist, Switch, FunctionCall
 from library.model import UserPerm
-from .vars import chitung_prefix
 from .utils.depends import FunctionControl
+from .vars import CHITUNG_PREFIX
 
 channel = Channel.current()
 vault_dir = Path(config.path.data / channel.module / "bank_record.json")
@@ -197,7 +197,7 @@ vault = Vault()
 @channel.use(
     ListenerSchema(
         listening_events=[GroupMessage, FriendMessage],
-        inline_dispatchers=[Twilight([FullMatch(chitung_prefix), FullMatch("bank")])],
+        inline_dispatchers=[Twilight([*CHITUNG_PREFIX, FullMatch("bank")])],
         decorators=[
             Switch.check(channel.module),
             Blacklist.check(),
@@ -223,7 +223,7 @@ async def chitung_bank_handler(app: Ariadne, event: MessageEvent):
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(chitung_prefix),
+                    *CHITUNG_PREFIX,
                     FullMatch("set"),
                     RegexMatch(r"\d+ ") @ "target",
                     RegexMatch(r"\d+") @ "amount",
@@ -257,7 +257,7 @@ async def chitung_bank_set_handler(
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(chitung_prefix),
+                    *CHITUNG_PREFIX,
                     FullMatch("laundry"),
                     RegexMatch(r"-?\d+") @ "amount",
                 ]

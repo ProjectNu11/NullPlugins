@@ -15,7 +15,7 @@ from graia.ariadne.message.parser.twilight import (
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
-from library import config
+from library import config, PrefixMatch
 from library.depend import Switch, FunctionCall
 from .function import __all__
 
@@ -33,7 +33,7 @@ channel.description("")
         inline_dispatchers=[
             Twilight(
                 [
-                    FullMatch(config.func.prefix).space(SpacePolicy.NOSPACE),
+                    PrefixMatch,
                     UnionMatch(*__all__.keys()) @ "func",
                     RegexMatch(r".+") @ "args",
                 ]

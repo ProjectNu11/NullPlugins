@@ -13,8 +13,6 @@ from graia.ariadne.message.element import Image
 from graia.ariadne.message.element import Plain, At
 from graia.ariadne.message.parser.twilight import (
     Twilight,
-    UnionMatch,
-    SpacePolicy,
     FullMatch,
 )
 from graia.ariadne.model import MemberPerm
@@ -26,7 +24,7 @@ from graia.scheduler.saya import SchedulerSchema
 from library import config
 from library.depend import Blacklist, Switch, FunctionCall
 from module.chitung.utils.depends import FunctionControl
-from module.chitung.vars import ASSETS, chitung_prefix
+from module.chitung.vars import ASSETS, CHITUNG_PREFIX, OK_CHITUNG_PREFIX
 
 channel = Channel.current()
 winner_dir = ASSETS
@@ -39,7 +37,7 @@ c4_activation_flags = []
         inline_dispatchers=[
             Twilight(
                 [
-                    UnionMatch("ok", "Ok", "OK", chitung_prefix),
+                    OK_CHITUNG_PREFIX,
                     FullMatch("winner"),
                 ]
             )
@@ -66,7 +64,7 @@ async def chitung_winner_handler(app: Ariadne, event: MessageEvent):
         await app.send_group_message(
             event.sender.group, MessageChain(f"Ok Winner! {guy_of_the_day.name}")
         )
-        avatar = PillowImage.open(BytesIO(await guy_of_the_day.getAvatar())).resize(
+        avatar = PillowImage.open(BytesIO(await guy_of_the_day.get_avatar())).resize(
             (512, 512)
         )
         base = PillowImage.open(Path(winner_dir / "winner" / "wanted.jpg"))
@@ -89,7 +87,7 @@ async def chitung_winner_handler(app: Ariadne, event: MessageEvent):
         inline_dispatchers=[
             Twilight(
                 [
-                    UnionMatch("ok", "Ok", "OK", chitung_prefix),
+                    OK_CHITUNG_PREFIX,
                     FullMatch("bummer"),
                 ]
             )
@@ -168,7 +166,7 @@ async def chitung_bummer_handler(app: Ariadne, event: GroupMessage):
         inline_dispatchers=[
             Twilight(
                 [
-                    UnionMatch("ok", "Ok", "OK", chitung_prefix),
+                    OK_CHITUNG_PREFIX,
                     FullMatch("c4"),
                 ]
             )
@@ -187,7 +185,7 @@ async def chitung_c4_handler(app: Ariadne, event: MessageEvent):
     if group.account_perm == MemberPerm.Member:
         await app.send_group_message(
             group,
-            MessageChain(f"{chitung_prefix}目前还没有管理员权限，请授予{chitung_prefix}权限解锁更多功能。"),
+            MessageChain(f"{CHITUNG_PREFIX}目前还没有管理员权限，请授予{CHITUNG_PREFIX}权限解锁更多功能。"),
         )
         return
     if group.id in c4_activation_flags:

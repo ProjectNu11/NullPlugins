@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from PIL import Image
 
 from module.avatar_fun.util import write_gif, crop_to_circle
@@ -23,9 +24,9 @@ self_locations = [
 assets_dir = Path(Path(__file__).parent.parent, "assets", "tuotoi")
 
 
-def tuotoi(*images: Image.Image) -> bytes:
-    self_avatar = crop_to_circle(images[0 if len(images) == 1 else -2].convert("RGBA"))
-    target_avatar = crop_to_circle(images[-1].convert("RGBA"))
+def tuotoi(*data: Image.Image) -> bytes:
+    self_avatar = crop_to_circle(data[0 if len(data) == 1 else -2].convert("RGBA"))
+    target_avatar = crop_to_circle(data[-1].convert("RGBA"))
     frames: list[Image.Image] = []
     for i in range(6):
         frame = Image.open(Path(assets_dir, f"{i}.png")).convert("RGBA")

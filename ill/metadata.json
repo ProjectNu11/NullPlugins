@@ -1,14 +1,16 @@
 {
-  "name": "发病",
-  "pack": "module.ill",
-  "version": "1.0.4",
-  "author": ["nullqwertyuiop"],
-  "pypi": false,
-  "category": "entertainment",
-  "description": "烧！",
-  "dependency": null,
-  "loaded": true,
-  "hidden": false,
-  "override_default": null,
-  "override_switch": null
+    "name": "发病",
+    "pack": "module.ill",
+    "version": "1.01",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": false,
+    "category": "entertainment",
+    "description": "烧！",
+    "dependency": null,
+    "loaded": true,
+    "hidden": false,
+    "override_default": null,
+    "override_switch": null
 }

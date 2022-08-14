@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from PIL import Image
 
 from module.avatar_fun.util import write_jpg
@@ -6,8 +7,8 @@ from module.avatar_fun.util import write_jpg
 assets_dir = Path(Path(__file__).parent.parent, "assets", "rip")
 
 
-def rip(*images: Image.Image) -> bytes:
-    base = images[-1].resize((400, 400), Image.LANCZOS)
+def rip(*data: Image.Image) -> bytes:
+    base = data[-1].resize((400, 400), Image.LANCZOS)
     bg = Image.new("RGB", (1080, 804), "#ffffff")
     frame = Image.open(Path(assets_dir, "0.png"))
     tmp1 = base.rotate(24, expand=True)
