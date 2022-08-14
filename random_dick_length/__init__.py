@@ -108,7 +108,7 @@ async def random_dick_length(app: Ariadne, event: MessageEvent):
     if dick_legth > 20:
         dick_length_evaluate = random.choice(EVALUATE_TEMPLATES_0)
         dick_comment = random.choice(COMMENT_TEMPLATES_0)
-        dick_comment_score = tr(random.uniform(7, 10))
+        dick_comment_score = random.uniform(7, 10)
     elif dick_legth > 15 and dick_legth <= 20:
         dick_length_evaluate = random.choice(EVALUATE_TEMPLATES_1)
         dick_comment = random.choice(COMMENT_TEMPLATES_1)
