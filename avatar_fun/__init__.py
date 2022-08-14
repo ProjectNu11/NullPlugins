@@ -17,7 +17,7 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
 from library import PrefixMatch
-from library.depend import Switch, FunctionCall, Interval
+from library.depend import Switch, FunctionCall, Interval, Blacklist
 from .function import __all__, check_and_run
 from .util import get_element_image, get_image
 
@@ -43,6 +43,7 @@ channel.description("")
         ],
         decorators=[
             Switch.check(channel.module),
+            Blacklist.check(),
             FunctionCall.record(channel.module),
         ],
     )

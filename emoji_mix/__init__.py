@@ -15,7 +15,7 @@ from graia.saya import Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
 from library import config, PrefixMatch
-from library.depend import Switch, FunctionCall
+from library.depend import Switch, FunctionCall, Blacklist
 from library.image.oneui_mock.elements import (
     is_dark,
     Column,
@@ -42,7 +42,11 @@ channel = Channel.current()
                 ]
             )
         ],
-        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
+        decorators=[
+            Switch.check(channel.module),
+            Blacklist.check(),
+            FunctionCall.record(channel.module),
+        ],
     )
 )
 async def emoji_mix(

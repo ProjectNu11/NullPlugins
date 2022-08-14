@@ -20,7 +20,7 @@ from graia.saya.builtins.broadcast import ListenerSchema
 
 from library import PrefixMatch
 from library.config import config
-from library.depend import Switch, FunctionCall
+from library.depend import Switch, FunctionCall, Blacklist
 
 saya = Saya.current()
 channel = Channel.current()
@@ -46,7 +46,11 @@ channel.description("")
                 ]
             )
         ],
-        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
+        decorators=[
+            Switch.check(channel.module),
+            Blacklist.check(),
+            FunctionCall.record(channel.module),
+        ],
     )
 )
 async def mute_roulette(

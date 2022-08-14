@@ -14,7 +14,7 @@ from graia.ariadne.message.parser.twilight import Twilight, RegexMatch, Wildcard
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
-from library.depend import Switch, FunctionCall
+from library.depend import Switch, FunctionCall, Blacklist
 from library.image.oneui_mock.elements import (
     Banner,
     Column,
@@ -48,7 +48,11 @@ channel.description("B站链接解析")
                 ]
             )
         ],
-        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
+        decorators=[
+            Switch.check(channel.module),
+            Blacklist.check(),
+            FunctionCall.record(channel.module),
+        ],
     )
 )
 async def bilibili_link_resolve_handler(app: Ariadne, event: MessageEvent):

@@ -14,7 +14,7 @@ from graia.saya import Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
 from library import config, PrefixMatch
-from library.depend import Switch, FunctionCall, Interval
+from library.depend import Switch, FunctionCall, Interval, Blacklist
 from module.drift_bottle.compose import (
     compose,
     compose_register_success,
@@ -57,6 +57,7 @@ DRIFT_BOTTLE_CHAR_LIMIT = 400
         ],
         decorators=[
             Switch.check(channel.module),
+            Blacklist.check(),
             FunctionCall.record(channel.module),
             Interval.check(
                 channel.module,
@@ -76,23 +77,23 @@ async def drift_bottle(
         content = content.result.display if content.matched else None
         assert func.matched, (
             f"未指定功能，可用的功能有："
-            f"\n{config.func.prefix}捞漂流瓶"
+            f"\n{config.func.prefix[0]}捞漂流瓶"
             f"\n        -> 捞一个漂流瓶"
-            f"\n{config.func.prefix}写漂流瓶 内容"
+            f"\n{config.func.prefix[0]}写漂流瓶 内容"
             f"\n        -> 写一个漂流瓶"
-            f"\n{config.func.prefix}扔漂流瓶 内容"
+            f"\n{config.func.prefix[0]}扔漂流瓶 内容"
             f"\n        -> 写一个漂流瓶"
-            f"\n{config.func.prefix}扔回漂流瓶"
+            f"\n{config.func.prefix[0]}扔回漂流瓶"
             f"\n        -> 将捞到的漂流瓶扔回（可被捞取）"
-            f"\n{config.func.prefix}丢弃漂流瓶"
+            f"\n{config.func.prefix[0]}丢弃漂流瓶"
             f"\n        -> 将捞到的漂流瓶丢弃（不可被捞取）"
-            f"\n{config.func.prefix}注册漂流瓶 昵称（可选）"
+            f"\n{config.func.prefix[0]}注册漂流瓶 昵称（可选）"
             f"\n        -> 注册漂流瓶，不可更改昵称"
-            f"\n{config.func.prefix}回复漂流瓶 内容"
+            f"\n{config.func.prefix[0]}回复漂流瓶 内容"
             f"\n        -> 在捞到的漂流瓶下回复"
-            f"\n{config.func.prefix}查看漂流瓶"
+            f"\n{config.func.prefix[0]}查看漂流瓶"
             f"\n        -> 查看捞到的漂流瓶"
-            f"\n{config.func.prefix}我的漂流瓶"
+            f"\n{config.func.prefix[0]}我的漂流瓶"
             f"\n        -> 查看自己的漂流瓶统计"
         )
         if function == "注册":
@@ -104,7 +105,7 @@ async def drift_bottle(
             )
         assert (
             user := await get_user(user_id=supplicant)
-        ), f"你还没有注册漂流瓶，请先发送 {config.func.prefix}注册漂流瓶 昵称（可选） 进行注册"
+        ), f"你还没有注册漂流瓶，请先发送 {config.func.prefix[0]}注册漂流瓶 昵称（可选） 进行注册"
         if function == "捞":
             assert user.kept_bottle == "", "你已经捞取了漂流瓶且未扔回或丢弃"
             assert len(bottle_list := await get_bottle()), "暂时没有漂流瓶可捞"

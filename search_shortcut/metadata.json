@@ -1,7 +1,7 @@
 {
     "name": "帮你搜搜",
     "pack": "module.search_shortcut",
-    "version": "0.12",
+    "version": "0.13",
     "author": [
         "nullqwertyuiop"
     ],

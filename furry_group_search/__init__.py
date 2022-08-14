@@ -20,7 +20,7 @@ from graia.saya.builtins.broadcast import ListenerSchema
 from pydantic import BaseModel, root_validator
 
 from library import config, PrefixMatch
-from library.depend import Switch, FunctionCall
+from library.depend import Switch, FunctionCall, Blacklist
 
 saya = Saya.current()
 channel = Channel.current()
@@ -57,7 +57,11 @@ class CityGroup(BaseModel):
         inline_dispatchers=[
             Twilight(PrefixMatch, FullMatch("同城群"), ParamMatch() @ "city")
         ],
-        decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
+        decorators=[
+            Switch.check(channel.module),
+            Blacklist.check(),
+            FunctionCall.record(channel.module),
+        ],
     )
 )
 async def furry_group_search(app: Ariadne, event: MessageEvent, city: RegexResult):

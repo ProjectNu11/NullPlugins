@@ -20,7 +20,7 @@ from graia.scheduler import timers
 from graia.scheduler.saya import SchedulerSchema
 
 from library import PrefixMatch
-from library.depend import Switch, FunctionCall
+from library.depend import Switch, FunctionCall, Blacklist
 from .util import (
     run_once,
     INTERVAL,
@@ -72,6 +72,7 @@ async def snowball_send_news(app: Ariadne):
         ],
         decorators=[
             Switch.check(channel.module),
+            Blacklist.check(),
             FunctionCall.record(channel.module),
         ],
     )

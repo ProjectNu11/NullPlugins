@@ -1,0 +1,16 @@
+{
+    "name": "戳一戳",
+    "pack": "module.nudge",
+    "version": "1.0.1",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": false,
+    "category": "entertainment",
+    "description": "对戳一戳作出回应",
+    "dependency": null,
+    "loaded": true,
+    "hidden": false,
+    "override_default": null,
+    "override_switch": null
+}

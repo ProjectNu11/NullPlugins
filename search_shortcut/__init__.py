@@ -39,8 +39,8 @@ channel.description("自己查")
         ],
         decorators=[
             Switch.check(channel.module),
-            FunctionCall.record(channel.module),
             Blacklist.check(),
+            FunctionCall.record(channel.module),
         ],
     )
 )

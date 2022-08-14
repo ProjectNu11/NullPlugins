@@ -31,7 +31,7 @@ channel = Channel.current()
         ],
         decorators=[
             Switch.check(channel.module),
-            Blacklist.check(),
+            Blacklist.check(allow_anonymous=True),
             FunctionControl.enable(FunctionControl.Responder),
             FunctionCall.record(channel.module),
         ],
@@ -55,7 +55,7 @@ async def chitung_greeting(app: Ariadne, event: GroupMessage):
         ],
         decorators=[
             Switch.check(channel.module),
-            Blacklist.check(),
+            Blacklist.check(allow_anonymous=True),
             FunctionControl.enable(FunctionControl.Responder),
             FunctionCall.record(channel.module),
         ],
@@ -80,7 +80,7 @@ async def chitung_goodbye(app: Ariadne, event: GroupMessage):
         ],
         decorators=[
             Switch.check(channel.module),
-            Blacklist.check(),
+            Blacklist.check(allow_anonymous=True),
             FunctionControl.enable(FunctionControl.Responder),
             FunctionCall.record(channel.module),
         ],
@@ -110,7 +110,7 @@ async def chitung_anti_ow(app: Ariadne, event: GroupMessage):
         ],
         decorators=[
             Switch.check(channel.module),
-            Blacklist.check(),
+            Blacklist.check(allow_anonymous=True),
             FunctionControl.enable(FunctionControl.Responder),
             FunctionCall.record(channel.module),
         ],

@@ -21,7 +21,7 @@ from graia.saya.builtins.broadcast import ListenerSchema
 
 from library import PrefixMatch
 from library.config import config
-from library.depend import Switch, FunctionCall
+from library.depend import Switch, FunctionCall, Blacklist
 from .engines import __all__, BaseSearch, run_search
 
 saya = Saya.current()
@@ -55,6 +55,7 @@ if not (__cfg := config.get_module_config(channel.module)):
         ],
         decorators=[
             Switch.check(channel.module),
+            Blacklist.check(),
             FunctionCall.record(channel.module),
         ],
     )
