@@ -108,7 +108,7 @@ async def random_dick_length(app: Ariadne, event: MessageEvent):
     if dick_legth > 20:
         dick_length_evaluate = random.choice(EVALUATE_TEMPLATES_0)
         dick_comment = random.choice(COMMENT_TEMPLATES_0)
-        dick_comment_score = tr(random.uniform(7, 10))
+        dick_comment_score = str(random.uniform(7, 10))
     elif dick_legth > 15 and dick_legth <= 20:
         dick_length_evaluate = random.choice(EVALUATE_TEMPLATES_1)
         dick_comment = random.choice(COMMENT_TEMPLATES_1)
@@ -136,7 +136,7 @@ async def random_dick_length(app: Ariadne, event: MessageEvent):
     await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
         MessageChain(
-            f"你今天有一根{dick_enchant}{dick_color}{dick_outward}{boki_status}的，{angle_status}角度为{angle}的{phimosis_status}的{dick_hardness},并且蛋蛋{egg_weight}的{length_text}{a}大众点评:{dick_comment_score_1}分，{dick_comment}"
+            f"你今天有一根{dick_enchant}{dick_color}{dick_outward}{boki_status}的，{angle_status}角度为{angle}的{phimosis_status}的{dick_hardness},并且蛋蛋{egg_weight}的{length_text}{a}大众点评：{dick_comment_score_1}分，{dick_comment}"
         ),
     )
     random.seed()
