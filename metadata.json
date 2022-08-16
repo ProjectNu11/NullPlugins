@@ -514,7 +514,7 @@
     {
         "name": "随机牛子长度",
         "pack": "module.random_dick_length",
-        "version": "1.0.6b1",
+        "version": "1.0.7",
         "author": [
             "SuChen"
         ],

@@ -109,22 +109,22 @@ async def random_dick_length(app: Ariadne, event: MessageEvent):
         dick_length_evaluate = random.choice(EVALUATE_TEMPLATES_0)
         dick_comment = random.choice(COMMENT_TEMPLATES_0)
         dick_comment_score = random.uniform(7, 10)
-    elif dick_legth > 15 and dick_legth <= 20:
+    elif 15 < dick_legth <= 20:
         dick_length_evaluate = random.choice(EVALUATE_TEMPLATES_1)
         dick_comment = random.choice(COMMENT_TEMPLATES_1)
         dick_comment_score = random.uniform(5, 7)
-    elif dick_legth >= 10 and dick_legth <= 15:
+    elif 10 <= dick_legth <= 15:
         dick_length_evaluate = random.choice(EVALUATE_TEMPLATES_2)
         dick_comment = random.choice(COMMENT_TEMPLATES_2)
         dick_comment_score = random.uniform(3, 5)
-    elif dick_legth > 0 and dick_legth < 10:
+    elif 0 < dick_legth < 10:
         dick_length_evaluate = random.choice(EVALUATE_TEMPLATES_3)
         dick_comment = random.choice(COMMENT_TEMPLATES_3)
         dick_comment_score = random.uniform(0, 3)
     elif dick_legth == 0:
         dick_length_evaluate = random.choice(EVALUATE_TEMPLATES_4)
         dick_comment = random.choice(COMMENT_TEMPLATES_4)
-        dick_comment_score_0 = "0"
+        dick_comment_score_1 = 0
     else:
         dick_length_evaluate = random.choice(EVALUATE_TEMPLATES_5)
         dick_comment = random.choice(COMMENT_TEMPLATES_5)
@@ -136,7 +136,7 @@ async def random_dick_length(app: Ariadne, event: MessageEvent):
     await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
         MessageChain(
-            f"你今天有一根{dick_enchant}{dick_color}{dick_outward}{boki_status}的，{angle_status}角度为{angle}的{phimosis_status}的{dick_hardness},并且蛋蛋{egg_weight}的{length_text}{a}大众点评:{dick_comment_score_1}分，{dick_comment}"
+            f"你今天有一根{dick_enchant}{dick_color}{dick_outward}{boki_status}的，{angle_status}角度为{angle}的{phimosis_status}的{dick_hardness},并且蛋蛋{egg_weight}的{length_text}{a}大众点评：{dick_comment_score_1}分，{dick_comment}"
         ),
     )
     random.seed()
