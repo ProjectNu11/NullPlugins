@@ -282,6 +282,22 @@
         "override_switch": null
     },
     {
+        "name": "疯狂星期四",
+        "pack": "module.fucking_crazy_thursday",
+        "version": "1.0.0",
+        "author": [
+            "SuChen"
+        ],
+        "pypi": false,
+        "category": "entertainment",
+        "description": "Fucking Crazy Thursday",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
         "name": "Furry 同城群搜索",
         "pack": "module.furry_group_search",
         "version": "1.02",

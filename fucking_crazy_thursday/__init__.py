@@ -45,23 +45,13 @@ with Path(assets_path, "fct.json").open("r", encoding="UTF-8") as f:
 @channel.use(
     ListenerSchema(
         [GroupMessage, FriendMessage],
-        inline_dispatchers=[
-            Twilight(
-                [
-                    FullMatch("疯狂星期四")
-                ]
-            )
-        ],
+        inline_dispatchers=[Twilight([FullMatch("疯狂星期四")])],
         decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
 async def random_dick_length(app: Ariadne, event: MessageEvent):
-   
-
 
     await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
-        MessageChain(
-            random.choice(TEMPLATES)
-        ),
+        MessageChain(random.choice(TEMPLATES)),
     )
