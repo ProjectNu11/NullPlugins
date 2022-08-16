@@ -1,0 +1,1 @@
+文案照搬 https://github.com/MinatoAquaCrews/nonebot_plugin_crazy_thursday/blob/beta/nonebot_plugin_crazy_thursday/post.json
