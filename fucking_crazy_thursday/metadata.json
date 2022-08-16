@@ -1,0 +1,16 @@
+{
+    "name": "疯狂星期四",
+    "pack": "module.fucking_crazy_thursday",
+    "version": "1.0.0",
+    "author": [
+        "SuChen"
+    ],
+    "pypi": false,
+    "category": "entertainment",
+    "description": "Fucking Crazy Thursday",
+    "dependency": null,
+    "loaded": true,
+    "hidden": false,
+    "override_default": null,
+    "override_switch": null
+}
