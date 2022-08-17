@@ -44,7 +44,6 @@ settings_file = Path(assets_path / "news_settings.json")
 
 with settings_file.open("r", encoding="UTF-8") as f:
     _data = json.loads(f.read())
-    ENCHANT_TEMPLATES = _data["enchant"]
     COLOR_TEMPLATES = _data["news_color"]
     OUTWARD_TEMPLATES = _data["outward"]
     EVALUATE_TEMPLATES_0 = _data["news_evaluate_0"]
@@ -83,7 +82,6 @@ async def random_dick_length(app: Ariadne, event: MessageEvent):
     dick_comment_score = 0.0
     dick_comment_score_time = 5
     if random.randint(0, 4) == 0:
-        # dick_enchant = random.choice(ENCHANT_TEMPLATES)
         list_enchant = ["Ⅰ", "Ⅱ", "Ⅲ", "Ⅳ", "Ⅴ"]
         rd_enchant = random.randint(0, 5)
         if rd_enchant == 0:
