@@ -80,47 +80,48 @@ async def random_dick_length(app: Ariadne, event: MessageEvent):
     RandomSeed(event.sender)
     dick_color = random.choice(COLOR_TEMPLATES)
     dick_outward = random.choice(OUTWARD_TEMPLATES)
-    dick_comment_score=0.0
-    dick_comment_score_time=5
+    dick_comment_score = 0.0
+    dick_comment_score_time = 5
     if random.randint(0, 4) == 0:
-        #dick_enchant = random.choice(ENCHANT_TEMPLATES)
-        list_enchant=["Ⅰ","Ⅱ","Ⅲ","Ⅳ","Ⅴ"]
-        rd_enchant=random.randint(0,5)
-        if rd_enchant==0:
-            dick_enchant="附魔上了经*修补"
-            dick_comment_score+=10
-        elif rd_enchant==1:
-            dick_enchant="附魔上了消失诅咒"
-        elif rd_enchant==2:
-            dick_enchant="附魔上了火焰附加"
-        elif rd_enchant==3:
-            dick_enchant="附魔上了耐久"
-        elif rd_enchant==4:
-            dick_enchant="附魔上了荆棘"
-        else:dick_enchant="附魔上了力量"
-        if rd_enchant<2:
-            dick_comment_score+=(not rd_enchant)*10
-        elif rd_enchant==2:
-            rd_temp=random.randint(0,1)
-            dick_enchant+=list_enchant[rd_temp]
-            dick_comment_score+=(rd_temp+1)*5
-        elif rd_enchant<5:
-            rd_temp=random.randint(0,2)
-            dick_enchant+=list_enchant[rd_temp]
-            dick_comment_score+=(rd_temp+1)*10/3.0
+        # dick_enchant = random.choice(ENCHANT_TEMPLATES)
+        list_enchant = ["Ⅰ", "Ⅱ", "Ⅲ", "Ⅳ", "Ⅴ"]
+        rd_enchant = random.randint(0, 5)
+        if rd_enchant == 0:
+            dick_enchant = "附魔上了经*修补"
+            dick_comment_score += 10
+        elif rd_enchant == 1:
+            dick_enchant = "附魔上了消失诅咒"
+        elif rd_enchant == 2:
+            dick_enchant = "附魔上了火焰附加"
+        elif rd_enchant == 3:
+            dick_enchant = "附魔上了耐久"
+        elif rd_enchant == 4:
+            dick_enchant = "附魔上了荆棘"
         else:
-            rd_temp=random.randint(0,4)
-            dick_enchant+=list_enchant[rd_temp]
-            dick_comment_score+=(rd_temp+1)*2
-        dick_enchant+="的"
-        dick_comment_score_time+=1
+            dick_enchant = "附魔上了力量"
+        if rd_enchant < 2:
+            dick_comment_score += (not rd_enchant) * 10
+        elif rd_enchant == 2:
+            rd_temp = random.randint(0, 1)
+            dick_enchant += list_enchant[rd_temp]
+            dick_comment_score += (rd_temp + 1) * 5
+        elif rd_enchant < 5:
+            rd_temp = random.randint(0, 2)
+            dick_enchant += list_enchant[rd_temp]
+            dick_comment_score += (rd_temp + 1) * 10 / 3.0
+        else:
+            rd_temp = random.randint(0, 4)
+            dick_enchant += list_enchant[rd_temp]
+            dick_comment_score += (rd_temp + 1) * 2
+        dick_enchant += "的"
+        dick_comment_score_time += 1
     else:
         dick_enchant = ""
 
     if random.randint(0, 1) == 1:
         boki_status = "勃起"
         angle_status = "boki"
-        dick_comment_score+=10
+        dick_comment_score += 10
     else:
         boki_status = "软掉"
         angle_status = ""
@@ -129,28 +130,28 @@ async def random_dick_length(app: Ariadne, event: MessageEvent):
 
     angle = f"{random.randint(0, 180)}度"
 
-    rd_phimosis_status=random.randint(0, 2)
+    rd_phimosis_status = random.randint(0, 2)
     if rd_phimosis_status == 0:
         phimosis_status = "包茎"
     elif rd_phimosis_status == 1:
         phimosis_status = "半包茎"
     else:
         phimosis_status = "非包茎"
-    dick_comment_score+=rd_phimosis_status*5
+    dick_comment_score += rd_phimosis_status * 5
 
-    rd_dick_hardness=random.randint(1, 10)
+    rd_dick_hardness = random.randint(1, 10)
     dick_hardness = f"莫氏硬度为{rd_dick_hardness}"
-    dick_comment_score+=rd_dick_hardness
+    dick_comment_score += rd_dick_hardness
 
-    rd_egg_weight=random.randint(50, 1000)
+    rd_egg_weight = random.randint(50, 1000)
     egg_weight = f"{rd_egg_weight}克"
-    dick_comment_score+=rd_egg_weight*10/951.0
+    dick_comment_score += rd_egg_weight * 10 / 951.0
 
     dick_legth = random.randint(-10, 30)
-    if dick_legth >0:
-        dick_comment_score+=dick_legth/3.0
-    elif dick_legth!=0:
-        dick_comment_score+=abs(dick_legth)
+    if dick_legth > 0:
+        dick_comment_score += dick_legth / 3.0
+    elif dick_legth != 0:
+        dick_comment_score += abs(dick_legth)
 
     if dick_legth > 20:
         dick_length_evaluate = random.choice(EVALUATE_TEMPLATES_0)
