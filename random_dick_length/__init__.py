@@ -1,10 +1,12 @@
 import asyncio
+from distutils.util import rfc822_escape
 import math
 import random
 import json
 from datetime import datetime
 from io import BytesIO
 from pathlib import Path
+from sre_constants import LITERAL_IGNORE
 
 from graia.ariadne import Ariadne
 from graia.ariadne.event.message import (
@@ -78,14 +80,48 @@ async def random_dick_length(app: Ariadne, event: MessageEvent):
     RandomSeed(event.sender)
     dick_color = random.choice(COLOR_TEMPLATES)
     dick_outward = random.choice(OUTWARD_TEMPLATES)
+    dick_comment_score = 0.0
+    dick_comment_score_time = 5
     if random.randint(0, 4) == 0:
-        dick_enchant = random.choice(ENCHANT_TEMPLATES)
+        # dick_enchant = random.choice(ENCHANT_TEMPLATES)
+        list_enchant = ["Ⅰ", "Ⅱ", "Ⅲ", "Ⅳ", "Ⅴ"]
+        rd_enchant = random.randint(0, 5)
+        if rd_enchant == 0:
+            dick_enchant = "附魔上了经*修补"
+            dick_comment_score += 10
+        elif rd_enchant == 1:
+            dick_enchant = "附魔上了消失诅咒"
+        elif rd_enchant == 2:
+            dick_enchant = "附魔上了火焰附加"
+        elif rd_enchant == 3:
+            dick_enchant = "附魔上了耐久"
+        elif rd_enchant == 4:
+            dick_enchant = "附魔上了荆棘"
+        else:
+            dick_enchant = "附魔上了力量"
+        if rd_enchant < 2:
+            dick_comment_score += (not rd_enchant) * 10
+        elif rd_enchant == 2:
+            rd_temp = random.randint(0, 1)
+            dick_enchant += list_enchant[rd_temp]
+            dick_comment_score += (rd_temp + 1) * 5
+        elif rd_enchant < 5:
+            rd_temp = random.randint(0, 2)
+            dick_enchant += list_enchant[rd_temp]
+            dick_comment_score += (rd_temp + 1) * 10 / 3.0
+        else:
+            rd_temp = random.randint(0, 4)
+            dick_enchant += list_enchant[rd_temp]
+            dick_comment_score += (rd_temp + 1) * 2
+        dick_enchant += "的"
+        dick_comment_score_time += 1
     else:
         dick_enchant = ""
 
     if random.randint(0, 1) == 1:
         boki_status = "勃起"
         angle_status = "boki"
+        dick_comment_score += 10
     else:
         boki_status = "软掉"
         angle_status = ""
@@ -94,49 +130,55 @@ async def random_dick_length(app: Ariadne, event: MessageEvent):
 
     angle = f"{random.randint(0, 180)}度"
 
-    if random.randint(0, 2) == 0:
+    rd_phimosis_status = random.randint(0, 2)
+    if rd_phimosis_status == 0:
         phimosis_status = "包茎"
-    elif random.randint(0, 2) == 1:
+    elif rd_phimosis_status == 1:
         phimosis_status = "半包茎"
     else:
         phimosis_status = "非包茎"
+    dick_comment_score += rd_phimosis_status * 5
 
-    dick_hardness = f"莫氏硬度为{random.randint(1, 10)}"
-    egg_weight = f"{random.randint(0, 1000)}克"
+    rd_dick_hardness = random.randint(1, 10)
+    dick_hardness = f"莫氏硬度为{rd_dick_hardness}"
+    dick_comment_score += rd_dick_hardness
+
+    rd_egg_weight = random.randint(50, 1000)
+    egg_weight = f"{rd_egg_weight}克"
+    dick_comment_score += rd_egg_weight * 10 / 951.0
+
     dick_legth = random.randint(-10, 30)
+    if dick_legth > 0:
+        dick_comment_score += dick_legth / 3.0
+    elif dick_legth != 0:
+        dick_comment_score += abs(dick_legth)
 
     if dick_legth > 20:
         dick_length_evaluate = random.choice(EVALUATE_TEMPLATES_0)
         dick_comment = random.choice(COMMENT_TEMPLATES_0)
-        dick_comment_score = random.uniform(7, 10)
     elif 15 < dick_legth <= 20:
         dick_length_evaluate = random.choice(EVALUATE_TEMPLATES_1)
         dick_comment = random.choice(COMMENT_TEMPLATES_1)
-        dick_comment_score = random.uniform(5, 7)
     elif 10 <= dick_legth <= 15:
         dick_length_evaluate = random.choice(EVALUATE_TEMPLATES_2)
         dick_comment = random.choice(COMMENT_TEMPLATES_2)
-        dick_comment_score = random.uniform(3, 5)
     elif 0 < dick_legth < 10:
         dick_length_evaluate = random.choice(EVALUATE_TEMPLATES_3)
         dick_comment = random.choice(COMMENT_TEMPLATES_3)
-        dick_comment_score = random.uniform(0, 3)
     elif dick_legth == 0:
         dick_length_evaluate = random.choice(EVALUATE_TEMPLATES_4)
         dick_comment = random.choice(COMMENT_TEMPLATES_4)
-        dick_comment_score_1 = 0
     else:
         dick_length_evaluate = random.choice(EVALUATE_TEMPLATES_5)
         dick_comment = random.choice(COMMENT_TEMPLATES_5)
         dick_comment_score = random.uniform(3, 10)
     a = "\n"
     length_text = f"{dick_legth}cm的牛子，{a}{dick_length_evaluate}"
-    dick_comment_score_1 = round(dick_comment_score, 1)
 
     await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
         MessageChain(
-            f"你今天有一根{dick_enchant}{dick_color}{dick_outward}{boki_status}的，{angle_status}角度为{angle}的{phimosis_status}的{dick_hardness},并且蛋蛋{egg_weight}的{length_text}{a}大众点评：{dick_comment_score_1}分，{dick_comment}"
+            f"你今天有一根{dick_enchant}{dick_color}{dick_outward}{boki_status}的，{angle_status}角度为{angle}的{phimosis_status}的{dick_hardness},并且蛋蛋{egg_weight}的{length_text}{a}大众点评：{round(dick_comment_score/dick_comment_score_time,1)}分，{dick_comment}"
         ),
     )
     random.seed()
