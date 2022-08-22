@@ -366,7 +366,7 @@
     {
         "name": "发病",
         "pack": "module.ill",
-        "version": "1.0.3",
+        "version": "1.0.4",
         "author": [
             "nullqwertyuiop"
         ],
@@ -546,7 +546,7 @@
     {
         "name": "随机牛子长度",
         "pack": "module.random_dick_length",
-        "version": "1.0.8",
+        "version": "1.0.9",
         "author": [
             "SuChen"
         ],
