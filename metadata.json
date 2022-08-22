@@ -380,6 +380,22 @@
         "override_switch": null
     },
     {
+        "name": "图片编码器",
+        "pack": "module.image_coder",
+        "version": "0.1",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": true,
+        "category": "utility",
+        "description": "",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
         "name": "以图搜图",
         "pack": "module.image_searcher",
         "version": "1.0.3",
@@ -530,7 +546,7 @@
     {
         "name": "随机牛子长度",
         "pack": "module.random_dick_length",
-        "version": "1.0.8",
+        "version": "1.0.9",
         "author": [
             "SuChen"
         ],
