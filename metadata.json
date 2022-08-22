@@ -380,6 +380,22 @@
         "override_switch": null
     },
     {
+        "name": "图片编码器",
+        "pack": "module.image_coder",
+        "version": "0.1",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": true,
+        "category": "utility",
+        "description": "",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
         "name": "以图搜图",
         "pack": "module.image_searcher",
         "version": "1.0.3",
