@@ -80,39 +80,26 @@ async def random_dick_length(app: Ariadne, event: MessageEvent):
     dick_color = random.choice(COLOR_TEMPLATES)
     dick_outward = random.choice(OUTWARD_TEMPLATES)
     dick_comment_score = 0.0
-    dick_comment_score_time = 5
+    dick_comment_score_time = 6
     if random.randint(0, 4) == 0:
-        list_enchant = ["Ⅰ", "Ⅱ", "Ⅲ", "Ⅳ", "Ⅴ"]
+        enchant_lv = ["Ⅰ", "Ⅱ", "Ⅲ", "Ⅳ", "Ⅴ"]
+        enchant_list = ["附魔上了消失诅咒","附魔上了经*修补","附魔上了火焰附加","附魔上了耐久","附魔上了荆棘","附魔上了力量"]
         rd_enchant = random.randint(0, 5)
-        if rd_enchant == 0:
-            dick_enchant = "附魔上了经*修补"
-            dick_comment_score += 10
-        elif rd_enchant == 1:
-            dick_enchant = "附魔上了消失诅咒"
-        elif rd_enchant == 2:
-            dick_enchant = "附魔上了火焰附加"
-        elif rd_enchant == 3:
-            dick_enchant = "附魔上了耐久"
-        elif rd_enchant == 4:
-            dick_enchant = "附魔上了荆棘"
-        else:
-            dick_enchant = "附魔上了力量"
+        dick_enchant=enchant_list[rd_enchant]
         if rd_enchant < 2:
-            dick_comment_score += (not rd_enchant) * 10
-        elif rd_enchant == 2:
-            rd_temp = random.randint(0, 1)
-            dick_enchant += list_enchant[rd_temp]
-            dick_comment_score += (rd_temp + 1) * 5
-        elif rd_enchant < 5:
-            rd_temp = random.randint(0, 2)
-            dick_enchant += list_enchant[rd_temp]
-            dick_comment_score += (rd_temp + 1) * 10 / 3.0
+            dick_comment_score += rd_enchant * 10
         else:
-            rd_temp = random.randint(0, 4)
-            dick_enchant += list_enchant[rd_temp]
-            dick_comment_score += (rd_temp + 1) * 2
+            if rd_enchant == 2:
+                rd_lv = random.randint(0, 1)
+                dick_comment_score += (rd_lv + 1) * 5
+            elif rd_enchant < 5:
+                rd_lv = random.randint(0, 2)
+                dick_comment_score += (rd_lv + 1) * 10 / 3.0
+            else:
+                rd_lv = random.randint(0, 4)
+                dick_comment_score += (rd_lv + 1) * 2
+            dick_enchant += enchant_lv[rd_lv]
         dick_enchant += "的"
-        dick_comment_score_time += 1
     else:
         dick_enchant = ""
 
@@ -169,7 +156,6 @@ async def random_dick_length(app: Ariadne, event: MessageEvent):
     else:
         dick_length_evaluate = random.choice(EVALUATE_TEMPLATES_5)
         dick_comment = random.choice(COMMENT_TEMPLATES_5)
-        dick_comment_score = random.uniform(3, 10)
     a = "\n"
     length_text = f"{dick_legth}cm的牛子，{a}{dick_length_evaluate}"
 
