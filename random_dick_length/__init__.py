@@ -83,9 +83,16 @@ async def random_dick_length(app: Ariadne, event: MessageEvent):
     dick_comment_score_time = 6
     if random.randint(0, 4) == 0:
         enchant_lv = ["Ⅰ", "Ⅱ", "Ⅲ", "Ⅳ", "Ⅴ"]
-        enchant_list = ["附魔上了消失诅咒","附魔上了经*修补","附魔上了火焰附加","附魔上了耐久","附魔上了荆棘","附魔上了力量"]
+        enchant_list = [
+            "附魔上了消失诅咒",
+            "附魔上了经*修补",
+            "附魔上了火焰附加",
+            "附魔上了耐久",
+            "附魔上了荆棘",
+            "附魔上了力量",
+        ]
         rd_enchant = random.randint(0, 5)
-        dick_enchant=enchant_list[rd_enchant]
+        dick_enchant = enchant_list[rd_enchant]
         if rd_enchant < 2:
             dick_comment_score += rd_enchant * 10
         else:
