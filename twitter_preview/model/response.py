@@ -11,12 +11,15 @@ class Response(BaseModel):
     errors: list[TweetError] = []
 
     def parse(self) -> list[ParsedTweet]:
+        print(self)
         tweets: list[ParsedTweet] = []
         for index, tweet in enumerate(self.data):
             media_keys = tweet.attachments.media_keys
             media: list[Photo] = list(
                 filter(lambda x: x.media_key in media_keys, self.includes.media)
             )
+            if index >= len(self.includes.users):
+                index = 0
             user: User = self.includes.users[index]
             tweets.append(ParsedTweet(**tweet.dict(), media=media, user=user))
         return tweets
