@@ -578,7 +578,7 @@
     {
         "name": "RSS",
         "pack": "module.rss",
-        "version": "1.0",
+        "version": "1.0.0",
         "author": [
             "nullqwertyuiop"
         ],
@@ -692,7 +692,7 @@
     {
         "name": "推特订阅",
         "pack": "module.twitter_rss",
-        "version": "0.1",
+        "version": "0.1.1",
         "author": [
             "nullqwertyuiop"
         ],
@@ -700,7 +700,8 @@
         "category": "utility",
         "description": "订阅推特用户",
         "dependency": [
-            "module.twitter_preview"
+            "module.twitter_preview",
+            "module.rss"
         ],
         "loaded": true,
         "hidden": false,
