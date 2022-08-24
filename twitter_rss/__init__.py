@@ -1,5 +1,6 @@
 import asyncio
 import contextlib
+import copy
 from datetime import datetime
 
 from graia.ariadne import Ariadne
@@ -80,6 +81,7 @@ async def twitter_rss_on_update(app: Ariadne, event: RSSUpdate):
                 ]
             )
         )
+    feed = copy.copy(feed)
     with contextlib.suppress(UnknownTarget, RemoteException, AccountMuted):
         for group in feed.groups:
             if (_ := switch.get(channel.module, group)) is None:
@@ -160,16 +162,31 @@ async def twitter_rss_on_msg(
             )
 
         def compose() -> bytes:
+            if not (
+                _feeds := get_feed_from_id(
+                    group=event.sender.group.id
+                    if isinstance(event, GroupMessage)
+                    else None,
+                    friend=event.sender.id
+                    if isinstance(event, FriendMessage)
+                    else None,
+                )
+            ):
+                _feeds = []
+
             return OneUIMock(
                 Column(
                     Banner("Twitter 订阅"),
-                    GeneralBox("已完成订阅", f"已订阅用户 {target} 的推文").add(
-                        "当前更新频率", f"{QUERY_INTERVAL_MINUTES} 分钟"
-                    ),
                     GeneralBox(
-                        f"本群已订阅 {len(feeds) + 1} 名用户",
+                        f"已{'取消' if unsubscribe.matched else '完成'}订阅",
+                        f"已{'取消' if unsubscribe.matched else ''}订阅用户 {target} 的推文",
+                    ).add("当前更新频率", f"{QUERY_INTERVAL_MINUTES} 分钟"),
+                    GeneralBox(
+                        f"本群已订阅 {len(_feeds) + 1} 名用户",
                         "\n".join(
-                            [feed.title.split(":")[-1] for feed in feeds] + [target]
+                            [feed.title.split(":")[-1] for feed in _feeds] + []
+                            if unsubscribe.matched
+                            else [target]
                         ),
                     ),
                 )
