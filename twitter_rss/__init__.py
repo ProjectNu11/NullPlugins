@@ -182,12 +182,8 @@ async def twitter_rss_on_msg(
                         f"已{'取消' if unsubscribe.matched else ''}订阅用户 {target} 的推文",
                     ).add("当前更新频率", f"{QUERY_INTERVAL_MINUTES} 分钟"),
                     GeneralBox(
-                        f"本群已订阅 {len(_feeds) + 1} 名用户",
-                        "\n".join(
-                            [feed.title.split(":")[-1] for feed in _feeds] + []
-                            if unsubscribe.matched
-                            else [target]
-                        ),
+                        f"该聊天区域已订阅 {len(_feeds)} 名用户",
+                        "\n".join([feed.title.split(":")[-1] for feed in _feeds]),
                     ),
                 )
             ).render_bytes()
@@ -219,3 +215,47 @@ async def twitter_rss_on_msg(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
             MessageChain([Image(data_bytes=await asyncio.to_thread(compose_error))]),
         )
+
+
+@channel.use(
+    ListenerSchema(
+        listening_events=[GroupMessage, FriendMessage],
+        inline_dispatchers=[
+            Twilight(
+                [
+                    PrefixMatch,
+                    FullMatch("推特订阅列表"),
+                ]
+            )
+        ],
+        decorators=[
+            Switch.check(channel.module),
+            Blacklist.check(),
+            FunctionCall.record(channel.module),
+        ],
+    )
+)
+async def twitter_rss_get_list(app: Ariadne, event: MessageEvent):
+    if not (
+        feeds := get_feed_from_id(
+            group=event.sender.group.id if isinstance(event, GroupMessage) else None,
+            friend=event.sender.id if isinstance(event, FriendMessage) else None,
+        )
+    ):
+        feeds = []
+
+    def compose() -> bytes:
+        return OneUIMock(
+            Column(
+                Banner("Twitter 订阅"),
+                GeneralBox(
+                    f"本群已订阅 {len(feeds)} 名用户",
+                    "\n".join([feed.title.split(":")[-1] for feed in feeds]),
+                ),
+            )
+        ).render_bytes()
+
+    return await app.send_message(
+        event.sender.group if isinstance(event, GroupMessage) else event.sender,
+        MessageChain([Image(data_bytes=await asyncio.to_thread(compose))]),
+    )
