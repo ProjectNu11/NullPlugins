@@ -1,9 +1,11 @@
+import asyncio
 from typing import Optional, BinaryIO
 
 from PicImageSearch import Network, EHentai
 from graia.ariadne.message.chain import MessageChain
-from graia.ariadne.message.element import Image, Plain
+from graia.ariadne.message.element import Image
 
+from library.image.oneui_mock.elements import OneUIMock, Column, Banner, GeneralBox
 from module.image_searcher.utils import get_thumb, error_catcher
 
 custom_cfg = []
@@ -30,16 +32,31 @@ async def ehentai_search(
         elif file:
             resp = await ehentai.search(file=file, ex=ex)
         if not resp.raw:
-            return MessageChain("EHentai 无搜索结果")
+
+            def compose() -> bytes:
+                return OneUIMock(
+                    Column(
+                        Banner(f"E{'x' if ex else '-'}Hentai 搜图"),
+                        GeneralBox("服务器未返回内容", "无法搜索到该图片"),
+                    )
+                ).render_bytes()
+
+            return MessageChain(Image(data_bytes=await asyncio.to_thread(compose)))
+
         resp = resp.raw[0]
-        return MessageChain(
-            [
-                Plain("EHentai 搜索到以下结果：\n"),
-                Image(data_bytes=await get_thumb(resp.thumbnail, proxies)),
-                Plain(f"\n标题：{resp.title}\n"),
-                Plain(f"类别：{resp.type}\n"),
-                Plain(f"上传日期：{resp.date}\n"),
-                Plain(f"标签：{', '.join(resp.tags)}\n"),
-                Plain(f"链接：{resp.url}"),
-            ]
-        )
+        thumb = await get_thumb(resp.thumbnail, proxies)
+
+        def compose() -> bytes:
+            return OneUIMock(
+                Column(
+                    Banner(f"E{'x' if ex else '-'}Hentai 搜图"),
+                    Image(data_bytes=thumb),
+                    GeneralBox("标题", resp.title)
+                    .add("类别", resp.type)
+                    .add("上传日期", resp.date)
+                    .add("标签", " ".join([f"#{tag}" for tag in resp.tags]))
+                    .add("链接", resp.url),
+                )
+            ).render_bytes()
+
+        return MessageChain(Image(data_bytes=await asyncio.to_thread(compose)))

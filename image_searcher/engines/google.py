@@ -1,9 +1,13 @@
+import asyncio
+from io import BytesIO
 from typing import Optional, BinaryIO
 
+from PIL import Image as PillowImage
 from PicImageSearch import Network, Google
 from graia.ariadne.message.chain import MessageChain
-from graia.ariadne.message.element import Image, Plain
+from graia.ariadne.message.element import Image
 
+from library.image.oneui_mock.elements import OneUIMock, Column, Banner, GeneralBox
 from module.image_searcher.utils import get_thumb, error_catcher
 
 custom_cfg = []
@@ -26,13 +30,23 @@ async def google_search(
         elif file:
             resp = await google.search(file=file)
         if not resp.raw:
-            return MessageChain("Google 无搜索结果")
+
+            def compose() -> bytes:
+                return OneUIMock(
+                    Column(Banner("Google 搜图"), GeneralBox("服务器未返回内容", "无法搜索到该图片"))
+                ).render_bytes()
+
+            return MessageChain(Image(data_bytes=await asyncio.to_thread(compose)))
         resp = resp.raw[2]
-        return MessageChain(
-            [
-                Plain("Google 搜索到以下结果：\n"),
-                Image(data_bytes=await get_thumb(resp.thumbnail, proxies)),
-                Plain(f"\n标题：{resp.title}\n"),
-                Plain(f"链接：{resp.url}"),
-            ]
-        )
+        thumb = await get_thumb(resp.thumbnail, proxies)
+
+        def compose() -> bytes:
+            return OneUIMock(
+                Column(
+                    Banner("Google 搜图"),
+                    PillowImage.open(BytesIO(thumb)),
+                    GeneralBox("标题", resp.title).add("链接", resp.url),
+                )
+            ).render_bytes()
+
+        return MessageChain(Image(data_bytes=await asyncio.to_thread(compose)))
