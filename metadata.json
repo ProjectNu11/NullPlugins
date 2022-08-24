@@ -576,6 +576,22 @@
         "override_switch": null
     },
     {
+        "name": "RSS",
+        "pack": "module.rss",
+        "version": "1.0",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "dependency",
+        "description": "依赖包，用于取得 RSS 订阅内容",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": true,
+        "override_switch": null
+    },
+    {
         "name": "帮你搜搜",
         "pack": "module.search_shortcut",
         "version": "0.13",
@@ -668,6 +684,24 @@
         "category": "utility",
         "description": "发送推特链接自动生成预览图",
         "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "推特订阅",
+        "pack": "module.twitter_rss",
+        "version": "0.1",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "utility",
+        "description": "订阅推特用户",
+        "dependency": [
+            "module.twitter_preview"
+        ],
         "loaded": true,
         "hidden": false,
         "override_default": null,
