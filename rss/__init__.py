@@ -23,6 +23,6 @@ channel = Channel.current()
 @channel.use(SchedulerSchema(timer=timers.every_custom_minutes(QUERY_INTERVAL_MINUTES)))
 async def get_rss_update(app: Ariadne):
     for _feed in feeds:
-        if feed_update := await get_feed(_feed):
+        if feed_update := await get_feed(_feed, suppress=True):
             app.broadcast.postEvent(RSSUpdate(feed=_feed, items=feed_update))
         await asyncio.sleep(SLEEP_SECONDS)
