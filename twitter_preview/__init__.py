@@ -102,3 +102,11 @@ async def twitter_preview(app: Ariadne, event: MessageEvent):
                         else event.sender,
                         MessageChain("文件未通过安全检查"),
                     )
+            except NotImplementedError as err:
+                logger.error(err)
+                await app.send_message(
+                    event.sender.group
+                    if isinstance(event, GroupMessage)
+                    else event.sender,
+                    MessageChain("暂不支持在此处发送文件"),
+                )
