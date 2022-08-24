@@ -9,10 +9,10 @@ class RSSFeedTable(Base):
     __tablename__ = "rss_feed"
 
     feed_id = Column(Integer, primary_key=True)
-    title = Column(TEXT(length=4000), nullable=False)
-    summary = Column(TEXT(length=4000), nullable=False)
+    title = Column(TEXT, nullable=False)
+    summary = Column(TEXT, nullable=False)
     published = Column(DateTime, nullable=False)
-    id = Column(TEXT(length=4000), nullable=False)
-    link = Column(TEXT(length=4000), nullable=False)
-    author = Column(TEXT(length=4000), nullable=False)
-    feed = Column(TEXT(length=4000), nullable=False)
+    id = Column(TEXT, nullable=False)
+    link = Column(TEXT, nullable=False)
+    author = Column(TEXT, nullable=False)
+    feed = Column(TEXT, nullable=False)
