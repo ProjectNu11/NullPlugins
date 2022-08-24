@@ -1,0 +1,18 @@
+{
+    "name": "推特订阅",
+    "pack": "module.twitter_rss",
+    "version": "0.1",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": false,
+    "category": "utility",
+    "description": "订阅推特用户",
+    "dependency": [
+        "module.twitter_preview"
+    ],
+    "loaded": true,
+    "hidden": false,
+    "override_default": null,
+    "override_switch": null
+}
