@@ -676,7 +676,7 @@
     {
         "name": "推特预览",
         "pack": "module.twitter_preview",
-        "version": "1.0.9",
+        "version": "1.0.10",
         "author": [
             "nullqwertyuiop"
         ],
