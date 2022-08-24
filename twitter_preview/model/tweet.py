@@ -58,7 +58,7 @@ class EntityURLMedia(BaseModel):
     url: str
     expanded_url: str
     display_url: str
-    media_key: str
+    media_key: str = ""
 
 
 class EntityHashtag(BaseModel):

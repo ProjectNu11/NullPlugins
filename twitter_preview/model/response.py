@@ -11,7 +11,6 @@ class Response(BaseModel):
     errors: list[TweetError] = []
 
     def parse(self) -> list[ParsedTweet]:
-        print(self)
         tweets: list[ParsedTweet] = []
         for index, tweet in enumerate(self.data):
             media_keys = tweet.attachments.media_keys
