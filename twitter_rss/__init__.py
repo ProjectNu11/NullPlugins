@@ -44,7 +44,7 @@ if not (__cfg := config.get_module_config(channel.module)):
 else:
     BASE_URL = __cfg.get("rsshub", "")
 
-RSSHUB_LINK = BASE_URL + RSSHUB_ENTRYPOINT
+RSSHUB_LINK = str(BASE_URL) + RSSHUB_ENTRYPOINT
 
 
 @channel.use(
