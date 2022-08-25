@@ -1,6 +1,5 @@
 import asyncio
 import functools
-import traceback
 
 import aiohttp
 from graia.ariadne.message.chain import MessageChain
@@ -13,7 +12,6 @@ from library.image.oneui_mock.elements import (
     GeneralBox,
     HintBox,
 )
-from module.build_image import create_image
 
 
 async def get_thumb(url: str, proxy: str) -> bytes:
@@ -32,7 +30,7 @@ def error_catcher(func):
             def compose_error() -> bytes:
                 return OneUIMock(
                     Column(
-                        Banner(func.__name__.replace("_", "").title()),
+                        Banner(func.__name__.replace("_", " ").title()),
                         GeneralBox("运行搜索时出现异常", f"{e}"),
                         HintBox(
                             "可以尝试以下解决方案",

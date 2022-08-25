@@ -1,6 +1,8 @@
 import asyncio
+from io import BytesIO
 from typing import Optional, BinaryIO
 
+from PIL import Image as PillowImage
 from PicImageSearch import Network, EHentai
 from graia.ariadne.message.chain import MessageChain
 from graia.ariadne.message.element import Image
@@ -50,7 +52,7 @@ async def ehentai_search(
             return OneUIMock(
                 Column(
                     Banner(f"E{'x' if ex else '-'}Hentai 搜图"),
-                    Image(data_bytes=thumb),
+                    PillowImage.open(BytesIO(thumb)),
                     GeneralBox("标题", resp.title)
                     .add("类别", resp.type)
                     .add("上传日期", resp.date)
