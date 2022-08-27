@@ -29,8 +29,10 @@ from loguru import logger
 from sqlalchemy import select
 
 from library.depend import Switch, FunctionCall, Permission, Blacklist
+from library.help import Disclaimer
 from library.model import UserPerm
 from library.orm import orm
+from .model import Currency
 from .table import WalletBalance, WalletDetail
 
 saya = Saya.current()
@@ -215,3 +217,29 @@ class Wallet:
             return wallet.reverse()
         else:
             return None
+
+
+class Coin(Currency):
+    value: float = 1.0
+    name: str = "硬币"
+
+    @classmethod
+    async def add(cls, field: int, supplicant: int, amount: int):
+        pass
+
+    @classmethod
+    async def charge(cls, field: int, supplicant: int, amount: int):
+        pass
+
+    @staticmethod
+    async def query(field: int, supplicant: int) -> int:
+        if balance := await Wallet.get_balance(field, supplicant):
+            return balance[0]
+        return 0
+
+
+Disclaimer.register(
+    "钱包与货币相关",
+    "本项目中使用到的货币只是虚拟数值，无法交易成现实通用货币或其他任何可实际使用的虚拟货币。",
+    "在特定情况下，硬币可以在本项目与其他具有合作关系的项目间流通，但硬币无法在玩家间以及玩家与项目组之间流通。",
+)
