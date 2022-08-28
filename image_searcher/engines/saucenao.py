@@ -9,7 +9,13 @@ from graia.ariadne.message.element import Image
 from graia.saya import Channel
 
 from library import config
-from library.image.oneui_mock.elements import OneUIMock, Column, GeneralBox, Banner
+from library.image.oneui_mock.elements import (
+    OneUIMock,
+    Column,
+    GeneralBox,
+    Banner,
+    ProgressBar,
+)
 from module.image_searcher.utils import get_thumb, error_catcher
 
 custom_cfg = ["api_key"]
@@ -55,7 +61,12 @@ async def saucenao_search(
                     Banner("SauceNAO 搜图"),
                     PillowImage.open(BytesIO(thumb)),
                     GeneralBox("标题", resp.title)
-                    .add("相似度", f"{resp.similarity}%")
+                    .add(
+                        element=ProgressBar(
+                            resp.similarity, "相似度", f"{resp.similarity}%"
+                        ),
+                        sub=False,
+                    )
                     .add("作者", resp.author)
                     .add("Pixiv 图像 id", str(resp.pixiv_id))
                     .add("Pixiv 画师 id", str(resp.member_id))
