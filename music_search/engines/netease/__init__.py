@@ -1,5 +1,6 @@
 import asyncio
 import urllib.parse
+from pathlib import Path
 
 from PIL import Image
 from graia.ariadne import Ariadne
@@ -85,26 +86,23 @@ class NetEaseSearch(BaseSearch):
 
     @staticmethod
     def compose(songs: list[Song]):
-        print("Composing")
-        column = Column()
-
-        banner = Banner(
-            "网易云 歌曲搜索",
+        column = Column(
+            Banner(
+                "网易云 歌曲搜索",
+                icon=Image.open(Path(__file__).parent.parent.parent / "icon.png"),
+            ),
+            GeneralBox(text="搜索到以下歌曲", description="请在 60 秒内发送序号进行点歌"),
         )
-        column.add(banner)
-
-        column.add(GeneralBox(text="搜索到以下歌曲", description="请在 60 秒内发送序号进行点歌"))
 
         for index, song in enumerate(songs):
-            box = GeneralBox()
-            box.add(text="序号", description=str(index + 1))
-            box.add(text="歌曲名称", description=song.name)
-            box.add(
-                text="歌手",
-                description=", ".join([artist.name for artist in song.artists]),
+            column.add(
+                GeneralBox(
+                    text=song.name,
+                    description="歌手：{', '.join([artist.name for artist in song.artists])}"
+                    f"专辑：{song.album.name}",
+                    name=f"#{index + 1}",
+                )
             )
-            box.add(text="专辑", description=song.album.name)
-            column.add(box)
 
         mock = OneUIMock(column)
         return mock.render()

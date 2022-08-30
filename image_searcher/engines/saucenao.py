@@ -1,5 +1,6 @@
 import asyncio
 from io import BytesIO
+from pathlib import Path
 from typing import Optional, BinaryIO
 
 from PIL import Image as PillowImage
@@ -20,6 +21,8 @@ from module.image_searcher.utils import get_thumb, error_catcher
 
 custom_cfg = ["api_key"]
 channel = Channel.current()
+
+ICON = PillowImage.open(Path(__file__).parent.parent / "icon.png")
 
 
 @error_catcher
@@ -48,7 +51,10 @@ async def saucenao_search(
 
             def compose() -> bytes:
                 return OneUIMock(
-                    Column(Banner("SauceNAO 搜图"), GeneralBox("服务器未返回内容", "无法搜索到该图片"))
+                    Column(
+                        Banner("SauceNAO 搜图", icon=ICON),
+                        GeneralBox("服务器未返回内容", "无法搜索到该图片"),
+                    )
                 ).render_bytes()
 
             return MessageChain(Image(data_bytes=await asyncio.to_thread(compose)))
@@ -58,7 +64,7 @@ async def saucenao_search(
         def compose() -> bytes:
             return OneUIMock(
                 Column(
-                    Banner("SauceNAO 搜图"),
+                    Banner("SauceNAO 搜图", icon=ICON),
                     PillowImage.open(BytesIO(thumb)),
                     GeneralBox("标题", resp.title)
                     .add(

@@ -1,5 +1,6 @@
 import asyncio
 from io import BytesIO
+from pathlib import Path
 from typing import Optional, BinaryIO
 
 from PIL import Image as PillowImage
@@ -11,6 +12,8 @@ from library.image.oneui_mock.elements import OneUIMock, Column, Banner, General
 from module.image_searcher.utils import get_thumb, error_catcher
 
 custom_cfg = []
+
+ICON = PillowImage.open(Path(__file__).parent.parent / "icon.png")
 
 
 @error_catcher
@@ -38,7 +41,7 @@ async def ehentai_search(
             def compose() -> bytes:
                 return OneUIMock(
                     Column(
-                        Banner(f"E{'x' if ex else '-'}Hentai 搜图"),
+                        Banner(f"E{'x' if ex else '-'}Hentai 搜图", icon=ICON),
                         GeneralBox("服务器未返回内容", "无法搜索到该图片"),
                     )
                 ).render_bytes()
@@ -51,7 +54,7 @@ async def ehentai_search(
         def compose() -> bytes:
             return OneUIMock(
                 Column(
-                    Banner(f"E{'x' if ex else '-'}Hentai 搜图"),
+                    Banner(f"E{'x' if ex else '-'}Hentai 搜图", icon=ICON),
                     PillowImage.open(BytesIO(thumb)),
                     GeneralBox("标题", resp.title)
                     .add("类别", resp.type)

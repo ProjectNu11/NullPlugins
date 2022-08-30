@@ -2,7 +2,9 @@ import asyncio
 import contextlib
 import copy
 from datetime import datetime
+from pathlib import Path
 
+from PIL import Image as PillowImage
 from graia.ariadne import Ariadne
 from graia.ariadne.event.message import GroupMessage, FriendMessage, MessageEvent
 from graia.ariadne.exception import UnknownTarget, RemoteException, AccountMuted
@@ -35,6 +37,8 @@ channel = Channel.current()
 
 MAX_COUNT_PER_FIELD = 10
 RSSHUB_ENTRYPOINT = "/twitter/user/{target}"
+ICON = PillowImage.open(Path(__file__).parent / "icon.png")
+
 
 if not (__cfg := config.get_module_config(channel.module)):
     config.update_module_config(
@@ -135,7 +139,7 @@ async def twitter_rss_on_msg(
         else:
             assert (
                 len(
-                    feeds := get_feed_from_id(
+                    get_feed_from_id(
                         group=event.sender.group.id
                         if isinstance(event, GroupMessage)
                         else None,
@@ -176,7 +180,7 @@ async def twitter_rss_on_msg(
 
             return OneUIMock(
                 Column(
-                    Banner("Twitter 订阅"),
+                    Banner("Twitter 订阅", icon=ICON),
                     GeneralBox(
                         f"已{'取消' if unsubscribe.matched else '完成'}订阅",
                         f"已{'取消' if unsubscribe.matched else ''}订阅用户 {target} 的推文",
@@ -199,11 +203,12 @@ async def twitter_rss_on_msg(
         def compose_error() -> bytes:
             return OneUIMock(
                 Column(
-                    Banner("Twitter 订阅"),
+                    Banner("Twitter 订阅", icon=ICON),
                     GeneralBox("运行时出现异常", err_text),
                     HintBox(
                         "可以尝试以下解决方案",
-                        "检查 RssHub 链接是由有效" "检查服务器 IP 是否被封禁",
+                        "检查 RssHub 链接是由有效",
+                        "检查服务器 IP 是否被封禁",
                         "检查网络连接是否正常",
                         "检查对应用户是否存在",
                         "检查对应用户是否开启推文保护",
@@ -245,15 +250,17 @@ async def twitter_rss_get_list(app: Ariadne, event: MessageEvent):
         feeds = []
 
     def compose() -> bytes:
-        return OneUIMock(
-            Column(
-                Banner("Twitter 订阅"),
+        column = Column(Banner("Twitter 订阅", icon=ICON))
+        if feeds:
+            column.add(
                 GeneralBox(
                     f"本群已订阅 {len(feeds)} 名用户",
                     "\n".join([feed.title.split(":")[-1] for feed in feeds]),
-                ),
+                )
             )
-        ).render_bytes()
+        else:
+            column.add(GeneralBox("本群暂未订阅用户"))
+        return OneUIMock(column).render_bytes()
 
     return await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,

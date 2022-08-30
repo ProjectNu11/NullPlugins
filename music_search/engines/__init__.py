@@ -25,7 +25,6 @@ async def run_search(
     except AssertionError as err:
         err_text = err.args[0]
     except Exception as err:
-        raise
         err_text = str(err)
     loop = asyncio.get_event_loop()
     return await loop.run_in_executor(None, compose_error, engine, err_text)

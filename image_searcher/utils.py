@@ -1,7 +1,9 @@
 import asyncio
 import functools
+from pathlib import Path
 
 import aiohttp
+from PIL import Image as PillowImage
 from graia.ariadne.message.chain import MessageChain
 from graia.ariadne.message.element import Image
 
@@ -12,6 +14,8 @@ from library.image.oneui_mock.elements import (
     GeneralBox,
     HintBox,
 )
+
+ICON = PillowImage.open(Path(__file__).parent / "icon.png")
 
 
 async def get_thumb(url: str, proxy: str) -> bytes:
@@ -30,7 +34,7 @@ def error_catcher(func):
             def compose_error() -> bytes:
                 return OneUIMock(
                     Column(
-                        Banner(func.__name__.replace("_", " ").title()),
+                        Banner(func.__name__.replace("_", " ").title(), icon=ICON),
                         GeneralBox("运行搜索时出现异常", f"{e}"),
                         HintBox(
                             "可以尝试以下解决方案",
