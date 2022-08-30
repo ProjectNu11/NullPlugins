@@ -1,4 +1,5 @@
 import asyncio
+from pathlib import Path
 
 from PIL import Image
 from graia.ariadne.message.element import MusicShare
@@ -34,7 +35,10 @@ def compose_error(
     engine: BaseSearch, err_text: str
 ) -> tuple[Image.Image, list[MusicShare]]:
     column = Column()
-    banner = Banner(f"{engine.engine_name} 歌曲搜索")
+    banner = Banner(
+        f"{engine.engine_name} 歌曲搜索",
+        icon=Image.open(Path(__file__).parent.parent / "icon.png"),
+    )
     column.add(banner)
     box = GeneralBox(text="运行搜索时出现错误", description=err_text)
     column.add(box)

@@ -98,7 +98,7 @@ class NetEaseSearch(BaseSearch):
             column.add(
                 GeneralBox(
                     text=song.name,
-                    description="歌手：{', '.join([artist.name for artist in song.artists])}"
+                    description=f"歌手：{', '.join([artist.name for artist in song.artists])}\n"
                     f"专辑：{song.album.name}",
                     name=f"#{index + 1}",
                 )
