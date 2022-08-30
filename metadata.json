@@ -398,7 +398,7 @@
     {
         "name": "以图搜图",
         "pack": "module.image_searcher",
-        "version": "1.0.5",
+        "version": "1.0.7",
         "author": [
             "nullqwertyuiop"
         ],
@@ -448,7 +448,7 @@
     {
         "name": "点歌",
         "pack": "module.music_search",
-        "version": "1.0.3",
+        "version": "1.0.4",
         "author": [
             "nullqwertyuiop"
         ],
@@ -692,7 +692,7 @@
     {
         "name": "推特订阅",
         "pack": "module.twitter_rss",
-        "version": "0.1.2",
+        "version": "0.1.3",
         "author": [
             "nullqwertyuiop"
         ],
