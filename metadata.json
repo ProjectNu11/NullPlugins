@@ -739,5 +739,23 @@
         "hidden": false,
         "override_default": null,
         "override_switch": null
+    },
+    {
+        "name": "Wordle",
+        "pack": "module.wordle",
+        "version": "1.0",
+        "author": [
+            "SAGIRI-kawaii",
+            "I_love_study",
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "entertainment",
+        "description": "Wordle 猜单词游戏",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
     }
 ]
