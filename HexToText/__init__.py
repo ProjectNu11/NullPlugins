@@ -25,6 +25,7 @@ import binascii
 
 channel = Channel.current()
 
+
 @channel.use(
     ListenerSchema(
         [GroupMessage, FriendMessage],
@@ -32,19 +33,21 @@ channel = Channel.current()
             Twilight(
                 [
                     FullMatch("转"),
-                    UnionMatch("文本", "16").space(SpacePolicy.FORCE)@"type",
-                    WildcardMatch().flags(re.S) @"data",
+                    UnionMatch("文本", "16").space(SpacePolicy.FORCE) @ "type",
+                    WildcardMatch().flags(re.S) @ "data",
                 ]
             )
         ],
         decorators=[Switch.check(channel.module), FunctionCall.record(channel.module)],
     )
 )
-async def Hex_text(app: Ariadne, event: MessageEvent,type:RegexResult,data: RegexResult):
+async def Hex_text(
+    app: Ariadne, event: MessageEvent, type: RegexResult, data: RegexResult
+):
     if type.result.display == "文本":
-        text=binascii.unhexlify(data.result.display).decode('gbk')
+        text = binascii.unhexlify(data.result.display).decode("gbk")
     else:
-        text=binascii.b2a_hex(data.result.display.encode('gbk')).decode()
+        text = binascii.b2a_hex(data.result.display.encode("gbk")).decode()
     await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
         MessageChain(f"{text}"),
