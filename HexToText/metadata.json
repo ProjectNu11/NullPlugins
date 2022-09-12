@@ -1,0 +1,16 @@
+{
+    "name": "Hex_text",
+    "pack": "module.HexToText",
+    "version": "1.0.0",
+    "author": [
+        "a57495681800"
+    ],
+    "pypi": false,
+    "category": "entertainment",
+    "description": "十六进制转文本，或文本转十六进制",
+    "dependency": null,
+    "loaded": true,
+    "hidden": false,
+    "override_default": null,
+    "override_switch": null
+}
