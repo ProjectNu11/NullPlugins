@@ -58,7 +58,7 @@ class EntityURLMedia(BaseModel):
     url: str
     expanded_url: str
     display_url: str
-    media_key: str
+    media_key: str = ""
 
 
 class EntityHashtag(BaseModel):
@@ -82,12 +82,12 @@ class PublicMetrics(BaseModel):
 
 class UnparsedTweet(BaseModel):
     author_id: int
-    attachments: Attachments
+    attachments: Attachments = Attachments()
     text: str
-    entities: Entities
+    entities: Entities = Entities()
     id: int
     created_at: datetime
-    public_metrics: PublicMetrics
+    public_metrics: PublicMetrics = PublicMetrics()
     possibly_sensitive: bool
 
 
@@ -96,8 +96,8 @@ class ParsedTweet(UnparsedTweet):
     user: User
     has_video: bool = False
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.has_video = bool(
             list(filter(lambda x: isinstance(x, (Video, AnimatedGif)), self.media))
         )
@@ -149,7 +149,7 @@ class ParsedTweet(UnparsedTweet):
             )
 
             if self.possibly_sensitive:
-                column.add(HintBox("可能包含敏感内容", "本推文可能包含一些不适合在工作场合查看的内容"))
+                column.add(HintBox("可能包含敏感内容", "本推文可能包含不适合在工作场合查看的内容"))
 
             column.add(*images)
 
@@ -205,5 +205,4 @@ class ParsedTweet(UnparsedTweet):
             return OneUIMock(column).render_bytes()
 
         logger.info(f"渲染推文 {self.id} 中...")
-        loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(None, __compose)
+        return await asyncio.to_thread(__compose)

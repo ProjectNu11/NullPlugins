@@ -1,15 +1,28 @@
+import asyncio
+from io import BytesIO
+from pathlib import Path
 from typing import Optional, BinaryIO
 
+from PIL import Image as PillowImage
 from PicImageSearch import Network, SauceNAO
 from graia.ariadne.message.chain import MessageChain
-from graia.ariadne.message.element import Image, Plain
+from graia.ariadne.message.element import Image
 from graia.saya import Channel
 
 from library import config
+from library.image.oneui_mock.elements import (
+    OneUIMock,
+    Column,
+    GeneralBox,
+    Banner,
+    ProgressBar,
+)
 from module.image_searcher.utils import get_thumb, error_catcher
 
 custom_cfg = ["api_key"]
 channel = Channel.current()
+
+ICON = PillowImage.open(Path(__file__).parent.parent / "icon.png")
 
 
 @error_catcher
@@ -27,7 +40,7 @@ async def saucenao_search(
         if not (
             saucenao_cfg := config.get_module_config(channel.module, "saucenao")
         ) or not (api_key := saucenao_cfg.get("api_key")):
-            return MessageChain("未配置 SauceNAO API Key")
+            raise ValueError("未配置 SauceNAO API Key")
     async with Network(proxies=proxies) as client:
         saucenao = SauceNAO(client=client, api_key=api_key)
         if url:
@@ -35,19 +48,36 @@ async def saucenao_search(
         elif file:
             resp = await saucenao.search(file=file)
         if not resp.raw:
-            return MessageChain("SauceNAO 无搜索结果")
+
+            def compose() -> bytes:
+                return OneUIMock(
+                    Column(
+                        Banner("SauceNAO 搜图", icon=ICON),
+                        GeneralBox("服务器未返回内容", "无法搜索到该图片"),
+                    )
+                ).render_bytes()
+
+            return MessageChain(Image(data_bytes=await asyncio.to_thread(compose)))
         resp = resp.raw[0]
-        return MessageChain(
-            [
-                Plain("SauceNAO 搜索到以下结果：\n"),
-                Image(data_bytes=await get_thumb(resp.thumbnail, proxies)),
-                Plain(f"\n标题：{resp.title}\n"),
-                Plain(f"相似度：{resp.similarity}%\n"),
-                Plain(f"作者：{resp.author}\n"),
-                Plain(f"Pixiv 图像 id：{resp.pixiv_id}\n") if resp.pixiv_id else Plain(""),
-                Plain(f"Pixiv 画师 id：{resp.member_id}\n")
-                if resp.member_id
-                else Plain(""),
-                Plain(f"链接：{resp.url}"),
-            ]
-        )
+        thumb = await get_thumb(resp.thumbnail, proxies)
+
+        def compose() -> bytes:
+            return OneUIMock(
+                Column(
+                    Banner("SauceNAO 搜图", icon=ICON),
+                    PillowImage.open(BytesIO(thumb)),
+                    GeneralBox("标题", resp.title)
+                    .add(
+                        element=ProgressBar(
+                            resp.similarity, "相似度", f"{resp.similarity}%"
+                        ),
+                        sub=False,
+                    )
+                    .add("作者", resp.author)
+                    .add("Pixiv 图像 id", str(resp.pixiv_id))
+                    .add("Pixiv 画师 id", str(resp.member_id))
+                    .add("链接", resp.url),
+                )
+            ).render_bytes()
+
+        return MessageChain(Image(data_bytes=await asyncio.to_thread(compose)))

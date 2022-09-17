@@ -17,6 +17,8 @@ class Response(BaseModel):
             media: list[Photo] = list(
                 filter(lambda x: x.media_key in media_keys, self.includes.media)
             )
+            if index >= len(self.includes.users):
+                index = 0
             user: User = self.includes.users[index]
             tweets.append(ParsedTweet(**tweet.dict(), media=media, user=user))
         return tweets

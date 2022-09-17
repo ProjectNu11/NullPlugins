@@ -1,0 +1,777 @@
+[
+    {
+        "name": "Hex_text",
+        "pack": "module.HexToText",
+        "version": "1.0.0",
+        "author": [
+            "a57495681800"
+        ],
+        "pypi": false,
+        "category": "entertainment",
+        "description": "十六进制转文本，或文本转十六进制",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "缩写预测",
+        "pack": "module.abbreviated_prediction",
+        "version": "1.0.0",
+        "author": [
+            "SAGIRI-kawaii",
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "utility",
+        "description": "",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "Apex 数据查询",
+        "pack": "module.apex_stat",
+        "version": "1.0.0",
+        "author": [
+            "SAGIRI-kawaii",
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "utility",
+        "description": "",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "头像表情包",
+        "pack": "module.avatar_fun",
+        "version": "0.3.2",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": true,
+        "category": "entertainment",
+        "description": "根据给定内容生成相应表情包",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "B 站链接解析",
+        "pack": "module.bilibili_link_resolve",
+        "version": "1.3",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "utility",
+        "description": "发送 B 站链接自动解析视频内容",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "图片构建器",
+        "pack": "module.build_image",
+        "version": "1.0.1",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": true,
+        "category": "utility",
+        "description": "依赖包，用于构建图片",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "聊天",
+        "pack": "module.chat",
+        "version": "0.1.1",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "utility",
+        "description": "基于多引擎的聊天模块",
+        "dependency": [
+            "module.translator"
+        ],
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "聊天记录储存",
+        "pack": "module.chat_recorder",
+        "version": "1.1.0",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": true,
+        "category": "utility",
+        "description": "依赖包，用于储存机器人收到及发送的消息。",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "七筒",
+        "pack": "module.chitung",
+        "version": "0.1.5",
+        "author": [
+            "角川烈",
+            "白门守望者",
+            "nullqwertyuiop",
+            "IshikawaKaito"
+        ],
+        "pypi": true,
+        "category": "utility",
+        "description": "七筒 Python",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "内容审核",
+        "pack": "module.content_moderation",
+        "version": "0.1.2b",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": true,
+        "category": "utility",
+        "description": "基于腾讯云的内容审核接口",
+        "dependency": null,
+        "loaded": false,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "骰子",
+        "pack": "module.dice",
+        "version": "0.1.2",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "utility",
+        "description": "简易骰子",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "豆瓣电影",
+        "pack": "module.douban_movie",
+        "version": "1.2",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": true,
+        "category": "utility",
+        "description": "查询豆瓣电影简介",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "漂流瓶",
+        "pack": "module.drift_bottle",
+        "version": "1.0.4",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "entertainment",
+        "description": "",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "E-hentai 下载器",
+        "pack": "module.ehentai_downloader",
+        "version": "1.04",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": true,
+        "category": "utility",
+        "description": "下载 E-hentai 的图库",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "Emoji 合成",
+        "pack": "module.emoji_mix",
+        "version": "1.0.3",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "utility",
+        "description": "",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "错误处理",
+        "pack": "module.exception_handler",
+        "version": "1.1",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "utility",
+        "description": "抓取错误信息并输出",
+        "dependency": [
+            "module.build_image"
+        ],
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": true
+    },
+    {
+        "name": "百度看病",
+        "pack": "module.fake_diagnose",
+        "version": "0.13",
+        "author": [
+            "nullqwertyuiop",
+            "Little-LinNian"
+        ],
+        "pypi": false,
+        "category": "entertainment",
+        "description": "您好，您可能得了癌症。",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "莱卡生成",
+        "pack": "module.fake_leica",
+        "version": "1.3",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "entertainment",
+        "description": "最新最靓的莱卡水印生成器",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "疯狂星期四",
+        "pack": "module.fucking_crazy_thursday",
+        "version": "1.0.0",
+        "author": [
+            "SuChen"
+        ],
+        "pypi": false,
+        "category": "entertainment",
+        "description": "Fucking Crazy Thursday",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "Furry 同城群搜索",
+        "pack": "module.furry_group_search",
+        "version": "1.02",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "utility",
+        "description": "同城群搜索，移植自洇岚",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "Furry 图片搜索",
+        "pack": "module.furry_pic_search",
+        "version": "1.0.2",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "utility",
+        "description": "搜索来自网络的 Furry 图片",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "帮助菜单",
+        "pack": "module.help_menu",
+        "version": "0.2",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "utility",
+        "description": "生成帮助菜单（老式）",
+        "dependency": [
+            "module.build_image"
+        ],
+        "loaded": false,
+        "hidden": false,
+        "override_default": true,
+        "override_switch": true
+    },
+    {
+        "name": "好大的图",
+        "pack": "module.huge_image",
+        "version": "1.04",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "entertainment",
+        "description": "真的好大的图",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "发病",
+        "pack": "module.ill",
+        "version": "1.0.5",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "entertainment",
+        "description": "烧！",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "图片编码器",
+        "pack": "module.image_coder",
+        "version": "0.1",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": true,
+        "category": "utility",
+        "description": "",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "以图搜图",
+        "pack": "module.image_searcher",
+        "version": "1.0.7",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": true,
+        "category": "utility",
+        "description": "基于多引擎的图片搜索",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "模因",
+        "pack": "module.meme",
+        "version": "1.0.3",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "entertainment",
+        "description": "根据给定内容生成相应模因图",
+        "dependency": [
+            "module.build_image"
+        ],
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "摸鱼",
+        "pack": "module.mofish",
+        "version": "1.4",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": true,
+        "category": "utility",
+        "description": "来自摸鱼办的贴心小功能",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "点歌",
+        "pack": "module.music_search",
+        "version": "1.0.5",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "utility",
+        "description": "基于多引擎的点歌插件",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "轮盘禁言",
+        "pack": "module.mute_roulette",
+        "version": "1.0.3",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "entertainment",
+        "description": "俄罗斯转盘，但是禁言",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "群名片打乱",
+        "pack": "module.namecard_shuffle",
+        "version": "1.0.6",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "entertainment",
+        "description": "我是谁？",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "瞎翻译",
+        "pack": "module.nonsense_translator",
+        "version": "1.0.5",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "entertainment",
+        "description": "循环翻译文本一定次数",
+        "dependency": [
+            "module.translator"
+        ],
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "戳一戳",
+        "pack": "module.nudge",
+        "version": "1.0.1",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "entertainment",
+        "description": "对戳一戳作出回应",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "随机圣经",
+        "pack": "module.random_bible",
+        "version": "1.03",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": true,
+        "category": "entertainment",
+        "description": "各群独立的圣经",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "随机牛子长度",
+        "pack": "module.random_dick_length",
+        "version": "1.0.9",
+        "author": [
+            "SuChen"
+        ],
+        "pypi": false,
+        "category": "entertainment",
+        "description": "获取你的每日牛子，每天一根，不许多拿！",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "复读机",
+        "pack": "module.repeater",
+        "version": "1.12",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "entertainment",
+        "description": "已通过图灵测试的人类的本质",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "RSS",
+        "pack": "module.rss",
+        "version": "1.0.1",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "dependency",
+        "description": "依赖包，用于取得 RSS 订阅内容",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": true,
+        "override_switch": null
+    },
+    {
+        "name": "帮你搜搜",
+        "pack": "module.search_shortcut",
+        "version": "0.13",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "utility",
+        "description": "懒得开浏览器，直接在群里搜",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "终端执行器",
+        "pack": "module.shell_executor",
+        "version": "1.04",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "utility",
+        "description": "在当前服务器上执行 Shell 命令",
+        "dependency": [
+            "module.build_image"
+        ],
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "雪球新闻",
+        "pack": "module.snowball_news",
+        "version": "0.1.6",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "utility",
+        "description": "",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "统计",
+        "pack": "module.statistics",
+        "version": "1.05",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "utility",
+        "description": "使用情况统计",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "翻译",
+        "pack": "module.translator",
+        "version": "1.0.4",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": true,
+        "category": "utility",
+        "description": "基于多种翻译接口的翻译工具",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "推特预览",
+        "pack": "module.twitter_preview",
+        "version": "1.0.10",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": true,
+        "category": "utility",
+        "description": "发送推特链接自动生成预览图",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "推特订阅",
+        "pack": "module.twitter_rss",
+        "version": "0.1.3",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "utility",
+        "description": "订阅推特用户",
+        "dependency": [
+            "module.twitter_preview",
+            "module.rss"
+        ],
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "钱包",
+        "pack": "module.wallet",
+        "version": "1.0.4",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "utility",
+        "description": "依赖包，用于插件间货币转换及储存",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "实时天气",
+        "pack": "module.weather_report",
+        "version": "1.05",
+        "author": [
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "utility",
+        "description": "获取某地实时天气",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    },
+    {
+        "name": "Wordle",
+        "pack": "module.wordle",
+        "version": "1.0",
+        "author": [
+            "SAGIRI-kawaii",
+            "I_love_study",
+            "nullqwertyuiop"
+        ],
+        "pypi": false,
+        "category": "entertainment",
+        "description": "Wordle 猜单词游戏",
+        "dependency": null,
+        "loaded": true,
+        "hidden": false,
+        "override_default": null,
+        "override_switch": null
+    }
+]

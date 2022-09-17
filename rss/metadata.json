@@ -1,0 +1,16 @@
+{
+    "name": "RSS",
+    "pack": "module.rss",
+    "version": "1.0.1",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": false,
+    "category": "dependency",
+    "description": "依赖包，用于取得 RSS 订阅内容",
+    "dependency": null,
+    "loaded": true,
+    "hidden": false,
+    "override_default": true,
+    "override_switch": null
+}

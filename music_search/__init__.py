@@ -113,10 +113,11 @@ async def music_search(
                         if _msg.isdigit():
                             _msg = int(_msg)
                             return _msg if 0 < _msg <= _max_count else _max_count
+                        return None
 
             assert (
                 count := await FunctionWaiter(waiter, [GroupMessage]).wait(60)
-            ), "输入内容非数字，取消点歌"
+            ), "输入内容无效或等待超时，取消点歌"
         else:
 
             async def waiter(

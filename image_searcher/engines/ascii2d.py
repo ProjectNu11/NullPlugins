@@ -1,13 +1,20 @@
+import asyncio
+from io import BytesIO
+from pathlib import Path
 from typing import Optional, BinaryIO
 
+from PIL import Image as PillowImage
 from PicImageSearch import Network, Ascii2D
 from graia.ariadne.message.chain import MessageChain
-from graia.ariadne.message.element import Image, Plain
+from graia.ariadne.message.element import Image
 
+from library.image.oneui_mock.elements import OneUIMock, Column, Banner, GeneralBox
 from module.image_searcher.utils import get_thumb, error_catcher
 
 bovw = True
 custom_cfg = []
+
+ICON = PillowImage.open(Path(__file__).parent.parent / "icon.png")
 
 
 @error_catcher
@@ -27,15 +34,30 @@ async def ascii2d_search(
         elif file:
             resp = await ascii2d.search(file=file)
         if not resp.raw:
-            return MessageChain("Ascii2D 无搜索结果")
+
+            def compose() -> bytes:
+                return OneUIMock(
+                    Column(
+                        Banner("Ascii2D 搜图", icon=ICON),
+                        GeneralBox("服务器未返回内容", "无法搜索到该图片"),
+                    )
+                ).render_bytes()
+
+            return MessageChain(Image(data_bytes=await asyncio.to_thread(compose)))
+
         resp = resp.raw[1]
-        return MessageChain(
-            [
-                Plain("Ascii2D 搜索到以下结果：\n"),
-                Image(data_bytes=await get_thumb(resp.thumbnail, proxies)),
-                Plain(f"\n标题：{resp.title}\n"),
-                Plain(f"作者：{resp.author}\n"),
-                Plain(f"图像详情：{resp.detail}\n"),
-                Plain(f"链接：{resp.url}"),
-            ]
-        )
+        thumb = await get_thumb(resp.thumbnail, proxies)
+
+        def compose() -> bytes:
+            return OneUIMock(
+                Column(
+                    Banner("Ascii2D 搜图", icon=ICON),
+                    PillowImage.open(BytesIO(thumb)),
+                    GeneralBox("标题", resp.title)
+                    .add("作者", resp.author)
+                    .add("图像详情", resp.detail)
+                    .add("链接", resp.url),
+                )
+            ).render_bytes()
+
+        return MessageChain(Image(data_bytes=await asyncio.to_thread(compose)))

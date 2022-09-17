@@ -16,6 +16,7 @@ from graia.ariadne.model import Group, Friend
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
+from library.help import Disclaimer
 from library.orm import orm
 from .pepper import pepper
 from .table import ChatRecord, SendRecord
@@ -81,3 +82,13 @@ async def sent_recorder(event: ActiveMessage):
             "persistent_string": msg,
         },
     )
+
+
+Disclaimer.register(
+    "聊天记录的储存与使用",
+    "在您未拒绝接受储存聊天内容的情况下，本项目会在所在服务器的数据库中保存和取用您的聊天内容，以便您能使用依赖于聊天内容的本项目功能。",
+    "您有权选择保存或拒绝保存聊天内容。您可以通过在群组内或私聊发送相关指令的方式拒绝保存聊天内容。但如果您选择拒"
+    "绝保存聊天内容，则您可能无法使用依赖于聊天内容的本项目功能。",
+    "您有权请求下载聊天内容归档或从本项目所在服务器的数据库中删除有关您的聊天内容，详细操作请咨询管理员。",
+    "通过本项目所保存聊天内容所取得的有关信息将适用于本政策。",
+)

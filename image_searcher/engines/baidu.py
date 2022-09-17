@@ -1,12 +1,19 @@
+import asyncio
+from io import BytesIO
+from pathlib import Path
 from typing import Optional, BinaryIO
 
+from PIL import Image as PillowImage
 from PicImageSearch import Network, BaiDu
 from graia.ariadne.message.chain import MessageChain
-from graia.ariadne.message.element import Image, Plain
+from graia.ariadne.message.element import Image
 
+from library.image.oneui_mock.elements import OneUIMock, Column, GeneralBox, Banner
 from module.image_searcher.utils import get_thumb, error_catcher
 
 custom_cfg = []
+
+ICON = PillowImage.open(Path(__file__).parent.parent / "icon.png")
 
 
 @error_catcher
@@ -22,14 +29,28 @@ async def baidu_search(
         elif file:
             resp = await baidu.search(file=file)
         if not resp.raw:
-            return MessageChain("百度无搜索结果")
+
+            def compose() -> bytes:
+                return OneUIMock(
+                    Column(
+                        Banner("百度 搜图", icon=ICON), GeneralBox("服务器未返回内容", "无法搜索到该图片")
+                    )
+                ).render_bytes()
+
+            return MessageChain(Image(data_bytes=await asyncio.to_thread(compose)))
+
         resp = resp.raw[2]
-        return MessageChain(
-            [
-                Plain("百度搜索到以下结果：\n"),
-                Image(data_bytes=await get_thumb(resp.image_src, "")),
-                Plain(f"\n标题：{resp.title}\n"),
-                Plain(f"摘要：{resp.abstract}\n"),
-                Plain(f"链接：{resp.url}"),
-            ]
-        )
+        thumb = await get_thumb(resp.image_src, "")
+
+        def compose() -> bytes:
+            return OneUIMock(
+                Column(
+                    Banner("百度 搜图", icon=ICON),
+                    PillowImage.open(BytesIO(thumb)),
+                    GeneralBox("标题", resp.title)
+                    .add("摘要", resp.abstract)
+                    .add("链接", resp.url),
+                )
+            ).render_bytes()
+
+        return MessageChain(Image(data_bytes=await asyncio.to_thread(compose)))

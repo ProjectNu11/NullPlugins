@@ -37,7 +37,6 @@ async def query(
                 data = await resp.json()
                 return Response(**data)
             except ValidationError:
-                raise
                 err_resp = ErrorResponse(**data)
                 if not exclude_error:
                     return err_resp
@@ -49,12 +48,9 @@ async def query(
                         ids=ids, banner_text=banner_text, exclude_error=False
                     )
     except AssertionError as err:
-        loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(None, compose_error, err.args[0], banner_text)
+        return await asyncio.to_thread(compose_error, err.args[0], banner_text)
     except Exception as err:
-        raise
-        loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(None, compose_error, str(err), banner_text)
+        return await asyncio.to_thread(compose_error, str(err), banner_text)
 
 
 def compose_error(err_text: str, banner_text: str) -> bytes:

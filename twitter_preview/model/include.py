@@ -39,5 +39,5 @@ class User(BaseModel):
 
 
 class Includes(BaseModel):
-    media: list[Photo | Video | AnimatedGif]
+    media: list[Photo | Video | AnimatedGif] = []
     users: list[User]

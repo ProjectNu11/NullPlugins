@@ -1,4 +1,5 @@
 import asyncio
+from pathlib import Path
 
 from PIL import Image
 from graia.ariadne.message.element import MusicShare
@@ -25,7 +26,6 @@ async def run_search(
     except AssertionError as err:
         err_text = err.args[0]
     except Exception as err:
-        raise
         err_text = str(err)
     loop = asyncio.get_event_loop()
     return await loop.run_in_executor(None, compose_error, engine, err_text)
@@ -35,7 +35,10 @@ def compose_error(
     engine: BaseSearch, err_text: str
 ) -> tuple[Image.Image, list[MusicShare]]:
     column = Column()
-    banner = Banner(f"{engine.engine_name} 歌曲搜索")
+    banner = Banner(
+        f"{engine.engine_name} 歌曲搜索",
+        icon=Image.open(Path(__file__).parent.parent / "icon.png"),
+    )
     column.add(banner)
     box = GeneralBox(text="运行搜索时出现错误", description=err_text)
     column.add(box)

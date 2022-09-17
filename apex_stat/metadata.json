@@ -1,7 +1,7 @@
 {
     "name": "Apex 数据查询",
     "pack": "module.apex_stat",
-    "version": "1.0",
+    "version": "1.0.0",
     "author": [
         "SAGIRI-kawaii",
         "nullqwertyuiop"
