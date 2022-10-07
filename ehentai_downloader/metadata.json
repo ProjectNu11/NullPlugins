@@ -6,11 +6,17 @@
         "nullqwertyuiop"
     ],
     "pypi": true,
-    "category": "utility",
+    "category": [
+        "utility"
+    ],
     "description": "下载 E-hentai 的图库",
     "dependency": null,
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {
+        "使用方法": "发送 \"{prefix}eh 需要下载的图库链接\" 即可",
+        "使用注意": "上传的文件可能不会显示在消息记录中，需手动进入群文件查看"
+    }
 }

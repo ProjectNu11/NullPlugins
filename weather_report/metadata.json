@@ -6,11 +6,16 @@
         "nullqwertyuiop"
     ],
     "pypi": false,
-    "category": "utility",
+    "category": [
+        "utility"
+    ],
     "description": "获取某地实时天气",
     "dependency": null,
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {
+        "使用方法": "发送 \"{prefix}[地区]天气\" 即可"
+    }
 }

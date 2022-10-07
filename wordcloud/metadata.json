@@ -1,0 +1,25 @@
+{
+    "name": "词云",
+    "pack": "module.wordcloud",
+    "version": "1.0.0",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": true,
+    "category": [
+        "utility"
+    ],
+    "description": "获得一段消息记录的词云",
+    "dependency": [
+        "module.chat_recorder"
+    ],
+    "loaded": true,
+    "hidden": false,
+    "override_default": null,
+    "override_switch": null,
+    "help": {
+        "使用方法": "发送 \"{prefix}[范围][跨度]词云\" 即可",
+        "可用范围": "\"我的\" 或 \"本群\"",
+        "可用跨度": "\"今日\" 或 \"月内\" 或 \"年内\""
+    }
+}

@@ -16,7 +16,7 @@ from graia.ariadne.message.parser.twilight import (
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
-from library import PrefixMatch
+from library import prefix_match
 from library.config import config
 from library.depend import Switch, FunctionCall, Blacklist
 from .engines import __all__, BaseSearch, run_search, __cfg__
@@ -53,7 +53,7 @@ else:
         inline_dispatchers=[
             Twilight(
                 [
-                    PrefixMatch,
+                    prefix_match(),
                     FullMatch("兽图"),
                     ArgumentMatch("-n", "--no-random", optional=True) @ "no_random",
                     ArgumentMatch("-e", "--engine", type=str, optional=True) @ "engine",
@@ -88,13 +88,9 @@ async def furry_pic_search(
         )
     tags = tags.result.display.split() if tags.matched else []
     get_random = not no_random.matched
-
-    image = await run_search(engine, *tags, get_random=get_random)
-    image = image.convert("RGB")
-
-    output = BytesIO()
-    image.save(output, format="jpeg")
     await ariadne.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
-        MessageChain(Image(data_bytes=output.getvalue())),
+        MessageChain(
+            Image(data_bytes=await run_search(engine, *tags, get_random=get_random))
+        ),
     )

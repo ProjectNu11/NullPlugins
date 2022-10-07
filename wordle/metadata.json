@@ -8,11 +8,17 @@
         "nullqwertyuiop"
     ],
     "pypi": false,
-    "category": "entertainment",
+    "category": [
+        "entertainment"
+    ],
     "description": "Wordle 猜单词游戏",
     "dependency": null,
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {
+        "使用方法": "发送 \"{prefix}wordle\" 即可",
+        "指定长度": "发送 \"{prefix}wordle --length [长度]\" 即可"
+    }
 }

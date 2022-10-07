@@ -17,7 +17,7 @@ from graia.ariadne.message.parser.twilight import (
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
-from library import PrefixMatch
+from library import prefix_match
 from library.depend import Switch, FunctionCall, Blacklist
 from library.depend.interval import Interval
 from module.translator.engines import BaseTrans, get_engine, get_languages
@@ -36,7 +36,7 @@ channel.description("")
         inline_dispatchers=[
             Twilight(
                 [
-                    PrefixMatch,
+                    prefix_match(),
                     FullMatch("瞎翻译"),
                     ArgumentMatch("-e", "--engine", type=str, optional=True) @ "engine",
                     ArgumentMatch("-t", "--times", type=int, optional=True) @ "times",

@@ -17,11 +17,11 @@ async def get_feed(
     feed: RSSFeed, update: bool = True, suppress: bool = False
 ) -> RSSFeedItems:
     items: list[RSSFeedItem] = []
-    with contextlib.suppress(Exception):
+    with contextlib.suppress(Exception if suppress else None):
         async with Ariadne.service.client_session.get(
             feed.url, proxy=config.proxy, timeout=10
         ) as response:
-            assert response.status == 200 or suppress, f"HTTP {response.status}"
+            assert response.status == 200, f"HTTP {response.status}"
             result = await response.text()
             feeds = feedparser.parse(result)
             items.extend(RSSFeedItem(**entry) for entry in feeds["entries"])

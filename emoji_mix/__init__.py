@@ -14,7 +14,7 @@ from graia.ariadne.message.parser.twilight import (
 from graia.saya import Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
-from library import config, PrefixMatch
+from library import config, prefix_match
 from library.depend import Switch, FunctionCall, Blacklist
 from library.image.oneui_mock.elements import (
     is_dark,
@@ -35,7 +35,7 @@ channel = Channel.current()
         inline_dispatchers=[
             Twilight(
                 [
-                    PrefixMatch,
+                    prefix_match(),
                     UnionMatch(*ALL_EMOJI) @ "emoji1",
                     FullMatch("+", optional=True),
                     UnionMatch(*ALL_EMOJI) @ "emoji2",

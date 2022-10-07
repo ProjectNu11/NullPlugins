@@ -1,5 +1,3 @@
-import asyncio
-
 import aiohttp
 from graia.ariadne.app import Ariadne
 from graia.ariadne.event.message import GroupMessage, FriendMessage, MessageEvent
@@ -10,7 +8,7 @@ from graia.ariadne.message.parser.twilight import WildcardMatch, RegexResult
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
-from library import PrefixMatch
+from library import prefix_match
 from library.depend import Switch, Blacklist, FunctionCall
 from library.image.oneui_mock.elements import (
     Banner,
@@ -35,7 +33,7 @@ channel.author("nullqwertyuiop")
         inline_dispatchers=[
             Twilight(
                 [
-                    PrefixMatch,
+                    prefix_match(),
                     FullMatch("apex"),
                     WildcardMatch() @ "player",
                 ]
@@ -53,27 +51,26 @@ async def apex_stat(app: Ariadne, event: MessageEvent, player: RegexResult):
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:
             data = await resp.json()
-    loop = asyncio.get_event_loop()
     if error := data.get("error"):
-
-        def _compose() -> bytes:
-            return OneUIMock(
-                Column(
-                    Banner("Apex 数据查询"),
-                    Header("运行查询时出现错误", str(error)),
-                    HintBox(
-                        "可以尝试以下解决方案",
-                        "检查用户名是否有效",
-                        "检查是否超出查询速率限制",
-                        "检查 API 是否可用",
-                        "检查网络链接是否正常",
-                    ),
-                )
-            ).render_bytes()
-
         return await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
-            MessageChain(Image(data_bytes=await loop.run_in_executor(None, _compose))),
+            MessageChain(
+                Image(
+                    data_bytes=await OneUIMock(
+                        Column(
+                            Banner("Apex 数据查询"),
+                            Header("运行查询时出现错误", str(error)),
+                            HintBox(
+                                "可以尝试以下解决方案",
+                                "检查用户名是否有效",
+                                "检查是否超出查询速率限制",
+                                "检查 API 是否可用",
+                                "检查网络链接是否正常",
+                            ),
+                        )
+                    ).async_render_bytes()
+                )
+            ),
         )
     user = data["user"]
     user_name = user.get("username", "null")
@@ -114,27 +111,24 @@ async def apex_stat(app: Ariadne, event: MessageEvent, player: RegexResult):
     arenas_name = arenas.get("name").strip()
     arenas_division = arenas.get("division")
 
-    def _compose() -> bytes:
-        column = Column(Banner("Apex 数据查询"), Header(user_name, f"{level} 级"))
+    column = Column(Banner("Apex 数据查询"), Header(user_name, f"{level} 级"))
 
-        box = GeneralBox()
-        box.add("当前状态", current_status)
-        box.add("封禁状态", bans_status)
-        column.add(box)
+    box = GeneralBox()
+    box.add("当前状态", current_status)
+    box.add("封禁状态", bans_status)
+    column.add(box)
 
-        box = GeneralBox()
-        box.add("大逃杀分数", str(br_score))
-        box.add("大逃杀段位", f"{br_name} {br_division}")
-        column.add(box)
+    box = GeneralBox()
+    box.add("大逃杀分数", str(br_score))
+    box.add("大逃杀段位", f"{br_name} {br_division}")
+    column.add(box)
 
-        box = GeneralBox()
-        box.add("竞技场分数", str(arenas_score))
-        box.add("竞技场段位", f"{arenas_name} {arenas_division}")
-        column.add(box)
-
-        return OneUIMock(column).render_bytes()
+    box = GeneralBox()
+    box.add("竞技场分数", str(arenas_score))
+    box.add("竞技场段位", f"{arenas_name} {arenas_division}")
+    column.add(box)
 
     await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
-        MessageChain(Image(data_bytes=await loop.run_in_executor(None, _compose))),
+        MessageChain(Image(data_bytes=await OneUIMock(column).async_render_bytes())),
     )

@@ -2,12 +2,14 @@ import asyncio
 import contextlib
 import itertools
 from datetime import datetime, timedelta
+from pathlib import Path
 
+from PIL import Image as PillowImage
 from graia.ariadne.app import Ariadne
 from graia.ariadne.event.message import GroupMessage, FriendMessage, MessageEvent
-from graia.ariadne.exception import UnknownTarget
+from graia.ariadne.exception import UnknownTarget, RemoteException, AccountMuted
 from graia.ariadne.message.chain import MessageChain
-from graia.ariadne.message.element import Plain, Forward, ForwardNode
+from graia.ariadne.message.element import Image
 from graia.ariadne.message.parser.twilight import (
     Twilight,
     FullMatch,
@@ -20,8 +22,9 @@ from graia.scheduler import timers
 from graia.scheduler.saya import SchedulerSchema
 from sqlalchemy import select
 
-from library import config, PrefixMatch
+from library import config, prefix_match
 from library.depend import Permission, FunctionCall, Switch, Blacklist
+from library.image.oneui_mock.elements import GeneralBox, Column, Banner, OneUIMock
 from library.model import UserPerm
 from library.orm import orm
 from library.orm.table import FunctionCallRecord
@@ -34,8 +37,10 @@ channel.name("MsgStat")
 channel.author("nullqwertyuiop")
 channel.description("收发信统计")
 
+ICON = PillowImage.open(Path(__file__).parent / "icon.png")
 
-async def generate_msg_stat(func: str | int):
+
+async def generate_msg_stat(func: str | int) -> tuple[GeneralBox, GeneralBox]:
     if func == "收信":
         query = select(ChatRecord.time, ChatRecord.id).where(
             ChatRecord.time > datetime.now() - timedelta(days=3)
@@ -64,23 +69,21 @@ async def generate_msg_stat(func: str | int):
         stat_6 = sum(x for key, x in stat.items() if key <= 6)
         stat_3 = sum(x for key, x in stat.items() if key <= 3)
         stat_1 = sum(x for key, x in stat.items() if key <= 1)
-        return MessageChain(
-            [
-                Plain(f"[{func}统计]\n"),
-                Plain(f"72 小时 | {stat_72} 条\n"),
-                Plain(f"36 小时 | {stat_36} 条\n"),
-                Plain(f"24 小时 | {stat_24} 条\n"),
-                Plain(f"12 小时 | {stat_12} 条\n"),
-                Plain(f" 6 小时 | {stat_6} 条\n"),
-                Plain(f" 3 小时 | {stat_3} 条\n"),
-                Plain(f" 1 小时 | {stat_1} 条"),
-            ]
+        return (
+            GeneralBox(f"{func}统计"),
+            GeneralBox()
+            .add(text="72 小时", description=f"{stat_72} 条", highlight=True)
+            .add(text="36 小时", description=f"{stat_36} 条", highlight=True)
+            .add(text="24 小时", description=f"{stat_24} 条", highlight=True)
+            .add(text="12 小时", description=f"{stat_12} 条", highlight=True)
+            .add(text="6 小时", description=f"{stat_6} 条", highlight=True)
+            .add(text="3 小时", description=f"{stat_3} 条", highlight=True)
+            .add(text="1 小时", description=f"{stat_1} 条", highlight=True),
         )
-    return MessageChain(f"[{func}统计]\n暂无数据")
+    return GeneralBox(f"{func}统计"), GeneralBox().add("暂无数据")
 
 
-async def generate_call_stat(sender: int = None):
-    stat = {}
+async def generate_call_stat(sender: int = None) -> tuple[GeneralBox, GeneralBox]:
     if sender:
         query = select(FunctionCallRecord.function).where(
             FunctionCallRecord.time > datetime.now() - timedelta(days=30),
@@ -90,44 +93,36 @@ async def generate_call_stat(sender: int = None):
         query = select(FunctionCallRecord.function).where(
             FunctionCallRecord.time > datetime.now() - timedelta(days=1)
         )
+    header = GeneralBox("模块调用统计")
     if data := await orm.all(query):
+        stat = {}
         for func in data:
             stat[func[0]] = stat.get(func[0], 0) + 1
-        messages = ["[模块调用统计]"]
+        box = GeneralBox()
         for func, value in sorted(stat.items(), key=lambda x: x[1], reverse=True):
-            messages.append(
-                f"{module.name} | {value} 次"
-                if (module := modules.get(func))
-                else f"{func} | {stat[func]} 次"
+            box.add(
+                module.name if (module := modules.get(func)) else func,
+                description=f"{value} 次",
+                highlight=True,
             )
-        return MessageChain(["\n".join(messages)])
-    return MessageChain(f"[模块调用统计]\n暂无数据")
+        return header, box
+    return header, GeneralBox().add("暂无数据")
 
 
-async def generate_all(supplicant: int = None):
+async def generate_all(supplicant: int = None) -> OneUIMock:
     if supplicant:
-        messages = [
-            await generate_msg_stat(supplicant),
-            await generate_call_stat(supplicant),
+        boxes = [
+            *(await generate_msg_stat(supplicant)),
+            *(await generate_call_stat(supplicant)),
         ]
     else:
-        messages = [
-            await generate_msg_stat("收信"),
-            await generate_msg_stat("发信"),
-            await generate_call_stat(),
+        boxes = [
+            *(await generate_msg_stat("收信")),
+            *(await generate_msg_stat("发信")),
+            *(await generate_call_stat()),
         ]
-    return MessageChain(
-        [
-            Forward(
-                ForwardNode(
-                    target=config.account,
-                    name=f"{config.name}#{config.num}",
-                    time=datetime.now(),
-                    message=message,
-                )
-                for message in messages
-            )
-        ]
+    return OneUIMock(
+        Column(Banner("统计", icon=ICON), *(boxes[-2:])), Column(*boxes[:-2])
     )
 
 
@@ -137,7 +132,7 @@ async def generate_all(supplicant: int = None):
         inline_dispatchers=[
             Twilight(
                 [
-                    PrefixMatch,
+                    prefix_match(),
                     UnionMatch("收信", "发信", "模块", "调用", "模块调用", optional=True) @ "which",
                     FullMatch("统计"),
                 ]
@@ -157,26 +152,31 @@ async def stats_handler(app: Ariadne, event: MessageEvent, which: MatchResult):
     if which.matched:
         func = which.result.display
         if func in ("收信", "发信"):
-            msg = await generate_msg_stat(func)
+            box = await generate_msg_stat(func)
         else:
-            msg = await generate_call_stat()
+            box = await generate_call_stat()
+        mock = OneUIMock(Column(Banner("统计", icon=ICON), *box))
     else:
-        msg = await generate_all()
+        mock = await generate_all()
     await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
-        msg,
+        MessageChain(Image(data_bytes=await mock.async_render_bytes())),
     )
 
 
 @channel.use(SchedulerSchema(timer=timers.crontabify("0 0 * * *")))
 async def send_daily(app: Ariadne):
-    message = await generate_all()
-    with contextlib.suppress(UnknownTarget):
+    image_bytes = await (await generate_all()).async_render_bytes()
+    with contextlib.suppress(UnknownTarget, RemoteException, AccountMuted):
         for owner in config.owners:
-            await app.send_friend_message(owner, message)
+            await app.send_friend_message(
+                owner, MessageChain(Image(data_bytes=image_bytes))
+            )
             await asyncio.sleep(1)
         for dev_group in config.dev_group:
-            await app.send_group_message(dev_group, message)
+            await app.send_group_message(
+                dev_group, MessageChain(Image(data_bytes=image_bytes))
+            )
             await asyncio.sleep(1)
 
 
@@ -186,7 +186,7 @@ async def send_daily(app: Ariadne):
         inline_dispatchers=[
             Twilight(
                 [
-                    PrefixMatch,
+                    prefix_match(),
                     FullMatch("我的"),
                     UnionMatch("消息", "模块", "调用", "模块调用", optional=True) @ "which",
                     FullMatch("统计"),
@@ -205,12 +205,13 @@ async def stats_no_permission_handler(
     if which.matched:
         func = which.result.display
         if func == "消息":
-            msg = await generate_msg_stat(event.sender.id)
+            box = await generate_msg_stat(event.sender.id)
         else:
-            msg = await generate_call_stat(event.sender.id)
+            box = await generate_call_stat(event.sender.id)
+        mock = OneUIMock(Column(Banner("统计", icon=ICON), *box))
     else:
-        msg = await generate_all(event.sender.id)
+        mock = await generate_all(event.sender.id)
     await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
-        msg,
+        MessageChain(Image(data_bytes=await mock.async_render_bytes())),
     )

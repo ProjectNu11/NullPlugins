@@ -6,11 +6,14 @@
         "nullqwertyuiop"
     ],
     "pypi": true,
-    "category": "utility",
+    "category": [
+        "utility"
+    ],
     "description": "查询豆瓣电影简介",
     "dependency": null,
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {}
 }

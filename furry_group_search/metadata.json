@@ -6,11 +6,16 @@
         "nullqwertyuiop"
     ],
     "pypi": false,
-    "category": "utility",
+    "category": [
+        "utility"
+    ],
     "description": "同城群搜索，移植自洇岚",
     "dependency": null,
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {
+        "使用方法": "发送 \"{prefix}同城群 需要查询的城市\" 即可"
+    }
 }

@@ -6,11 +6,17 @@
         "nullqwertyuiop"
     ],
     "pypi": true,
-    "category": "utility",
+    "category": [
+        "utility"
+    ],
     "description": "基于多种翻译接口的翻译工具",
     "dependency": null,
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {
+        "使用方法": "发送 \"{prefix}翻译 内容\" 即可",
+        "指定引擎": "发送 \"{prefix}翻译 --engine [引擎] 内容\" 即可"
+    }
 }

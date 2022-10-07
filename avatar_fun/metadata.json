@@ -6,11 +6,15 @@
         "nullqwertyuiop"
     ],
     "pypi": true,
-    "category": "entertainment",
+    "category": [
+        "entertainment",
+        "图像处理"
+    ],
     "description": "根据给定内容生成相应表情包",
     "dependency": null,
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {}
 }

@@ -19,19 +19,19 @@ from graia.saya.builtins.broadcast import ListenerSchema
 from graia.scheduler import timers
 from graia.scheduler.saya import SchedulerSchema
 
-from library import PrefixMatch
+from library import prefix_match
 from library.depend import Switch, FunctionCall, Blacklist
 from .util import (
     run_once,
     INTERVAL,
-    async_compose,
+    compose,
     bulk_fetch_from_db,
     registered,
-    async_compose_error,
+    compose_error,
     register,
     fetch_from_db,
     unregister,
-    async_compose_general,
+    compose_general,
     QUERY_INTERVAL,
 )
 
@@ -47,7 +47,7 @@ async def snowball_fetch_news():
 async def snowball_send_news(app: Ariadne):
     with contextlib.suppress(UnknownTarget, AssertionError):
         news = await bulk_fetch_from_db(set_sent=True)
-        img = await async_compose(*news)
+        img = await compose(*news)
         data = registered.get()
         for group in data["group"]:
             await app.send_group_message(group, MessageChain(Image(data_bytes=img)))
@@ -63,7 +63,7 @@ async def snowball_send_news(app: Ariadne):
         inline_dispatchers=[
             Twilight(
                 [
-                    PrefixMatch,
+                    prefix_match(),
                     FullMatch("实时新闻"),
                     UnionMatch("开启", "关闭", "查看", optional=True) @ "func",
                     WildcardMatch() @ "args",
@@ -108,7 +108,7 @@ async def snowball_news(
                 )
             assert _match <= 50, "最多只能查看最新的 50 条新闻"
             news = await bulk_fetch_from_db(count=_match, set_sent=False)
-            img = await async_compose(*news)
+            img = await compose(*news)
             return await app.send_message(
                 event.sender.group if isinstance(event, GroupMessage) else event.sender,
                 MessageChain(Image(data_bytes=img)),
@@ -125,14 +125,14 @@ async def snowball_news(
             unregister(**reg_args)
             title = "已取消订阅实时新闻"
             description = "将不再推送实时新闻"
-        img = await async_compose_general(title, description)
+        img = await compose_general(title, description)
         return await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
             MessageChain(Image(data_bytes=img)),
         )
     except AssertionError as err:
         err_text = err.args[0]
-        img = await async_compose_error(err_text)
+        img = await compose_error(err_text)
         await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
             MessageChain(Image(data_bytes=img)),

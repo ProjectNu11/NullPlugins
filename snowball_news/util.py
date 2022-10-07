@@ -140,7 +140,7 @@ async def bulk_fetch_from_db(
     return [NewsItem(**item) for item in result if item[0] > since_id]
 
 
-def compose(*news: NewsItem) -> bytes:
+async def compose(*news: NewsItem) -> bytes:
     assert news
 
     column = Column(Banner("雪球实时新闻"))
@@ -169,15 +169,10 @@ def compose(*news: NewsItem) -> bytes:
 
     mock = OneUIMock(column)
 
-    return mock.render_bytes()
+    return await mock.async_render_bytes()
 
 
-async def async_compose(*news: NewsItem) -> bytes:
-    loop = asyncio.get_event_loop()
-    return await loop.run_in_executor(None, compose, *news)
-
-
-def compose_general(text: str, description: str) -> bytes:
+async def compose_general(text: str, description: str) -> bytes:
     column = Column(Banner("雪球实时新闻"))
 
     box = GeneralBox(text=text, description=description)
@@ -187,12 +182,7 @@ def compose_general(text: str, description: str) -> bytes:
 
     column.add(box, cfg)
     mock = OneUIMock(column)
-    return mock.render_bytes()
-
-
-async def async_compose_general(text: str, description: str) -> bytes:
-    loop = asyncio.get_event_loop()
-    return await loop.run_in_executor(None, compose_general, text, description)
+    return await mock.async_render_bytes()
 
 
 DATA_PATH = Path(config.path.data, channel.module)
@@ -236,7 +226,7 @@ def unregister(friend: int = None, group: int = None):
         json.dump(data, f)
 
 
-def compose_error(err_text: str) -> bytes:
+async def compose_error(err_text: str) -> bytes:
     column = Column(Banner("雪球实时新闻"))
     box = GeneralBox(text="运行时出现错误", description=err_text)
     column.add(box)
@@ -250,9 +240,4 @@ def compose_error(err_text: str) -> bytes:
     )
     column.add(hint)
     mock = OneUIMock(column)
-    return mock.render_bytes()
-
-
-async def async_compose_error(err_text: str) -> bytes:
-    loop = asyncio.get_event_loop()
-    return await loop.run_in_executor(None, compose_error, err_text)
+    return await mock.async_render_bytes()

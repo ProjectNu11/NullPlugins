@@ -16,6 +16,7 @@ from library.image.oneui_mock.elements import (
     GeneralBox,
     Banner,
     ProgressBar,
+    QRCodeBox,
 )
 from module.image_searcher.utils import get_thumb, error_catcher
 
@@ -49,35 +50,33 @@ async def saucenao_search(
             resp = await saucenao.search(file=file)
         if not resp.raw:
 
-            def compose() -> bytes:
-                return OneUIMock(
-                    Column(
-                        Banner("SauceNAO 搜图", icon=ICON),
-                        GeneralBox("服务器未返回内容", "无法搜索到该图片"),
-                    )
-                ).render_bytes()
-
-            return MessageChain(Image(data_bytes=await asyncio.to_thread(compose)))
+            return MessageChain(
+                Image(
+                    data_bytes=await OneUIMock(
+                        Column(
+                            Banner("SauceNAO 搜图", icon=ICON),
+                            GeneralBox("服务器未返回内容", "无法搜索到该图片"),
+                        )
+                    ).async_render_bytes()
+                )
+            )
         resp = resp.raw[0]
         thumb = await get_thumb(resp.thumbnail, proxies)
 
-        def compose() -> bytes:
-            return OneUIMock(
-                Column(
-                    Banner("SauceNAO 搜图", icon=ICON),
-                    PillowImage.open(BytesIO(thumb)),
-                    GeneralBox("标题", resp.title)
-                    .add(
-                        element=ProgressBar(
-                            resp.similarity, "相似度", f"{resp.similarity}%"
-                        ),
-                        sub=False,
+        return MessageChain(
+            Image(
+                data_bytes=await OneUIMock(
+                    Column(
+                        Banner("SauceNAO 搜图", icon=ICON),
+                        PillowImage.open(BytesIO(thumb)),
+                        ProgressBar(resp.similarity, "相似度", f"{resp.similarity}%"),
+                        GeneralBox("标题", resp.title)
+                        .add("作者", resp.author)
+                        .add("Pixiv 图像 id", str(resp.pixiv_id))
+                        .add("Pixiv 画师 id", str(resp.member_id))
+                        .add("链接", resp.url),
+                        QRCodeBox(resp.url),
                     )
-                    .add("作者", resp.author)
-                    .add("Pixiv 图像 id", str(resp.pixiv_id))
-                    .add("Pixiv 画师 id", str(resp.member_id))
-                    .add("链接", resp.url),
-                )
-            ).render_bytes()
-
-        return MessageChain(Image(data_bytes=await asyncio.to_thread(compose)))
+                ).async_render_bytes()
+            )
+        )

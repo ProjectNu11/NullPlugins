@@ -16,6 +16,7 @@ from library.image.oneui_mock.elements import (
     HintBox,
     GeneralBox,
     OneUIMock,
+    QRCodeBox,
 )
 from .include import Photo, User, Video, AnimatedGif
 from ..var import STATUS_LINK
@@ -94,11 +95,13 @@ class UnparsedTweet(BaseModel):
 class ParsedTweet(UnparsedTweet):
     media: list[Photo | Video | AnimatedGif] = []
     user: User
-    has_video: bool = False
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.has_video = bool(
+
+    @property
+    def has_video(self) -> bool:
+        return bool(
             list(filter(lambda x: isinstance(x, (Video, AnimatedGif)), self.media))
         )
 
@@ -140,69 +143,57 @@ class ParsedTweet(UnparsedTweet):
         images: list[Image.Image] = [Image.open(BytesIO(image)) for image in images]
         avatar: Image.Image = Image.open(BytesIO(await self.user.get_avatar()))
 
-        def __compose() -> bytes:
-            column = Column(
-                Banner(banner_text),
-                Header(
-                    text=self.user.name, description=self.user.username, icon=avatar
-                ),
-            )
+        column = Column(
+            Banner(banner_text),
+            Header(text=self.user.name, description=self.user.username, icon=avatar),
+        )
 
-            if self.possibly_sensitive:
-                column.add(HintBox("可能包含敏感内容", "本推文可能包含不适合在工作场合查看的内容"))
+        if self.possibly_sensitive:
+            column.add(HintBox("可能包含敏感内容", "本推文可能包含不适合在工作场合查看的内容"))
 
-            column.add(*images)
+        column.add(*images)
+        column.add(GeneralBox(text="正文", description=self.text, highlight=True))
+        column.add(
+            QRCodeBox(STATUS_LINK.format(username=self.user.username, id=self.id))
+        )
 
-            box = GeneralBox(text="正文", description=self.text, highlight=True)
-            box.add(text="私人推特", description="推特是否对外不可见", switch=self.user.protected)
-            column.add(box)
-
-            if hashtags := self.entities.hashtags:
-                column.add(
-                    GeneralBox(
-                        text="标签",
-                        description=" ".join(
-                            [f"#{hashtag.tag}" for hashtag in hashtags]
-                        ),
-                    )
+        if hashtags := self.entities.hashtags:
+            column.add(
+                GeneralBox(
+                    text="标签",
+                    description=" ".join([f"#{hashtag.tag}" for hashtag in hashtags]),
                 )
-
-            if urls := self.entities.urls:
-                external_urls: list[EntityURLExternal] = []
-                for url in urls:
-                    if not isinstance(url, EntityURLExternal):
-                        continue
-                    external_urls.append(url)
-                if external_urls:
-                    for index, url in enumerate(external_urls):
-                        box = GeneralBox()
-                        box.add(text=f"外部链接 #{index + 1}", description=url.expanded_url)
-                        box.add(
-                            text="标题",
-                            description=url.title,
-                        )
-                        box.add(
-                            text="描述",
-                            description=url.description,
-                        )
-                        column.add(box)
-
-            box = GeneralBox(
-                text="转推", description=str(self.public_metrics.retweet_count)
             )
-            box.add(text="回复", description=str(self.public_metrics.reply_count))
-            box.add(text="点赞", description=str(self.public_metrics.like_count))
-            box.add(text="引用", description=str(self.public_metrics.quote_count))
-            column.add(box)
 
-            box = GeneralBox(
-                text="发布时间", description=self.created_at.strftime("%Y-%m-%d %H:%M:%S")
-            )
-            box.add(
-                text="制图时间", description=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            )
-            column.add(box)
-            return OneUIMock(column).render_bytes()
+        if urls := self.entities.urls:
+            if external_urls := [
+                url for url in urls if isinstance(url, EntityURLExternal)
+            ]:
+                for index, url in enumerate(external_urls):
+                    box = GeneralBox()
+                    box.add(text=f"外部链接 #{index + 1}", description=url.expanded_url)
+                    box.add(
+                        text="标题",
+                        description=url.title,
+                    )
+                    box.add(
+                        text="描述",
+                        description=url.description,
+                    )
+                    column.add(
+                        box, QRCodeBox(url.expanded_url, title=f"外部链接 #{index + 1}")
+                    )
 
+        box = GeneralBox(text="转推", description=str(self.public_metrics.retweet_count))
+        box.add(text="回复", description=str(self.public_metrics.reply_count))
+        box.add(text="点赞", description=str(self.public_metrics.like_count))
+        box.add(text="引用", description=str(self.public_metrics.quote_count))
+        column.add(box)
+
+        box = GeneralBox(
+            text="发布时间", description=self.created_at.strftime("%Y-%m-%d %H:%M:%S")
+        )
+        box.add(text="制图时间", description=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        column.add(box)
         logger.info(f"渲染推文 {self.id} 中...")
-        return await asyncio.to_thread(__compose)
+        return await OneUIMock(column).async_render_bytes()

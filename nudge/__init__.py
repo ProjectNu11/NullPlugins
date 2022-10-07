@@ -20,7 +20,7 @@ from graia.saya import Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 from loguru import logger
 
-from library import config, PrefixMatch
+from library import config, prefix_match
 from library.depend import Switch, Blacklist, FunctionCall, Interval
 from library.util.switch import switch
 
@@ -82,7 +82,7 @@ async def nudged(app: Ariadne, event: NudgeEvent):
         inline_dispatchers=[
             Twilight(
                 [
-                    PrefixMatch,
+                    prefix_match(),
                     FullMatch("戳"),
                     FullMatch("我", optional=True) @ "me",
                     ElementMatch(At, optional=True) @ "at",

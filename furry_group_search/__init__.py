@@ -19,7 +19,7 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 from pydantic import BaseModel, root_validator
 
-from library import config, PrefixMatch
+from library import config, prefix_match
 from library.depend import Switch, FunctionCall, Blacklist
 
 saya = Saya.current()
@@ -55,7 +55,7 @@ class CityGroup(BaseModel):
     ListenerSchema(
         listening_events=[GroupMessage, FriendMessage],
         inline_dispatchers=[
-            Twilight(PrefixMatch, FullMatch("同城群"), ParamMatch() @ "city")
+            Twilight(prefix_match(), FullMatch("同城群"), ParamMatch() @ "city")
         ],
         decorators=[
             Switch.check(channel.module),

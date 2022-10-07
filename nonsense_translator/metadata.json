@@ -6,7 +6,9 @@
         "nullqwertyuiop"
     ],
     "pypi": false,
-    "category": "entertainment",
+    "category": [
+        "entertainment"
+    ],
     "description": "循环翻译文本一定次数",
     "dependency": [
         "module.translator"
@@ -14,5 +16,10 @@
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {
+        "使用方法": "发送 \"{prefix}瞎翻译 内容\" 即可",
+        "指定次数": "发送 \"{prefix}瞎翻译 --times [次数] 内容\" 即可",
+        "指定引擎": "发送 \"{prefix}瞎翻译 --engine [引擎] 内容\" 即可"
+    }
 }

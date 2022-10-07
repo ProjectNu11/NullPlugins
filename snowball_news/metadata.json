@@ -6,11 +6,14 @@
         "nullqwertyuiop"
     ],
     "pypi": false,
-    "category": "utility",
+    "category": [
+        "utility"
+    ],
     "description": "",
     "dependency": null,
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {}
 }

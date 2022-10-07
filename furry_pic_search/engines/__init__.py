@@ -1,7 +1,3 @@
-import asyncio
-
-from PIL import Image
-
 from library.image.oneui_mock.elements import (
     Banner,
     Column,
@@ -22,18 +18,17 @@ __cfg__: dict[str, list[str]] = {"e621": E621_CFG_KEYS}
 
 async def run_search(
     engine: BaseSearch, *tags: str, get_random: bool, rating: str = None
-) -> Image.Image:
+) -> bytes:
     try:
         return await engine.get(*tags, get_random=get_random, rating=rating)
     except AssertionError as err:
         err_text = err.args[0]
     except Exception as err:
         err_text = str(err)
-    loop = asyncio.get_event_loop()
-    return await loop.run_in_executor(None, compose_error, engine, err_text)
+    return await compose_error(engine, err_text)
 
 
-def compose_error(engine: BaseSearch, err_text: str) -> Image.Image:
+async def compose_error(engine: BaseSearch, err_text: str) -> bytes:
     dark = is_dark()
     column = Column(dark=dark)
     banner = Banner(f"{engine.__name__} 图片搜索", dark=dark)
@@ -53,4 +48,4 @@ def compose_error(engine: BaseSearch, err_text: str) -> Image.Image:
     )
     column.add(hint)
     mock = OneUIMock(column, dark=dark)
-    return mock.render()
+    return await mock.async_render_bytes()

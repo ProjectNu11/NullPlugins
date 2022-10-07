@@ -19,7 +19,7 @@ from graia.ariadne.message.parser.twilight import (
 from graia.saya import Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
-from library import config, PrefixMatch
+from library import config, prefix_match
 from library.depend import Switch, Blacklist, FunctionCall
 from library.image.oneui_mock.elements import (
     OneUIMock,
@@ -106,7 +106,7 @@ async def twitter_rss_on_update(app: Ariadne, event: RSSUpdate):
         inline_dispatchers=[
             Twilight(
                 [
-                    PrefixMatch,
+                    prefix_match(),
                     FullMatch("取消", optional=True) @ "unsubscribe",
                     FullMatch("订阅推特"),
                     WildcardMatch() @ "target",
@@ -165,60 +165,66 @@ async def twitter_rss_on_msg(
                 friend=event.sender.id if isinstance(event, FriendMessage) else None,
             )
 
-        def compose() -> bytes:
-            if not (
-                _feeds := get_feed_from_id(
-                    group=event.sender.group.id
-                    if isinstance(event, GroupMessage)
-                    else None,
-                    friend=event.sender.id
-                    if isinstance(event, FriendMessage)
-                    else None,
-                )
-            ):
-                _feeds = []
-
-            return OneUIMock(
-                Column(
-                    Banner("Twitter 订阅", icon=ICON),
-                    GeneralBox(
-                        f"已{'取消' if unsubscribe.matched else '完成'}订阅",
-                        f"已{'取消' if unsubscribe.matched else ''}订阅用户 {target} 的推文",
-                    ).add("当前更新频率", f"{QUERY_INTERVAL_MINUTES} 分钟"),
-                    GeneralBox(
-                        f"该聊天区域已订阅 {len(_feeds)} 名用户",
-                        "\n".join([feed.title.split(":")[-1] for feed in _feeds]),
-                    ),
-                )
-            ).render_bytes()
+        if not (
+            _feeds := get_feed_from_id(
+                group=event.sender.group.id
+                if isinstance(event, GroupMessage)
+                else None,
+                friend=event.sender.id if isinstance(event, FriendMessage) else None,
+            )
+        ):
+            _feeds = []
 
         return await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
-            MessageChain([Image(data_bytes=await asyncio.to_thread(compose))]),
+            MessageChain(
+                [
+                    Image(
+                        data_bytes=await OneUIMock(
+                            Column(
+                                Banner("Twitter 订阅", icon=ICON),
+                                GeneralBox(
+                                    f"已{'取消' if unsubscribe.matched else '完成'}订阅",
+                                    f"已{'取消' if unsubscribe.matched else ''}订阅用户 {target} 的推文",
+                                ).add("当前更新频率", f"{QUERY_INTERVAL_MINUTES} 分钟"),
+                                GeneralBox(
+                                    f"该聊天区域已订阅 {len(_feeds)} 名用户",
+                                    "\n".join(
+                                        [feed.title.split(":")[-1] for feed in _feeds]
+                                    ),
+                                ),
+                            )
+                        ).async_render_bytes()
+                    )
+                ]
+            ),
         )
 
     except AssertionError as err:
         err_text = err.args[0]
 
-        def compose_error() -> bytes:
-            return OneUIMock(
-                Column(
-                    Banner("Twitter 订阅", icon=ICON),
-                    GeneralBox("运行时出现异常", err_text),
-                    HintBox(
-                        "可以尝试以下解决方案",
-                        "检查 RssHub 链接是由有效",
-                        "检查服务器 IP 是否被封禁",
-                        "检查网络连接是否正常",
-                        "检查对应用户是否存在",
-                        "检查对应用户是否开启推文保护",
-                    ),
-                )
-            ).render_bytes()
-
         return await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
-            MessageChain([Image(data_bytes=await asyncio.to_thread(compose_error))]),
+            MessageChain(
+                [
+                    Image(
+                        data_bytes=await OneUIMock(
+                            Column(
+                                Banner("Twitter 订阅", icon=ICON),
+                                GeneralBox("运行时出现异常", err_text),
+                                HintBox(
+                                    "可以尝试以下解决方案",
+                                    "检查 RssHub 链接是由有效",
+                                    "检查服务器 IP 是否被封禁",
+                                    "检查网络连接是否正常",
+                                    "检查对应用户是否存在",
+                                    "检查对应用户是否开启推文保护",
+                                ),
+                            )
+                        ).async_render_bytes()
+                    )
+                ]
+            ),
         )
 
 
@@ -228,7 +234,7 @@ async def twitter_rss_on_msg(
         inline_dispatchers=[
             Twilight(
                 [
-                    PrefixMatch,
+                    prefix_match(),
                     FullMatch("推特订阅列表"),
                 ]
             )
@@ -249,7 +255,7 @@ async def twitter_rss_get_list(app: Ariadne, event: MessageEvent):
     ):
         feeds = []
 
-    def compose() -> bytes:
+    async def compose() -> bytes:
         column = Column(Banner("Twitter 订阅", icon=ICON))
         if feeds:
             column.add(
@@ -260,9 +266,9 @@ async def twitter_rss_get_list(app: Ariadne, event: MessageEvent):
             )
         else:
             column.add(GeneralBox("本群暂未订阅用户"))
-        return OneUIMock(column).render_bytes()
+        return await OneUIMock(column).async_render_bytes()
 
     return await app.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
-        MessageChain([Image(data_bytes=await asyncio.to_thread(compose))]),
+        MessageChain([Image(data_bytes=await compose())]),
     )

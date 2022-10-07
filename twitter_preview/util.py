@@ -48,12 +48,12 @@ async def query(
                         ids=ids, banner_text=banner_text, exclude_error=False
                     )
     except AssertionError as err:
-        return await asyncio.to_thread(compose_error, err.args[0], banner_text)
+        return await compose_error(err.args[0], banner_text)
     except Exception as err:
-        return await asyncio.to_thread(compose_error, str(err), banner_text)
+        return await compose_error(str(err), banner_text)
 
 
-def compose_error(err_text: str, banner_text: str) -> bytes:
+async def compose_error(err_text: str, banner_text: str) -> bytes:
     column = Column()
     banner = Banner(banner_text)
     column.add(banner)
@@ -70,7 +70,7 @@ def compose_error(err_text: str, banner_text: str) -> bytes:
     )
     column.add(hint)
     mock = OneUIMock(column)
-    return mock.render_bytes()
+    return await mock.async_render_bytes()
 
 
 async def get_status_link(short_link: str) -> str | None:

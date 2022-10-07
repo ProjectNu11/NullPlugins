@@ -1,4 +1,3 @@
-import asyncio
 import json
 import re
 import time
@@ -20,6 +19,7 @@ from library.image.oneui_mock.elements import (
     Column,
     GeneralBox,
     OneUIMock,
+    QRCodeBox,
 )
 
 saya = Saya.current()
@@ -116,10 +116,10 @@ async def generate_messagechain(info: dict) -> MessageChain:
         async with session.get(url=img_url) as resp:
             img_content = await resp.read()
     cover = PillowImage.open(BytesIO(img_content))
-    return MessageChain(Image(data_bytes=await async_compose(data, cover)))
+    return MessageChain(Image(data_bytes=await compose(data, cover)))
 
 
-def compose(data: dict, cover: PillowImage.Image) -> bytes:
+async def compose(data: dict, cover: PillowImage.Image) -> bytes:
     column = Column()
 
     banner = Banner(
@@ -154,16 +154,13 @@ def compose(data: dict, cover: PillowImage.Image) -> bytes:
     box4.add(text="AV 号", description=str("av" + str(data["aid"])))
     box4.add(text="BV 号", description=str(data["bvid"]))
 
-    column.add(banner, cover, box1, box2, box3, box4)
+    qr = QRCodeBox("https://bilibili.com/video/" + data["bvid"])
+
+    column.add(banner, cover, box1, box2, box3, box4, qr)
     mock = OneUIMock(
         column,
     )
-    return mock.render_bytes()
-
-
-async def async_compose(data: dict, cover: PillowImage.Image) -> bytes:
-    loop = asyncio.get_event_loop()
-    return await loop.run_in_executor(None, compose, data, cover)
+    return await mock.async_render_bytes()
 
 
 def sec_format(secs: int) -> str:

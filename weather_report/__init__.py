@@ -12,6 +12,7 @@ from graia.ariadne.event.message import (
     MessageEvent,
 )
 from graia.ariadne.message.chain import MessageChain
+from graia.ariadne.message.element import Image
 from graia.ariadne.message.parser.twilight import (
     Twilight,
     FullMatch,
@@ -28,9 +29,16 @@ from graia.scheduler.saya import SchedulerSchema
 from pydantic import BaseModel
 from sqlalchemy import select
 
-from library import PrefixMatch
+from library import prefix_match
 from library.config import config
 from library.depend import Switch, FunctionCall, Blacklist
+from library.image.oneui_mock.elements import (
+    OneUIMock,
+    Column,
+    Banner,
+    GeneralBox,
+    ProgressBar,
+)
 from library.orm import orm
 from .table import WeatherSchedule
 
@@ -48,7 +56,7 @@ if not config.get_module_config(channel.module, "key"):
 @channel.use(
     ListenerSchema(
         listening_events=[GroupMessage, FriendMessage],
-        inline_dispatchers=[Twilight([PrefixMatch, RegexMatch(r"(?!订阅).+天气")])],
+        inline_dispatchers=[Twilight([prefix_match(), RegexMatch(r"(?!订阅).+天气")])],
         decorators=[
             Switch.check(channel.module),
             Blacklist.check(),
@@ -71,7 +79,7 @@ async def weather_report(app: Ariadne, event: MessageEvent):
         inline_dispatchers=[
             Twilight(
                 [
-                    PrefixMatch,
+                    prefix_match(),
                     FullMatch("订阅"),
                     WildcardMatch() @ "city",
                     FullMatch("天气"),
@@ -242,18 +250,35 @@ async def get_realtime_weather_msg(city_name: str) -> None | MessageChain:
             city_code, city_name = city_info
             if realtime_weather := await get_realtime_weather(city_code, session):
                 msg = MessageChain(
-                    f"{city_name}的天气如下\n\n"
-                    f"天气状况：{realtime_weather.text}\n"
-                    f"温度：{realtime_weather.temp} °C\n"
-                    f"相对湿度：{realtime_weather.humidity}%\n"
-                    f"体感温度：{realtime_weather.feelsLike} °C\n"
-                    f"风向：{realtime_weather.windDir}\n"
-                    f"风力：{realtime_weather.windScale} 级\n"
-                    f"风速：{realtime_weather.windSpeed} km/h\n"
-                    f"当前小时累计降水量：{realtime_weather.precip} mm\n"
-                    f"气压：{realtime_weather.pressure} 百帕\n"
-                    f"能见度：{realtime_weather.vis} km\n"
-                    f"观测时间：{realtime_weather.obsTime.strftime('%Y-%m-%d %H:%M:%S')}"
+                    Image(
+                        data_bytes=await OneUIMock(
+                            Column(
+                                Banner("实时天气"),
+                                GeneralBox(f"{city_name} 的天气如下"),
+                                GeneralBox("天气状况", realtime_weather.text).add(
+                                    "温度", f"{realtime_weather.temp} °C"
+                                ),
+                                ProgressBar(
+                                    realtime_weather.humidity,
+                                    "相对湿度",
+                                    f"{realtime_weather.humidity}%",
+                                ),
+                                GeneralBox("体感温度", f"{realtime_weather.feelsLike} °C")
+                                .add("风向", realtime_weather.windDir)
+                                .add("风力", f"{realtime_weather.windScale} 级")
+                                .add("风速", f"{realtime_weather.windSpeed} km/h")
+                                .add("当前小时累计降水量", f"{realtime_weather.precip} mm")
+                                .add("气压", f"{realtime_weather.pressure} 百帕")
+                                .add("能见度", f"{realtime_weather.vis} km")
+                                .add(
+                                    "观测时间",
+                                    realtime_weather.obsTime.strftime(
+                                        "%Y-%m-%d %H:%M:%S"
+                                    ),
+                                ),
+                            )
+                        ).async_render_bytes()
+                    )
                 )
             else:
                 raise ValueError

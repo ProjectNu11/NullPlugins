@@ -7,11 +7,16 @@
         "nullqwertyuiop"
     ],
     "pypi": false,
-    "category": "utility",
+    "category": [
+        "utility"
+    ],
     "description": "",
     "dependency": null,
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {
+        "使用方法": "发送 \"{prefix}缩 需要预测的内容\" 即可"
+    }
 }

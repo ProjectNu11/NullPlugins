@@ -6,11 +6,16 @@
         "nullqwertyuiop"
     ],
     "pypi": false,
-    "category": "utility",
+    "category": [
+        "utility"
+    ],
     "description": "懒得开浏览器，直接在群里搜",
     "dependency": null,
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {
+        "使用方法": "发送 \"百度 内容\" 即可"
+    }
 }

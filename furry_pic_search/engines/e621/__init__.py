@@ -42,7 +42,7 @@ class E621Search(BaseSearch):
         *tags: str,
         get_random: bool = True,
         rating: Literal["s", "q", "e"] | None = None,
-    ) -> Image.Image:
+    ) -> bytes:
 
         assert self.last_query < datetime.now() - timedelta(seconds=5), "查询速率过快"
         self.last_query = datetime.now()
@@ -86,11 +86,10 @@ class E621Search(BaseSearch):
             async with session.get(post.file.url, proxy=config.proxy) as response:
                 image = Image.open(BytesIO(await response.read()))
 
-        loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(None, self.compose, post, image)
+        return await self.compose(post, image)
 
     @staticmethod
-    def compose(post: PostModel, image: Image):
+    async def compose(post: PostModel, image: Image) -> bytes:
         dark = is_dark()
         column = Column(dark=dark)
 
@@ -121,7 +120,7 @@ class E621Search(BaseSearch):
         column.add(box3)
 
         mock = OneUIMock(column, dark=dark)
-        return mock.render()
+        return await mock.async_render_bytes()
 
     @staticmethod
     def get_username() -> str:

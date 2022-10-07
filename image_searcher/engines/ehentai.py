@@ -8,7 +8,13 @@ from PicImageSearch import Network, EHentai
 from graia.ariadne.message.chain import MessageChain
 from graia.ariadne.message.element import Image
 
-from library.image.oneui_mock.elements import OneUIMock, Column, Banner, GeneralBox
+from library.image.oneui_mock.elements import (
+    OneUIMock,
+    Column,
+    Banner,
+    GeneralBox,
+    QRCodeBox,
+)
 from module.image_searcher.utils import get_thumb, error_catcher
 
 custom_cfg = []
@@ -38,30 +44,33 @@ async def ehentai_search(
             resp = await ehentai.search(file=file, ex=ex)
         if not resp.raw:
 
-            def compose() -> bytes:
-                return OneUIMock(
-                    Column(
-                        Banner(f"E{'x' if ex else '-'}Hentai 搜图", icon=ICON),
-                        GeneralBox("服务器未返回内容", "无法搜索到该图片"),
-                    )
-                ).render_bytes()
-
-            return MessageChain(Image(data_bytes=await asyncio.to_thread(compose)))
+            return MessageChain(
+                Image(
+                    data_bytes=await OneUIMock(
+                        Column(
+                            Banner(f"E{'x' if ex else '-'}Hentai 搜图", icon=ICON),
+                            GeneralBox("服务器未返回内容", "无法搜索到该图片"),
+                        )
+                    ).async_render_bytes()
+                )
+            )
 
         resp = resp.raw[0]
         thumb = await get_thumb(resp.thumbnail, proxies)
 
-        def compose() -> bytes:
-            return OneUIMock(
-                Column(
-                    Banner(f"E{'x' if ex else '-'}Hentai 搜图", icon=ICON),
-                    PillowImage.open(BytesIO(thumb)),
-                    GeneralBox("标题", resp.title)
-                    .add("类别", resp.type)
-                    .add("上传日期", resp.date)
-                    .add("标签", " ".join([f"#{tag}" for tag in resp.tags]))
-                    .add("链接", resp.url),
-                )
-            ).render_bytes()
-
-        return MessageChain(Image(data_bytes=await asyncio.to_thread(compose)))
+        return MessageChain(
+            Image(
+                data_bytes=await OneUIMock(
+                    Column(
+                        Banner(f"E{'x' if ex else '-'}Hentai 搜图", icon=ICON),
+                        PillowImage.open(BytesIO(thumb)),
+                        GeneralBox("标题", resp.title)
+                        .add("类别", resp.type)
+                        .add("上传日期", resp.date)
+                        .add("标签", " ".join([f"#{tag}" for tag in resp.tags]))
+                        .add("链接", resp.url),
+                        QRCodeBox(resp.url),
+                    )
+                ).async_render_bytes()
+            )
+        )

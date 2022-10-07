@@ -6,11 +6,17 @@
         "nullqwertyuiop"
     ],
     "pypi": false,
-    "category": "entertainment",
+    "category": [
+        "entertainment",
+        "交流"
+    ],
     "description": "",
     "dependency": null,
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {
+        "使用方法": "发送 \"{prefix}捞漂流瓶\" 即可"
+    }
 }

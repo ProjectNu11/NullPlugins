@@ -31,23 +31,26 @@ def error_catcher(func):
             return await func(*args, **kwargs)
         except Exception as e:
 
-            def compose_error() -> bytes:
-                return OneUIMock(
-                    Column(
-                        Banner(func.__name__.replace("_", " ").title(), icon=ICON),
-                        GeneralBox("运行搜索时出现异常", f"{e}"),
-                        HintBox(
-                            "可以尝试以下解决方案",
-                            "检查依赖是否为最新版本",
-                            "检查服务器 IP 是否被封禁",
-                            "检查 API 是否有效",
-                            "检查网络连接是否正常",
-                        ),
-                    )
-                ).render_bytes()
-
             return MessageChain(
-                [Image(data_bytes=await asyncio.to_thread(compose_error))]
+                [
+                    Image(
+                        data_bytes=await OneUIMock(
+                            Column(
+                                Banner(
+                                    func.__name__.replace("_", " ").title(), icon=ICON
+                                ),
+                                GeneralBox("运行搜索时出现异常", f"{e}"),
+                                HintBox(
+                                    "可以尝试以下解决方案",
+                                    "检查依赖是否为最新版本",
+                                    "检查服务器 IP 是否被封禁",
+                                    "检查 API 是否有效",
+                                    "检查网络连接是否正常",
+                                ),
+                            )
+                        ).async_render_bytes()
+                    )
+                ]
             )
 
     return wrapper

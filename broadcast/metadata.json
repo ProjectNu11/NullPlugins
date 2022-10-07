@@ -1,0 +1,21 @@
+{
+    "name": "广播",
+    "pack": "module.broadcast",
+    "version": "1.0.0",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": false,
+    "category": [
+        "utility"
+    ],
+    "description": "来自维护人员的广播",
+    "dependency": null,
+    "loaded": true,
+    "hidden": false,
+    "override_default": true,
+    "override_switch": null,
+    "help": {
+        "使用方法": "私聊发送 \".broadcast 广播内容\" 即可，需要所有人权限"
+    }
+}

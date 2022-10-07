@@ -8,7 +8,13 @@ from PicImageSearch import Network, Google
 from graia.ariadne.message.chain import MessageChain
 from graia.ariadne.message.element import Image
 
-from library.image.oneui_mock.elements import OneUIMock, Column, Banner, GeneralBox
+from library.image.oneui_mock.elements import (
+    OneUIMock,
+    Column,
+    Banner,
+    GeneralBox,
+    QRCodeBox,
+)
 from module.image_searcher.utils import get_thumb, error_catcher
 
 custom_cfg = []
@@ -34,25 +40,28 @@ async def google_search(
             resp = await google.search(file=file)
         if not resp.raw:
 
-            def compose() -> bytes:
-                return OneUIMock(
-                    Column(
-                        Banner("Google 搜图", icon=ICON),
-                        GeneralBox("服务器未返回内容", "无法搜索到该图片"),
-                    )
-                ).render_bytes()
-
-            return MessageChain(Image(data_bytes=await asyncio.to_thread(compose)))
+            return MessageChain(
+                Image(
+                    data_bytes=await OneUIMock(
+                        Column(
+                            Banner("Google 搜图", icon=ICON),
+                            GeneralBox("服务器未返回内容", "无法搜索到该图片"),
+                        )
+                    ).async_render_bytes()
+                )
+            )
         resp = resp.raw[2]
         thumb = await get_thumb(resp.thumbnail, proxies)
 
-        def compose() -> bytes:
-            return OneUIMock(
-                Column(
-                    Banner("Google 搜图", icon=ICON),
-                    PillowImage.open(BytesIO(thumb)),
-                    GeneralBox("标题", resp.title).add("链接", resp.url),
-                )
-            ).render_bytes()
-
-        return MessageChain(Image(data_bytes=await asyncio.to_thread(compose)))
+        return MessageChain(
+            Image(
+                data_bytes=await OneUIMock(
+                    Column(
+                        Banner("Google 搜图", icon=ICON),
+                        PillowImage.open(BytesIO(thumb)),
+                        GeneralBox("标题", resp.title).add("链接", resp.url),
+                        QRCodeBox(resp.url),
+                    )
+                ).async_render_bytes()
+            )
+        )

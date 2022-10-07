@@ -6,11 +6,17 @@
         "nullqwertyuiop"
     ],
     "pypi": true,
-    "category": "utility",
+    "category": [
+        "utility"
+    ],
     "description": "基于多引擎的图片搜索",
     "dependency": null,
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {
+        "使用方法": "发送 \"{prefix}搜图 [图片]\" 即可",
+        "注意事项": "搜图功能同时使用多个引擎，可能会返回不合适的结果"
+    }
 }

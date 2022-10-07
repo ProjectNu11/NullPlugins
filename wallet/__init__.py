@@ -29,7 +29,7 @@ from loguru import logger
 from sqlalchemy import select
 
 from library.depend import Switch, FunctionCall, Permission, Blacklist
-from library.help import Disclaimer
+from library.help.disclaimer import Disclaimer
 from library.model import UserPerm
 from library.orm import orm
 from .model import Currency

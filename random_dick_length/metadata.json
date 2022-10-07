@@ -1,16 +1,21 @@
 {
     "name": "随机牛子长度",
     "pack": "module.random_dick_length",
-    "version": "1.0.9",
+    "version": "1.0.6",
     "author": [
         "SuChen"
     ],
     "pypi": false,
-    "category": "entertainment",
-    "description": "获取你的每日牛子，每天一根，不许多拿！",
+    "category": [
+        "entertainment"
+    ],
+    "description": "获取你的每日牛子",
     "dependency": null,
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {
+        "使用方法": "发送 \"牛子长度\" 即可"
+    }
 }

@@ -1,16 +1,21 @@
 {
     "name": "发病",
     "pack": "module.ill",
-    "version": "1.0.5",
+    "version": "1.02",
     "author": [
         "nullqwertyuiop"
     ],
     "pypi": false,
-    "category": "entertainment",
+    "category": [
+        "entertainment"
+    ],
     "description": "烧！",
     "dependency": null,
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {
+        "使用方法": "发送 \"{prefix}发病 [可选对象]\" 即可"
+    }
 }

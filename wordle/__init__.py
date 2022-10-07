@@ -18,7 +18,7 @@ from graia.saya import Channel, Saya
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 from loguru import logger
 
-from library import PrefixMatch, config
+from library import prefix_match, config
 from library.depend import Switch, Blacklist, FunctionCall
 from .gb import running_group, running_mutex
 from .utils import get_member_statistic
@@ -52,7 +52,7 @@ decorators = [
         inline_dispatchers=[
             Twilight(
                 [
-                    PrefixMatch,
+                    prefix_match(),
                     FullMatch("wordle"),
                     ArgumentMatch("-help", "-h", action="store_true", optional=False)
                     @ "_",
@@ -87,7 +87,7 @@ async def wordle_help(app: Ariadne, group: Group):
         inline_dispatchers=[
             Twilight(
                 [
-                    PrefixMatch,
+                    prefix_match(),
                     FullMatch("wordle"),
                     ArgumentMatch(
                         "-s", "-statistic", action="store_true", optional=False
@@ -119,7 +119,7 @@ async def wordle_statistic(app: Ariadne, group: Group, member: Member, source: S
         inline_dispatchers=[
             Twilight(
                 [
-                    PrefixMatch,
+                    prefix_match(),
                     FullMatch("wordle"),
                     ArgumentMatch("-d", "-dic") @ "dic",
                     ArgumentMatch("--single", action="store_true") @ "single",

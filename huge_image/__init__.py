@@ -20,7 +20,7 @@ from graia.ariadne.message.parser.twilight import (
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
-from library import PrefixMatch
+from library import prefix_match
 from library.depend import Switch, FunctionCall, Blacklist
 
 saya = Saya.current()
@@ -38,7 +38,7 @@ channel.description("好大的图")
             Twilight(
                 [
                     ElementMatch(At, optional=True),
-                    PrefixMatch,
+                    prefix_match(),
                     FullMatch("好大的图"),
                     RegexMatch(r"[\n\r]?", optional=True),
                     ElementMatch(Image) @ "image",

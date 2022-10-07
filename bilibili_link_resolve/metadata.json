@@ -6,11 +6,17 @@
         "nullqwertyuiop"
     ],
     "pypi": false,
-    "category": "utility",
+    "category": [
+        "utility",
+        "内容预览"
+    ],
     "description": "发送 B 站链接自动解析视频内容",
     "dependency": null,
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {
+        "使用方法": "发送 B 站分享链接即可"
+    }
 }

@@ -1,4 +1,3 @@
-import asyncio
 from pathlib import Path
 
 from PIL import Image
@@ -19,7 +18,7 @@ __all__: dict[str, BaseSearch] = {"netease": NetEaseSearch, "网易": NetEaseSea
 
 async def run_search(
     engine: BaseSearch, *keywords: str
-) -> tuple[Image.Image, list[MusicShare]]:
+) -> tuple[bytes, list[MusicShare]]:
     try:
         assert keywords, "没有搜索关键词"
         return await engine.search(*keywords)
@@ -27,13 +26,12 @@ async def run_search(
         err_text = err.args[0]
     except Exception as err:
         err_text = str(err)
-    loop = asyncio.get_event_loop()
-    return await loop.run_in_executor(None, compose_error, engine, err_text)
+    return await compose_error(engine, err_text)
 
 
-def compose_error(
+async def compose_error(
     engine: BaseSearch, err_text: str
-) -> tuple[Image.Image, list[MusicShare]]:
+) -> tuple[bytes, list[MusicShare]]:
     column = Column()
     banner = Banner(
         f"{engine.engine_name} 歌曲搜索",
@@ -52,4 +50,4 @@ def compose_error(
     )
     column.add(hint)
     mock = OneUIMock(column)
-    return mock.render(), []
+    return await mock.async_render_bytes(), []

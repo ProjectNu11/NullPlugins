@@ -1,7 +1,7 @@
 from typing import Literal
 
 from aiohttp import ClientSession
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 from library import config
 
@@ -31,6 +31,10 @@ class User(BaseModel):
     id: int
     protected: bool
     name: str
+
+    @validator("profile_image_url")
+    def twitter_profile_image_url(cls, v):
+        return v.replace("_normal", "")
 
     async def get_avatar(self) -> bytes:
         async with ClientSession() as session:

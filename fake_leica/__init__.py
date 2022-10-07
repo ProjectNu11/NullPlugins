@@ -23,7 +23,7 @@ from graia.broadcast.interrupt import Waiter, InterruptControl
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 from graia.saya.channel import Channel
 
-from library import PrefixMatch
+from library import prefix_match
 from library.depend import Switch, FunctionCall, Blacklist
 
 channel = Channel.current()
@@ -38,7 +38,7 @@ DEVICES = {"三星": "samsung note20 ultra.png", "samsung": "samsung note20 ultr
             Twilight(
                 [
                     ElementMatch(At, optional=True),
-                    PrefixMatch,
+                    prefix_match(),
                     UnionMatch("leica", "莱卡"),
                     ArgumentMatch("-d", "--device", type=str, optional=True) @ "device",
                     RegexMatch(r"[\n\r]?", optional=True),

@@ -19,7 +19,7 @@ from graia.saya import Channel, Saya
 from graia.saya.builtins.broadcast import ListenerSchema
 from sqlalchemy import select
 
-from library import PrefixMatch
+from library import prefix_match
 from library.config import config
 from library.depend import Switch, FunctionCall, Blacklist
 from library.orm import orm
@@ -42,7 +42,7 @@ shuffle_flags = {}
         inline_dispatchers=[
             Twilight(
                 [
-                    PrefixMatch,
+                    prefix_match(),
                     FullMatch("shuffle"),
                     ArgumentMatch("-r", "--restore", action="store_true") @ "restore",
                     ArgumentMatch("-l", "--latest", action="store_true") @ "latest",

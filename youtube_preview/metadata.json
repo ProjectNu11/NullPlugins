@@ -1,0 +1,22 @@
+{
+    "name": "YouTube 预览",
+    "pack": "module.youtube_preview",
+    "version": "1.0.0",
+    "author": [
+        "nullqwertyuiop"
+    ],
+    "pypi": true,
+    "category": [
+        "utility",
+        "内容预览"
+    ],
+    "description": "发送 YouTube 链接自动生成预览图",
+    "dependency": null,
+    "loaded": true,
+    "hidden": false,
+    "override_default": null,
+    "override_switch": null,
+    "help": {
+        "使用方法": "发送 YouTube 链接即可"
+    }
+}

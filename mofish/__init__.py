@@ -5,7 +5,7 @@ from graia.ariadne.message.parser.twilight import Twilight, FullMatch
 from graia.saya import Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
-from library import PrefixMatch
+from library import prefix_match
 from library.depend import Switch, FunctionCall, Blacklist
 from .main import get_text
 
@@ -18,7 +18,7 @@ channel = Channel.current()
         inline_dispatchers=[
             Twilight(
                 [
-                    PrefixMatch,
+                    prefix_match(),
                     FullMatch("摸鱼"),
                 ]
             )

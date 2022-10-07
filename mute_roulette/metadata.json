@@ -6,11 +6,17 @@
         "nullqwertyuiop"
     ],
     "pypi": false,
-    "category": "entertainment",
+    "category": [
+        "entertainment"
+    ],
     "description": "俄罗斯转盘，但是禁言",
     "dependency": null,
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {
+        "使用方法": "发送 \"{prefix}轮盘 @对象\" 即可",
+        "注意事项": "使用本功能需要先将机器人添加为群管理员"
+    }
 }

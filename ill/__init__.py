@@ -17,7 +17,7 @@ from graia.ariadne.message.parser.twilight import (
 from graia.saya import Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
-from library import PrefixMatch
+from library import prefix_match
 from library.depend import Switch, FunctionCall, Blacklist
 
 channel = Channel.current()
@@ -33,7 +33,7 @@ with Path(assets_path, "ill_templates.json").open("r", encoding="UTF-8") as f:
         inline_dispatchers=[
             Twilight(
                 [
-                    PrefixMatch,
+                    prefix_match(),
                     FullMatch("发病"),
                     ElementMatch(At, optional=True) @ "at",
                     ParamMatch(optional=True) @ "text",

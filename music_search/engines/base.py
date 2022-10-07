@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 
-from PIL.Image import Image
 from graia.ariadne.message.element import MusicShare
 
 
@@ -9,7 +8,7 @@ class BaseSearch(ABC):
 
     @staticmethod
     @abstractmethod
-    async def search(*keywords: str) -> tuple[Image, list[MusicShare]]:
+    async def search(*keywords: str) -> tuple[bytes, list[MusicShare]]:
         """
         Generate a picture from the search engine.
 

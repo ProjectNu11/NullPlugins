@@ -17,7 +17,7 @@ from graia.broadcast.interrupt.waiter import Waiter
 from graia.saya import Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
-from library import config, PrefixMatch
+from library import config, prefix_match
 from library.depend import Switch, FunctionCall, Blacklist
 from library.depend.interval import Interval
 from module.image_searcher.engines import (
@@ -67,7 +67,7 @@ else:
             Twilight(
                 [
                     ElementMatch(At, optional=True),
-                    PrefixMatch,
+                    prefix_match(),
                     UnionMatch("搜图", "识图", "以图搜图"),
                     RegexMatch(r"[\s]+", optional=True),
                     ElementMatch(Image, optional=True) @ "image",

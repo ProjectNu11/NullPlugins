@@ -6,7 +6,9 @@
         "nullqwertyuiop"
     ],
     "pypi": false,
-    "category": "utility",
+    "category": [
+        "utility"
+    ],
     "description": "抓取错误信息并输出",
     "dependency": [
         "module.build_image"
@@ -14,5 +16,6 @@
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": true
+    "override_switch": true,
+    "help": {}
 }

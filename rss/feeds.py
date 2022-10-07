@@ -92,3 +92,9 @@ def get_feed_from_id(group: int | None = None, friend: int | None = None):
     if group is not None:
         return list(filter(lambda x: group in x.groups, feeds))
     return list(filter(lambda x: friend in x.friends, feeds))
+
+
+def batch_replace_url(old_base: str, new_base: str):
+    for feed in feeds:
+        feed.url = feed.url.replace(old_base, new_base)
+    save_pickle(feeds)

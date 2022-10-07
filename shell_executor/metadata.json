@@ -6,7 +6,9 @@
         "nullqwertyuiop"
     ],
     "pypi": false,
-    "category": "utility",
+    "category": [
+        "utility"
+    ],
     "description": "在当前服务器上执行 Shell 命令",
     "dependency": [
         "module.build_image"
@@ -14,5 +16,8 @@
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {
+        "使用方法": "发送 \"@bot shell> 需要执行的 Shell 语句\" 即可，需要所有人权限"
+    }
 }

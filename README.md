@@ -11,6 +11,8 @@ _Compatible with Project. Null_
 
 </div>
 
+Discontinued due to bad mental health.
+
 ## 开始使用
 
 ### 通过 PN-Hub 安装

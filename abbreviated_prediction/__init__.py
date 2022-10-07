@@ -1,5 +1,3 @@
-import asyncio
-
 from graia.ariadne.app import Ariadne
 from graia.ariadne.event.message import GroupMessage, MessageEvent, FriendMessage
 from graia.ariadne.message.chain import MessageChain
@@ -9,7 +7,7 @@ from graia.ariadne.message.parser.twilight import Twilight, FullMatch
 from graia.saya import Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
-from library import PrefixMatch
+from library import prefix_match
 from library.depend import Switch, Blacklist, FunctionCall
 from library.image.oneui_mock.elements import (
     Banner,
@@ -33,7 +31,7 @@ channel.description("")
         inline_dispatchers=[
             Twilight(
                 [
-                    PrefixMatch,
+                    prefix_match(),
                     FullMatch("缩"),
                     RegexMatch(r"[A-Za-z0-9 ]+").help("要缩写的内容") @ "content",
                 ]
@@ -58,8 +56,6 @@ async def abbreviated_prediction(
     ) as resp:
         res = await resp.json()
 
-    loop = asyncio.get_event_loop()
-
     try:
         data: dict[str, list[str]] = {}
         has_result = False
@@ -74,39 +70,37 @@ async def abbreviated_prediction(
                 data[i["name"]] = i["inputting"]
         assert has_result, "没有查询到结果"
 
-        def _compose() -> bytes:
-            column = Column(Banner("缩写预测"))
-
-            for key, value in data.items():
-                column.add(GeneralBox(key, "\n".join(value)))
-
-            return OneUIMock(column).render_bytes()
-
+        column = Column(Banner("缩写预测"))
+        for key, value in data.items():
+            column.add(GeneralBox(key, "\n".join(value)))
         await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
-            MessageChain(Image(data_bytes=await loop.run_in_executor(None, _compose))),
+            MessageChain(
+                Image(data_bytes=await OneUIMock(column).async_render_bytes())
+            ),
         )
+
     except AssertionError as err:
         err_text = err.args[0]
-
-        def _compose() -> bytes:
-            return OneUIMock(
-                Column(
-                    Banner("缩写预测"),
-                    GeneralBox("运行时出现错误", err_text),
-                    HintBox(
-                        "可以尝试以下解决方案",
-                        "检查缩写是否存在",
-                        "检查缩写对应原文是否被录入",
-                        "检查网络连接是否正常",
-                        "检查输入内容是否在屏蔽词内",
-                        "检查是否超过查询速率限制",
-                        "检查 API 是否有效",
-                    ),
-                )
-            ).render_bytes()
-
         await app.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
-            MessageChain(Image(data_bytes=await loop.run_in_executor(None, _compose))),
+            MessageChain(
+                Image(
+                    data_bytes=await OneUIMock(
+                        Column(
+                            Banner("缩写预测"),
+                            GeneralBox("运行时出现错误", err_text),
+                            HintBox(
+                                "可以尝试以下解决方案",
+                                "检查缩写是否存在",
+                                "检查缩写对应原文是否被录入",
+                                "检查网络连接是否正常",
+                                "检查输入内容是否在屏蔽词内",
+                                "检查是否超过查询速率限制",
+                                "检查 API 是否有效",
+                            ),
+                        )
+                    ).async_render_bytes()
+                )
+            ),
         )

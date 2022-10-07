@@ -6,11 +6,17 @@
         "nullqwertyuiop"
     ],
     "pypi": true,
-    "category": "entertainment",
+    "category": [
+        "entertainment"
+    ],
     "description": "各群独立的圣经",
     "dependency": null,
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {
+        "上传方法": "发送 \"上传圣经\" 即可",
+        "调用方法": "发送 \"随机圣经\" 即可"
+    }
 }

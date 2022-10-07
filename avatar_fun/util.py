@@ -15,6 +15,9 @@ def get_match_element(message: MessageChain) -> list[str | int | Image | At]:
             elements.append(element)
         elif isinstance(element, Plain):
             for part in element.display.split(" "):
+                part = part.strip("\n")
+                if not part:
+                    continue
                 if part.isdigit():
                     part = int(part)
                 elements.append(part)
@@ -46,7 +49,7 @@ async def get_element_image(message: MessageChain) -> list[PillowImage.Image]:
     elements = []
     for element in get_match_element(message):
         if isinstance(element, str):
-            elements.append(str)
+            elements.append(element)
         else:
             elements.append(PillowImage.open(BytesIO(await get_image(element))))
     return elements

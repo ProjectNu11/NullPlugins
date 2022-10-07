@@ -6,11 +6,17 @@
         "nullqwertyuiop"
     ],
     "pypi": false,
-    "category": "entertainment",
+    "category": [
+        "entertainment"
+    ],
     "description": "我是谁？",
     "dependency": null,
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {
+        "使用方法": "发送 \"{prefix}shuffle\" 即可",
+        "注意事项": "使用时如有用户退群可能导致无法正常恢复，使用本功能前请先备份群名片\n使用本功能需要先将机器人添加为群管理员"
+    }
 }

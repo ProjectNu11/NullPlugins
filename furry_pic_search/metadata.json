@@ -6,11 +6,19 @@
         "nullqwertyuiop"
     ],
     "pypi": false,
-    "category": "utility",
+    "category": [
+        "utility"
+    ],
     "description": "搜索来自网络的 Furry 图片",
     "dependency": null,
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {
+        "使用方法": "发送 \"{prefix}兽图\" 即可",
+        "使用标签": "发送 \"{prefix}兽图 [标签1] [标签2] ...\" 即可",
+        "进阶使用": "发送 \"{prefix}兽图 --engine [引擎]\" 即可",
+        "禁用随机": "发送 \"{prefix}兽图 --no-random\" 即可"
+    }
 }

@@ -6,7 +6,9 @@
         "nullqwertyuiop"
     ],
     "pypi": false,
-    "category": "utility",
+    "category": [
+        "utility"
+    ],
     "description": "订阅推特用户",
     "dependency": [
         "module.twitter_preview",
@@ -15,5 +17,8 @@
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {
+        "使用方法": "发送 \"{prefix}订阅推特 用户名\" 即可"
+    }
 }

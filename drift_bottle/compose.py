@@ -1,6 +1,4 @@
-import asyncio
 from io import BytesIO
-from typing import Callable
 
 from PIL import Image
 
@@ -16,12 +14,11 @@ from library.image.oneui_mock.elements import (
 from module.drift_bottle.model import DBUser, DBottle, DBReply
 
 
-async def compose(func: Callable[[...], bytes], *args) -> bytes:
-    loop = asyncio.get_event_loop()
-    return await loop.run_in_executor(None, func, *args)
+async def compose(func, *args) -> bytes:
+    return await func(*args)
 
 
-def compose_error(err_text: str) -> bytes:
+async def compose_error(err_text: str) -> bytes:
     column = Column()
     banner = Banner("漂流瓶")
     box = GeneralBox(text="运行时出现错误", description=err_text)
@@ -39,10 +36,10 @@ def compose_error(err_text: str) -> bytes:
     )
     column.add(banner, box, hint)
     mock = OneUIMock(column)
-    return mock.render_bytes()
+    return await mock.async_render_bytes()
 
 
-def compose_register_success(user: DBUser) -> bytes:
+async def compose_register_success(user: DBUser) -> bytes:
     column = Column()
     banner = Banner("漂流瓶")
     box = GeneralBox(text="注册成功", description=f"你的漂流瓶用户ID是: {user.id}")
@@ -61,19 +58,19 @@ def compose_register_success(user: DBUser) -> bytes:
     )
     column.add(banner, box, hint)
     mock = OneUIMock(column)
-    return mock.render_bytes()
+    return await mock.async_render_bytes()
 
 
-def compose_add_bottle_success(bottle_id: str) -> bytes:
+async def compose_add_bottle_success(bottle_id: str) -> bytes:
     column = Column()
     banner = Banner("漂流瓶")
     box = GeneralBox(text="成功丢出漂流瓶", description=f"漂流瓶ID: {bottle_id}")
     column.add(banner, box)
     mock = OneUIMock(column)
-    return mock.render_bytes()
+    return await mock.async_render_bytes()
 
 
-def compose_bottle(bottle: DBottle, *replies: DBReply) -> bytes:
+async def compose_bottle(bottle: DBottle, *replies: DBReply) -> bytes:
     column = Column()
     banner = Banner("漂流瓶")
     box = GeneralBox(text=f"来自 {bottle.sender[:16]} 的漂流瓶", description=bottle.content)
@@ -102,19 +99,19 @@ def compose_bottle(bottle: DBottle, *replies: DBReply) -> bytes:
 
     column.add(banner, box, reply_box, hint_box, hint)
     mock = OneUIMock(column)
-    return mock.render_bytes()
+    return await mock.async_render_bytes()
 
 
-def reply_bottle_success(reply_id: str) -> bytes:
+async def reply_bottle_success(reply_id: str) -> bytes:
     column = Column()
     banner = Banner("漂流瓶")
     box = GeneralBox(text="成功回复漂流瓶", description=f"评论ID: {reply_id}")
     column.add(banner, box)
     mock = OneUIMock(column)
-    return mock.render_bytes()
+    return await mock.async_render_bytes()
 
 
-def compose_my_stat(me: DBUser, avatar: bytes) -> bytes:
+async def compose_my_stat(me: DBUser, avatar: bytes) -> bytes:
     column = Column()
     banner = Banner("漂流瓶")
     header = Header(me.name[:16], "漂流瓶统计", Image.open(BytesIO(avatar)))
@@ -124,10 +121,10 @@ def compose_my_stat(me: DBUser, avatar: bytes) -> bytes:
     box.add(text="回复漂流瓶数", description=str(me.reply_count))
     column.add(banner, header, box)
     mock = OneUIMock(column)
-    return mock.render_bytes()
+    return await mock.async_render_bytes()
 
 
-def return_or_delete_bottle_success(bottle_id: str, deleted: bool) -> bytes:
+async def return_or_delete_bottle_success(bottle_id: str, deleted: bool) -> bytes:
     column = Column()
     banner = Banner("漂流瓶")
     box = GeneralBox(
@@ -135,4 +132,4 @@ def return_or_delete_bottle_success(bottle_id: str, deleted: bool) -> bytes:
     )
     column.add(banner, box)
     mock = OneUIMock(column)
-    return mock.render_bytes()
+    return await mock.async_render_bytes()

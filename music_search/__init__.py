@@ -1,6 +1,5 @@
 import asyncio
 import re
-from io import BytesIO
 
 from graia.ariadne import Ariadne
 from graia.ariadne.event.message import GroupMessage, FriendMessage
@@ -19,7 +18,7 @@ from graia.ariadne.util.interrupt import FunctionWaiter
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
-from library import PrefixMatch
+from library import prefix_match
 from library.config import config
 from library.depend import Switch, FunctionCall, Blacklist
 from .engines import __all__, BaseSearch, run_search
@@ -46,7 +45,7 @@ if not (__cfg := config.get_module_config(channel.module)):
         inline_dispatchers=[
             Twilight(
                 [
-                    PrefixMatch,
+                    prefix_match(),
                     FullMatch("点歌"),
                     ArgumentMatch("-e", "--engine", type=str, optional=True) @ "engine",
                     WildcardMatch().flags(re.S) @ "keywords",
@@ -80,19 +79,16 @@ async def music_search(
     keywords = keywords.result.display.split() if keywords.matched else []
 
     image, music = await run_search(engine, *keywords)
-    image = image.convert("RGB")
-    output = BytesIO()
-    image.save(output, format="jpeg")
 
     if not music:
         return await ariadne.send_message(
             event.sender.group if isinstance(event, GroupMessage) else event.sender,
-            MessageChain(Image(data_bytes=output.getvalue())),
+            MessageChain(Image(data_bytes=image)),
         )
 
     await ariadne.send_message(
         event.sender.group if isinstance(event, GroupMessage) else event.sender,
-        MessageChain(Image(data_bytes=output.getvalue())),
+        MessageChain(Image(data_bytes=image)),
     )
 
     _max_count = len(music)

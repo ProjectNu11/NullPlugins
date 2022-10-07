@@ -18,7 +18,7 @@ from graia.broadcast.interrupt import Waiter, InterruptControl
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast import ListenerSchema
 
-from library import PrefixMatch
+from library import prefix_match
 from library.config import config
 from library.depend import Switch, FunctionCall, Blacklist
 
@@ -36,7 +36,7 @@ channel.description("")
         inline_dispatchers=[
             Twilight(
                 [
-                    PrefixMatch,
+                    prefix_match(),
                     FullMatch("轮盘"),
                     ArgumentMatch("-f", "--fast", action="store_true", optional=True)
                     @ "fast",

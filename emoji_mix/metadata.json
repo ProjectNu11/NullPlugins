@@ -6,11 +6,17 @@
         "nullqwertyuiop"
     ],
     "pypi": false,
-    "category": "utility",
+    "category": [
+        "utility"
+    ],
     "description": "",
     "dependency": null,
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {
+        "使用方法": "发送 \"{prefix}emoji1+emoji2\" 即可",
+        "使用注意": "本插件仅适用于 Emoji，不包含腾讯表情"
+    }
 }

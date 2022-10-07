@@ -7,11 +7,16 @@
         "Little-LinNian"
     ],
     "pypi": false,
-    "category": "entertainment",
+    "category": [
+        "entertainment"
+    ],
     "description": "您好，您可能得了癌症。",
     "dependency": null,
     "loaded": true,
     "hidden": false,
     "override_default": null,
-    "override_switch": null
+    "override_switch": null,
+    "help": {
+        "使用方法": "全自动诊病，无需任何操作"
+    }
 }
